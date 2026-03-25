@@ -6,6 +6,7 @@ import time
 import traceback
 from contextlib import redirect_stderr, redirect_stdout
 from typing import Any
+import os
 
 import tiktoken
 from IPython.core.interactiveshell import InteractiveShell
@@ -75,7 +76,6 @@ TOOLS: list[dict[str, Any]] = [
         "type": "function",
         "name": "finalize_result",
         "description": "Return the final result object and stop.",
-        "strict": True,
         "parameters": {
             "type": "object",
             "properties": {
@@ -159,12 +159,14 @@ class AgenticWorkflow:
         max_turns: int = 25,
         trace_output_dir: str | None = None,
         trace_filename_stem: str | None = None,
+        reasoning: dict | None = None,
     ) -> None:
         self.client = client
         self.model = model
         self.max_turns = max_turns
         self.trace_output_dir = trace_output_dir
         self.trace_filename_stem = trace_filename_stem
+        self.reasoning = reasoning
         self.executor = PythonExecutor()
 
         if vault_name is not None and workflow_key is not None:
@@ -231,7 +233,7 @@ class AgenticWorkflow:
 
                 # --- API call (timed) ----------------------------------------
                 t0 = time.perf_counter()
-                response = self.client.responses.create(
+                create_kwargs: dict[str, Any] = dict(
                     model=self.model,
                     instructions=self.system_prompt,
                     input=pending,
@@ -239,6 +241,9 @@ class AgenticWorkflow:
                     tools=TOOLS,
                     parallel_tool_calls=False,
                 )
+                if self.reasoning is not None:
+                    create_kwargs["reasoning"] = self.reasoning
+                response = self.client.responses.create(**create_kwargs)
                 api_latency = time.perf_counter() - t0
                 prev_id = response.id
 
@@ -522,19 +527,25 @@ not just a description of the table.
 """
 
 if __name__ == "__main__":
+
+    openai_key_file = "/Users/jinjinzhao/Documents/work_projects/my_keys/my_keys/openai_jinjin.key"
+    with open(openai_key_file, 'r') as f:
+        openai_key = f.read()
+    os.environ["OPENAI_API_KEY"] = openai_key
+
+    TASK = "For document classification with large language models, does few shot examples improve accuracy?"
     wf = AgenticWorkflow(
         client=OpenAI(),
-        model="YOUR_MODEL_NAME",
+        model="gpt-5.4",
         system_prompt=SYSTEM_PROMPT,
         vault_name="tv_experiment_1",    # passed to initialization()
         workflow_key="items_only",       # key in FUNCTION_EXPERIMENTS
         max_turns=20,
         trace_output_dir="traces",       # set to None to disable file saving
         trace_filename_stem=None,        # defaults to run timestamp
+        reasoning=None, #reasoning={"effort": "medium"
     )
-    output = wf.run(
-        "Inspect the available item lists and summarise what data is stored."
-    )
+    output = wf.run(TASK)
 
     print("=== Result ===")
     print(json.dumps(output["result"], indent=2))

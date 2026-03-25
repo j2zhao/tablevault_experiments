@@ -2,6 +2,7 @@ import os
 
 from tablevault.tablevault import Vault
 from openai import OpenAI
+import time
 
 def _get_embeddings(text):
     client = OpenAI()
@@ -15,7 +16,7 @@ def initialization(vault_name, new_arango_db=False): # okay
     from openai import OpenAI
 
     vault = tablevault.Vault(user_id="jinjin",
-                                process_name="experiment_1a",
+                                process_name=f"gent_{int(time.time())}",
                                 arango_url="http://localhost:8629",
                                 arango_db=vault_name,
                                 arango_username="tablevault_user",
@@ -23,7 +24,6 @@ def initialization(vault_name, new_arango_db=False): # okay
                                 new_arango_db=new_arango_db,
                                 arango_root_username="root",
                                 arango_root_password="passwd",
-                                description_embedding_size=3072,
                             )
 
     
