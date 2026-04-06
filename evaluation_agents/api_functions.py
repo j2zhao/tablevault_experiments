@@ -451,6 +451,9 @@ FUNCTION_DESCRIPTIONS = {
     ),
 }
 
+# show this across different tasks -> more notebooks with same methodology (prompting vs. less varied)
+# beyond NLP tasks -> only traditional machine learning -> number of ways to solve the prompts
+# 
 
 FUNCTION_EXPERIMENTS = {
     "items_only": ["get_item", "get_item_names"],
