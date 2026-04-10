@@ -75,7 +75,13 @@ TOOLS: list[dict[str, Any]] = [
     {
         "type": "function",
         "name": "finalize_result",
-        "description": "Return the final result object and stop.",
+        "description": (
+            "Return the final result object and stop. "
+            "Before calling this, confirm that your rows table contains evidence "
+            "drawn from multiple distinct sources in the repository — not just one "
+            "or two items — and that you have used at least one search function "
+            "to filter candidates before reading."
+        ),
         "parameters": {
             "type": "object",
             "properties": {
@@ -177,9 +183,6 @@ class AgenticWorkflow:
                 "The following functions are pre-imported and available in your Python session. "
                 "The vault is already assigned to the variable `vault`. "
                 "Call them as e.g. `get_item(vault, 'my_list')`.\n\n",
-                "The OpenAI API key is already set in the environment (`OPENAI_API_KEY`). "
-                "You may use `from openai import OpenAI; client = OpenAI()` directly in your "
-                "code if needed (e.g. for embeddings or completions).\n\n",
             ]
             for name in fn_names:
                 if name in FUNCTION_DESCRIPTIONS:
@@ -488,11 +491,28 @@ context is accessible.
 Use `print()` for output.
 - `finalize_result`: return the final result object and stop.
 
+## Search strategy
+
+Work in two phases:
+
+**Phase 1 — Discovery:** Use only search and listing functions to identify
+candidate item and code names. Do NOT read full item content yet (`get_item`
+and `get_code` should not be called in this phase). Collect all plausible
+candidates first, then assess which are relevant to the task.
+
+**Phase 2 — Selection and reading:** From your candidates, select the most
+representative subset that covers the different methodological conditions
+relevant to the task. Read only that subset in detail. Avoid reading items
+that are redundant with others already selected.
+
+------------------------------------------------------------
+
 ## Rules
 
 - Always act via tool calls — never put raw code in assistant text.
 - On errors, read the traceback and fix the code.
 - The variable `vault` and all listed TableVault functions are pre-imported and ready to use.
+- **Do not make direct HuggingFace model calls** (e.g. do not use `transformers`, `pipeline`, or any HuggingFace inference API). All model inference results are pre-computed and stored in the TableVault repository — retrieve them from there instead.
 
 ------------------------------------------------------------
 
