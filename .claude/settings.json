@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python notebook_experiments.py)",
+      "Read(//private/tmp/**)"
+    ]
+  }
+}

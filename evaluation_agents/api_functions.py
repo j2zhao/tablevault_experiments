@@ -47,69 +47,104 @@ def get_item(vault, item_name, start_position = None, end_position = None): # DO
     ltype = vault.query_item_type(item_name)
     if ltype is None or ltype == "process_list":
         raise ValueError("Name given isn't a registered item list")
-    return vault.query_item_content(item_name, start_position = start_position, end_position = end_position)
+    output = vault.query_item_content(item_name, start_position = start_position, end_position = end_position)
+    if start_position is None:
+        return output[:10]
+    else:
+        return output
 
-def get_code_names(vault): # DONE
-    return vault.query_item_names(item_type = "process_list")
+def get_code_names(vault, n_items = None): # DONE
+    output = vault.query_item_names(item_type = "process_list")
+    if n_items is not None:
+        return output[:n_items]
+    else:
+        return output
 
-def get_item_names(vault, item_type): # DONE
+def get_item_names(vault, item_type, n_items = None): # DONE
     if item_type == "process_list":
         raise ValueError("Name given isn't a valid item type.")
-    return vault.query_item_names(item_type)
+    output = vault.query_item_names(item_type)
+    if n_items is not None:
+        return output[:n_items]
+    else:
+        return output
 
-def code_search(vault, code): # DONE
+
+def code_search(vault, code, n_items = None): # DONE
     results = vault.query_process_list(code_text = code)
     names = set()
     for result in results:
         names.add(result[0])
-    return list(names)
+    output = list(names)
+    if n_items is not None:
+        return output[:n_items]
+    else:
+        return output
 
-def embedding_search(vault, embedding):
+def embedding_search(vault, embedding, n_items = None): # Done
     results = vault.query_embedding_list(embedding = embedding)
     names = []
     for result in results:
         names.append([result[0], result[2]])
-    return names
+    if n_items is not None:
+        return names[:n_items]
+    else:
+        return names
 
-def record_search(vault, record_text):
+def record_search(vault, record_text, n_items = None): # Done
     results = vault.query_record_list(record_text = record_text)
     names = []
     for result in results:
         names.append(result[0])
-    return names
+    if n_items is not None:
+        return names[:n_items]
+    else:
+        return names
 
-def document_search(vault, document_text):
+def document_search(vault, document_text, n_items = None): # Done
     results =  vault.query_document_list(document_text = document_text)
     names = []
     for result in results:
         names.append([result[0], result[2]])
-    return names
+    if n_items is not None:
+        return names[:n_items]
+    else:
+        return names
 
-def description_search(vault, description_text):
+def description_search(vault, description_text, n_items = None): # Done
     descriptions = vault.query_description(description_text)
     results = []
     for dname, dtext, list_name, list_type in descriptions:
         if "BASE" in dname and list_type != "process_list":
             results.append([dname, dtext, list_name, list_type])
-    return results
+    if n_items is not None:
+        return results[:n_items]
+    else:
+        return results
 
-def description_embedding_search(vault, description_text):
+def description_embedding_search(vault, description_text, n_items = 10): # TODO: Change
     description_embedding = _get_embeddings(description_text)
     descriptions = vault.query_description_embedding(description_embedding)
     results = []
     for dname, dtext, list_name, list_type in descriptions:
         if "BASE" in dname and list_type != "process_list":
             results.append([dname, dtext, list_name, list_type])
-    return results
+    if n_items is not None:
+        return results[:n_items]
+    else:
+        return results
 
-def properties_search(vault, description_text):
+def properties_search(vault, description_text,  n_items = 10): #TODO: Change
     description_embedding = _get_embeddings(description_text)
     descriptions = vault.query_description_embedding(description_embedding)
     results = []
     for dname, dtext, list_name, list_type in descriptions:
         if "BASE" not in dname and list_type != "process_list":
             results.append([dname, dtext, list_name, list_type])
-    return results
+    if n_items is not None:
+        return results[:n_items]
+    else:
+        return results
 
 def get_item_code_name(vault, name):
     results = vault.query_item_creation_process(name)
@@ -160,31 +195,40 @@ def get_item_properties(vault, name):
             descriptions[result[0]] = result[1]
     return descriptions
 
-def code_description_search(vault, description_text):
+def code_description_search(vault, description_text, n_items = 10):
     descriptions = vault.query_description(description_text)
     results = []
     for dname, dtext, list_name, list_type in descriptions:
         if "BASE" in dname and list_type == "process_list":
             results.append([dname, dtext, list_name, list_type])
-    return results
+    if n_items is not None:
+        return results[:n_items]
+    else:
+        return results
 
-def code_description_embedding_search(vault, description_text): # add openai embedding
+def code_description_embedding_search(vault, description_text, n_items = 10):
     description_embedding = _get_embeddings(description_text)
     descriptions = vault.query_description_embedding(description_embedding)
     results = []
     for dname, dtext, list_name, list_type in descriptions:
         if "BASE" in dname and list_type == "process_list":
             results.append([dname, dtext, list_name, list_type])
-    return results
+    if n_items is not None:
+        return results[:n_items]
+    else:
+        return results
 
-def code_properties_search(vault, description_text):  # add openai embedding
+def code_properties_search(vault, description_text, n_items = 10):  # TODO: Change
     description_embedding = _get_embeddings(description_text)
     descriptions = vault.query_description_embedding(description_embedding)
     results = []
     for dname, dtext, list_name, list_type in descriptions:
         if "BASE" not in dname and list_type == "process_list":
             results.append([dname, dtext, list_name, list_type])
-    return results
+    if n_items is not None:
+        return results[:n_items]
+    else:
+        return results
 
 def get_code_description(vault, name):
     ltype = vault.query_item_type(name)
@@ -212,7 +256,7 @@ FUNCTION_DESCRIPTIONS = {
         "get_item(vault, item_name, start_position=None, end_position=None)\n"
         "Retrieve stored data from an item list by name.\n"
         "Always returns a List sorted by position:\n"
-        "- Without start_position/end_position: returns all entries in the list.\n"
+        "- Without start_position/end_position: returns first 10 entries in the list.\n"
         "- With start_position and end_position: returns entries whose position overlaps "
         "the half-open range [start_position, end_position).\n"
         "Element type depends on the list type:\n"
@@ -224,9 +268,10 @@ FUNCTION_DESCRIPTIONS = {
         "Example (range): get_item(vault, 'sst2_documents', 4, 7) → ['text 4', 'text 5', 'text 6']"
     ),
     "get_item_names": (
-        "get_item_names(vault, item_type)\n"
+        "get_item_names(vault, item_type, n_items=None)\n"
         "Return a sorted List[str] of all item list names of a given type.\n"
         "item_type must be one of: 'embedding_list', 'document_list', 'record_list', 'file_list'.\n"
+        "n_items: if provided, return only the first n_items names; if None, return all.\n"
         "Example: get_item_names(vault, 'record_list') → ['clf_outputs', 'eval_scores', ...]"
     ),
     "get_code": (
@@ -237,46 +282,51 @@ FUNCTION_DESCRIPTIONS = {
         "first recorded code block."
     ),
     "get_code_names": (
-        "get_code_names(vault)\n"
+        "get_code_names(vault, n_items=None)\n"
         "Return a sorted List[str] of all registered names of executed code processes in the vault.\n"
+        "n_items: if provided, return only the first n_items names; if None, return all.\n"
         "Example: ['build_embeddings', 'classify_articles', 'score_predictions']"
     ),
     "code_search": (
-        "code_search(vault, code)\n"
+        "code_search(vault, code, n_items=None)\n"
         "Full-text search over registered code by source-code content.\n"
         "Returns List[str] of unique code process names whose source matches the query string.\n"
+        "n_items: if provided, return only the first n_items results; if None, return all.\n"
         "Example: code_search(vault, 'cosine_similarity') → ['build_embeddings', 'rank_docs']"
     ),
     "embedding_search": (
-        "embedding_search(vault, embedding)\n"
+        "embedding_search(vault, embedding, n_items=None)\n"
         "Nearest-neighbour search over embedding_list items using a pre-computed vector.\n"
         "embedding must be a List[float] matching the vault's configured vector dimensionality. "
         "To discover the dimensionality, fetch any entry from a known embedding list: "
         "ndim = len(get_item(vault, emb_list_name, 0, 1)[0]).\n"
         "Returns List[[item_name: str, start_position: int]] ranked by cosine similarity.\n"
         "start_position is the index of the matching entry within that list.\n"
+        "n_items: if provided, return only the top n_items results; if None, return all.\n"
         "Example: results = embedding_search(vault, my_vec); "
         "item_name, pos = results[0][0], results[0][1]; "
         "entry = get_item(vault, item_name, pos, pos+1)[0]"
     ),
     "record_search": (
-        "record_search(vault, record_text)\n"
+        "record_search(vault, record_text, n_items=None)\n"
         "Full-text search over record_list items by their field values.\n"
         "Returns List[str] of item list names (not individual row identifiers) "
         "whose records contain text matching the query.\n"
+        "n_items: if provided, return only the first n_items results; if None, return all.\n"
         "Example: record_search(vault, 'World') → ['ag_news_clf_outputs', 'topic_records']"
     ),
     "document_search": (
-        "document_search(vault, document_text)\n"
+        "document_search(vault, document_text, n_items=None)\n"
         "Full-text search over document_list items by text content.\n"
         "Returns List[[item_name: str, start_position: int]] for each matching document chunk.\n"
         "start_position is the index of the matching chunk within that list.\n"
+        "n_items: if provided, return only the first n_items results; if None, return all.\n"
         "Example: results = document_search(vault, 'neural network'); "
         "name, pos = results[0][0], results[0][1]; "
         "chunk = get_item(vault, name, pos, pos+1)[0]"
     ),
     "description_search": (
-        "description_search(vault, description_text)\n"
+        "description_search(vault, description_text, n_items=None)\n"
         "Full-text keyword search over the primary (BASE) descriptions of data item lists "
         "(document_list, embedding_list, record_list, file_list).\n"
         "Each item list may have a long free-text description summarising its contents, "
@@ -290,10 +340,11 @@ FUNCTION_DESCRIPTIONS = {
         "  text      — the full description text\n"
         "  item_name — name of the matching item list\n"
         "  item_type — one of 'embedding_list', 'document_list', 'record_list', 'file_list'\n"
+        "n_items: if provided, return only the first n_items results; if None, return all.\n"
         "Example: results = description_search(vault, 'sentiment'); item_name = results[0][2]"
     ),
     "description_embedding_search": (
-        "description_embedding_search(vault, description_text)\n"
+        "description_embedding_search(vault, description_text, n_items=10)\n"
         "Semantic similarity search over the primary (BASE) descriptions of data item lists. "
         "Accepts a plain-text query; internally converts it to an OpenAI embedding and searches "
         "by cosine similarity.\n"
@@ -306,11 +357,12 @@ FUNCTION_DESCRIPTIONS = {
         "  text      — the full description text\n"
         "  item_name — name of the matching item list (index [2])\n"
         "  item_type — one of 'embedding_list', 'document_list', 'record_list', 'file_list'\n"
+        "n_items: if provided, return only the top n_items results; defaults to 10.\n"
         "Example: results = description_embedding_search(vault, 'text vectors for reviews'); "
         "item_name = results[0][2]"
     ),
     "properties_search": (
-        "properties_search(vault, description_text)\n"
+        "properties_search(vault, description_text, n_items=10)\n"
         "Semantic similarity search over the property names (labels) of data item lists. "
         "Properties are short key-value metadata attached to an item list, separate from its "
         "primary description. The property name (label) describes what the value represents — "
@@ -324,6 +376,7 @@ FUNCTION_DESCRIPTIONS = {
         "  text      — the property value (e.g. 'gpt-4o-mini', 'train', '1b')\n"
         "  item_name — name of the item list that has this property\n"
         "  item_type — one of 'embedding_list', 'document_list', 'record_list', 'file_list'\n"
+        "n_items: if provided, return only the top n_items results; defaults to 10.\n"
         "Example: results = properties_search(vault, 'language model'); "
         "prop_name, prop_value, item_name = results[0][0], results[0][1], results[0][2]"
     ),
@@ -380,7 +433,7 @@ FUNCTION_DESCRIPTIONS = {
         "child_name = records[0][3]"
     ),
     "code_description_search": (
-        "code_description_search(vault, description_text)\n"
+        "code_description_search(vault, description_text, n_items=10)\n"
         "Full-text keyword search over the primary (BASE) descriptions of registered code.\n"
         "Each code entry may have a long free-text description summarising what the code does, "
         "its inputs/outputs, and its role in the pipeline. For example: 'This code classifies "
@@ -392,11 +445,12 @@ FUNCTION_DESCRIPTIONS = {
         "  label     — 'BASE' (primary description identifier)\n"
         "  text      — the full description text\n"
         "  code_name — name of the matching code entry (index [2])\n"
+        "n_items: if provided, return only the first n_items results; defaults to 10.\n"
         "Example: results = code_description_search(vault, 'zero-shot classification'); "
         "code_name = results[0][2]"
     ),
     "code_description_embedding_search": (
-        "code_description_embedding_search(vault, description_text)\n"
+        "code_description_embedding_search(vault, description_text, n_items=10)\n"
         "Semantic similarity search over the primary (BASE) descriptions of registered code. "
         "Accepts a plain-text query; internally converts it to an OpenAI embedding and searches "
         "by cosine similarity.\n"
@@ -409,11 +463,12 @@ FUNCTION_DESCRIPTIONS = {
         "  label     — 'BASE' (primary description identifier)\n"
         "  text      — the full description text\n"
         "  code_name — name of the matching code entry (index [2])\n"
+        "n_items: if provided, return only the top n_items results; defaults to 10.\n"
         "Example: results = code_description_embedding_search(vault, 'LLM-based labelling'); "
         "code_name = results[0][2]"
     ),
     "code_properties_search": (
-        "code_properties_search(vault, description_text)\n"
+        "code_properties_search(vault, description_text, n_items=10)\n"
         "Semantic similarity search over the property names (labels) of registered code. "
         "Code entries can have short key-value properties describing metadata about the "
         "execution — for example: label='ai_model', value='gpt-4o-mini'; "
@@ -425,6 +480,7 @@ FUNCTION_DESCRIPTIONS = {
         "  label     — the property name (e.g. 'ai_model', 'framework')\n"
         "  text      — the property value (e.g. 'gpt-4o-mini', 'openai')\n"
         "  code_name — name of the code entry that has this property (index [2])\n"
+        "n_items: if provided, return only the top n_items results; defaults to 10.\n"
         "Example: results = code_properties_search(vault, 'language model'); "
         "prop_name, prop_value, code_name = results[0][0], results[0][1], results[0][2]"
     ),

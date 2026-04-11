@@ -1,0 +1,2510 @@
+{
+  "run_id": "20260411T024251Z",
+  "timestamp": "2026-04-11T02:42:51.273416+00:00",
+  "model": "gpt-5.4",
+  "task": "How does the pooling strategy used to extract sentence representations from DistilBERT affect paraphrase detection accuracy on MRPC?",
+  "system_prompt": "You are a data analyst assistant with access to a TableVault repository.\n\nYour goal is to investigate the repository and extract **structured evidence**\nrelevant to the user task.\n\nThe final output should summarize the evidence stored in the TableVault\nrepository in the form of:\n\n1. a **results table** (structured rows), and\n2. a **scientific-style summary** interpreting that evidence.\n\nThe results table should represent **summary evidence extracted from the\nrepository**. Each row corresponds to a piece of evidence such as an experiment\nresult, dataset observation, workflow output, or other structured record.\n\nExample result table schemas:\n\nExample 1 \u2014 workflow evaluation evidence\n\n[\n  {\n    \"workflow\": \"baseline_xgboost\",\n    \"model\": \"xgboost\",\n    \"running_time\": 132.4,\n    \"accuracy\": 0.91\n  },\n  {\n    \"workflow\": \"llm_augmented_pipeline\",\n    \"model\": \"gpt-4o-mini\",\n    \"running_time\": 245.8,\n    \"accuracy\": 0.94\n  }\n]\n\nExample 2 \u2014 sample-level classification evidence\n\n[\n  {\n    \"data_sample\": \"sample_001\",\n    \"true_label\": \"sports\",\n    \"predicted_label\": \"sports\",\n    \"reasoning_strategy\": \"few-shot classification\"\n  },\n  {\n    \"data_sample\": \"sample_002\",\n    \"true_label\": \"business\",\n    \"predicted_label\": \"technology\",\n    \"reasoning_strategy\": \"two-step reasoning + classification\"\n  }\n]\n\nThe columns depend on what evidence exists in the repository. Choose columns\nthat best summarize the relevant structured evidence. Don't include unnecessary columns.\n\n------------------------------------------------------------\n\n## What is TableVault?\n\nTableVault is a centralized data repository (backed by ArangoDB) that stores\n**item lists** \u2014 ordered collections of data items. Every item list has a\nunique name and belongs to one of four types:\n\n| Type          | Stores                                         |\n|---------------|------------------------------------------------|\n| **file**      | References (paths) to external files           |\n| **document**  | Text strings (paragraphs, logs, notes, etc.)   |\n| **embedding** | Fixed-dimension float vectors                  |\n| **record**    | Structured rows (dict with predefined columns) |\n\n------------------------------------------------------------\n\n## How data gets into TableVault\n\nData is ingested by Python processes. A Python script or notebook initialises\na `Vault` object, and then calls `append_*` helpers to add items to the\nrelevant lists.\n\nThere may also be additional context about the lists stored in the repository.\nThe available tool functions expose what context is accessible.\n\n------------------------------------------------------------\n\n## Tools\n\nCall the available TableVault query functions directly as tool calls \u2014 you do\nnot need to write Python code. Use `finalize_result` to return the final answer.\n\n## Search strategy\n\nWork in two phases:\n\n**Phase 1 \u2014 Discovery:** Use only search and listing functions to identify\ncandidate item and code names. Do NOT read full item content yet (`get_item`\nand `get_code` should not be called in this phase). Collect all plausible\ncandidates first, then assess which are relevant to the task.\n\n**Phase 2 \u2014 Selection and reading:** From your candidates, select the most\nrepresentative subset that covers the different methodological conditions\nrelevant to the task. Read only that subset in detail. Avoid reading items\nthat are redundant with others already selected.\n\n------------------------------------------------------------\n\n## Rules\n\n- Always act via tool calls \u2014 never just describe what you would do.\n- On errors, read the error message and retry with corrected arguments.\n- **Do not make direct HuggingFace model calls** \u2014 all model inference results\n  are pre-computed and stored in the TableVault repository. Retrieve them there.\n\n------------------------------------------------------------\n\n## Your output\n\nWhen you have enough information, call `finalize_result` with exactly this shape:\n\n{\n  \"rows\": [\n    {\"column1\": \"value1\", \"column2\": \"value2\"}\n  ],\n  \"summary\": \"Scientific-style description of the evidence and interpretation.\"\n}\n\n------------------------------------------------------------\n\n## Summary expectations\n\nThe **summary** should interpret the evidence in a research-style description.\nIt should explain:\n\n\u2022 what the repository evidence suggests about the user's task\n\u2022 key findings or patterns in the retrieved data\n\u2022 notable issues, biases, or inconsistencies in existing workflows or results\n\u2022 limitations or gaps in the available evidence\n\u2022 how the returned table should be interpreted\n\nThe summary should read like a short analytical explanation of the evidence,\nnot just a description of the table.\n\n------------------------------------------------------------\n",
+  "turns": [
+    {
+      "turn": 0,
+      "model_input": {
+        "pending_messages": [
+          {
+            "role": "user",
+            "content": "How does the pooling strategy used to extract sentence representations from DistilBERT affect paraphrase detection accuracy on MRPC?"
+          }
+        ],
+        "previous_response_id": "resp_0c9826dea94254760069d9b52b545c819998dba8fd486b0587"
+      },
+      "model_output": {
+        "response_id": "resp_0c9826dea94254760069d9b52b545c819998dba8fd486b0587",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "properties_search",
+            "call_id": "call_252Y2QNMGRAykRrHdHflsPoO",
+            "arguments": {
+              "description_text": "dataset"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "properties_search",
+        "call_id": "call_252Y2QNMGRAykRrHdHflsPoO",
+        "arguments": {
+          "description_text": "dataset"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          [
+            "dataset",
+            "MRPC",
+            "sentence-transformers-sentence-2-max64",
+            "embedding_list"
+          ],
+          [
+            "dataset",
+            "MRPC",
+            "cosine_mrpc_max_pool_similarity_prediction",
+            "record_list"
+          ],
+          [
+            "dataset",
+            "GLUE MRPC",
+            "hf_pipeline_mrpc_short_maxlen_64_summary",
+            "record_list"
+          ],
+          [
+            "dataset",
+            "GLUE MRPC",
+            "hf_pipeline_mrpc_threshold_070_summary",
+            "record_list"
+          ],
+          [
+            "dataset",
+            "GLUE MRPC",
+            "pipeline_distilbert_softmax_probs",
+            "record_list"
+          ],
+          [
+            "dataset",
+            "MRPC",
+            "glue_mrpc_validation",
+            "record_list"
+          ],
+          [
+            "dataset",
+            "GLUE MRPC",
+            "quora_cross_encoder_softmax_threshold_065_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "dataset",
+            "MRPC",
+            "quora_cross_encoder_max_length_64_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "dataset",
+            "GLUE MRPC",
+            "hf_pipeline_mrpc_margin_rule_summary",
+            "record_list"
+          ],
+          [
+            "dataset",
+            "MRPC",
+            "flan_t5_full_answer_logprob_mrpc_summary",
+            "record_list"
+          ]
+        ]
+      },
+      "metrics": {
+        "input_tokens": 1809,
+        "output_tokens": 219,
+        "reasoning_tokens": 198,
+        "conversation_tokens": 0,
+        "api_latency_s": 3.5714,
+        "exec_latency_s": 0.3209
+      },
+      "error": null
+    },
+    {
+      "turn": 1,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_252Y2QNMGRAykRrHdHflsPoO",
+            "output": "{\"ok\": true, \"result\": [[\"dataset\", \"MRPC\", \"sentence-transformers-sentence-2-max64\", \"embedding_list\"], [\"dataset\", \"MRPC\", \"cosine_mrpc_max_pool_similarity_prediction\", \"record_list\"], [\"dataset\", \"GLUE MRPC\", \"hf_pipeline_mrpc_short_maxlen_64_summary\", \"record_list\"], [\"dataset\", \"GLUE MRPC\", \"hf_pipeline_mrpc_threshold_070_summary\", \"record_list\"], [\"dataset\", \"GLUE MRPC\", \"pipeline_distilbert_softmax_probs\", \"record_list\"], [\"dataset\", \"MRPC\", \"glue_mrpc_validation\", \"record_list\"], [\"dataset\", \"GLUE MRPC\", \"quora_cross_encoder_softmax_threshold_065_mrpc_summary\", \"record_list\"], [\"dataset\", \"MRPC\", \"quora_cross_encoder_max_length_64_mrpc_summary\", \"record_list\"], [\"dataset\", \"GLUE MRPC\", \"hf_pipeline_mrpc_margin_rule_summary\", \"record_list\"], [\"dataset\", \"MRPC\", \"flan_t5_full_answer_logprob_mrpc_summary\", \"record_list\"]]}"
+          }
+        ],
+        "previous_response_id": "resp_0c9826dea94254760069d9b52f37248199a4a93e6c3d05acb2"
+      },
+      "model_output": {
+        "response_id": "resp_0c9826dea94254760069d9b52f37248199a4a93e6c3d05acb2",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "properties_search",
+            "call_id": "call_onGSqgqQ6ztkSNkRW8mbnnad",
+            "arguments": {
+              "description_text": "pooling strategy"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "properties_search",
+        "call_id": "call_onGSqgqQ6ztkSNkRW8mbnnad",
+        "arguments": {
+          "description_text": "pooling strategy"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          [
+            "pooling",
+            "mean pooling",
+            "distilbert_mean_cosine_median_threshold_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "pooling",
+            "masked max pooling",
+            "cosine_mrpc_max_pool_similarity_prediction",
+            "record_list"
+          ],
+          [
+            "inference_strategy",
+            "bidirectional consensus then average entailment-contradiction margin",
+            "mrpc_gate_margin_prediction",
+            "record_list"
+          ],
+          [
+            "inference_strategy",
+            "symmetric average of forward and reversed pair scores",
+            "quora_cross_encoder_symmetric_average_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "embedding_pooling",
+            "mean pooling",
+            "threshold_cosine_mrpc_similarity_prediction",
+            "record_list"
+          ],
+          [
+            "embedding_pooling",
+            "mean excluding special tokens",
+            "distilbert_no_special_tokens_mean_cosine_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "embedding_pooling",
+            "masked max pooling",
+            "distilbert_max_pool_cosine_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "embedding_pooling",
+            "mean pooling excluding [CLS] and [SEP]",
+            "no_special_cosine_mrpc_similarity_prediction",
+            "record_list"
+          ],
+          [
+            "threshold_strategy",
+            "median threshold",
+            "distilbert_mean_cosine_median_threshold_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "sampling",
+            "first 10 misclassifications",
+            "mrpc_paraphrase_inference_distilbert_mistakes",
+            "record_list"
+          ]
+        ]
+      },
+      "metrics": {
+        "input_tokens": 2276,
+        "output_tokens": 41,
+        "reasoning_tokens": 18,
+        "conversation_tokens": 329,
+        "api_latency_s": 1.6252,
+        "exec_latency_s": 0.3508
+      },
+      "error": null
+    },
+    {
+      "turn": 2,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_onGSqgqQ6ztkSNkRW8mbnnad",
+            "output": "{\"ok\": true, \"result\": [[\"pooling\", \"mean pooling\", \"distilbert_mean_cosine_median_threshold_mrpc_summary\", \"record_list\"], [\"pooling\", \"masked max pooling\", \"cosine_mrpc_max_pool_similarity_prediction\", \"record_list\"], [\"inference_strategy\", \"bidirectional consensus then average entailment-contradiction margin\", \"mrpc_gate_margin_prediction\", \"record_list\"], [\"inference_strategy\", \"symmetric average of forward and reversed pair scores\", \"quora_cross_encoder_symmetric_average_mrpc_summary\", \"record_list\"], [\"embedding_pooling\", \"mean pooling\", \"threshold_cosine_mrpc_similarity_prediction\", \"record_list\"], [\"embedding_pooling\", \"mean excluding special tokens\", \"distilbert_no_special_tokens_mean_cosine_mrpc_summary\", \"record_list\"], [\"embedding_pooling\", \"masked max pooling\", \"distilbert_max_pool_cosine_mrpc_summary\", \"record_list\"], [\"embedding_pooling\", \"mean pooling excluding [CLS] and [SEP]\", \"no_special_cosine_mrpc_similarity_prediction\", \"record_list\"], [\"threshold_strategy\", \"median threshold\", \"distilbert_mean_cosine_median_threshold_mrpc_summary\", \"record_list\"], [\"sampling\", \"first 10 misclassifications\", \"mrpc_paraphrase_inference_distilbert_mistakes\", \"record_list\"]]}"
+          }
+        ],
+        "previous_response_id": "resp_0c9826dea94254760069d9b53134588199b2f8fd8bc1f1c28b"
+      },
+      "model_output": {
+        "response_id": "resp_0c9826dea94254760069d9b53134588199b2f8fd8bc1f1c28b",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item_properties",
+            "call_id": "call_hgNAmCMA8q2XwCXCACt6eoSn",
+            "arguments": {
+              "name": "distilbert_mean_cosine_median_threshold_mrpc_summary"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item_properties",
+        "call_id": "call_hgNAmCMA8q2XwCXCACt6eoSn",
+        "arguments": {
+          "name": "distilbert_mean_cosine_median_threshold_mrpc_summary"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": {
+          "process_name": "distilbert_mean_cosine_median_threshold_mrpc",
+          "upstream_prediction_dataset": "threshold_cosine_mrpc_similarity_prediction",
+          "framework": "transformers+pytorch",
+          "metrics": "accuracy,f1,classification_report",
+          "prediction_type": "binary classification",
+          "threshold_strategy": "median threshold",
+          "similarity_metric": "cosine similarity",
+          "pooling": "mean pooling",
+          "embedding_type": "sentence embedding from last hidden state",
+          "model": "distilbert-base-uncased",
+          "size": "408",
+          "split": "validation",
+          "source": "glue/mrpc",
+          "dataset_role": "evaluation summary",
+          "task": "paraphrase detection"
+        }
+      },
+      "metrics": {
+        "input_tokens": 2611,
+        "output_tokens": 154,
+        "reasoning_tokens": 122,
+        "conversation_tokens": 664,
+        "api_latency_s": 3.9908,
+        "exec_latency_s": 0.014
+      },
+      "error": null
+    },
+    {
+      "turn": 3,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_hgNAmCMA8q2XwCXCACt6eoSn",
+            "output": "{\"ok\": true, \"result\": {\"process_name\": \"distilbert_mean_cosine_median_threshold_mrpc\", \"upstream_prediction_dataset\": \"threshold_cosine_mrpc_similarity_prediction\", \"framework\": \"transformers+pytorch\", \"metrics\": \"accuracy,f1,classification_report\", \"prediction_type\": \"binary classification\", \"threshold_strategy\": \"median threshold\", \"similarity_metric\": \"cosine similarity\", \"pooling\": \"mean pooling\", \"embedding_type\": \"sentence embedding from last hidden state\", \"model\": \"distilbert-base-uncased\", \"size\": \"408\", \"split\": \"validation\", \"source\": \"glue/mrpc\", \"dataset_role\": \"evaluation summary\", \"task\": \"paraphrase detection\"}}"
+          }
+        ],
+        "previous_response_id": "resp_0c9826dea94254760069d9b5353534819996ea204b3802f474"
+      },
+      "model_output": {
+        "response_id": "resp_0c9826dea94254760069d9b5353534819996ea204b3802f474",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item_properties",
+            "call_id": "call_FcgEjeCKWWwM3mPRWgAYOQBG",
+            "arguments": {
+              "name": "distilbert_no_special_tokens_mean_cosine_mrpc_summary"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item_properties",
+        "call_id": "call_FcgEjeCKWWwM3mPRWgAYOQBG",
+        "arguments": {
+          "name": "distilbert_no_special_tokens_mean_cosine_mrpc_summary"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": {
+          "upstream_prediction_dataset": "no_special_cosine_mrpc_similarity_prediction",
+          "decision_rule": "threshold >= 0.85",
+          "similarity_metric": "cosine similarity",
+          "embedding_pooling": "mean excluding special tokens",
+          "label_type": "binary",
+          "input_type": "sentence pairs",
+          "model": "distilbert-base-uncased",
+          "size": "408",
+          "split": "validation",
+          "source": "glue/mrpc",
+          "task": "paraphrase detection",
+          "artifact_type": "evaluation summary"
+        }
+      },
+      "metrics": {
+        "input_tokens": 2933,
+        "output_tokens": 30,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 986,
+        "api_latency_s": 1.3356,
+        "exec_latency_s": 0.0176
+      },
+      "error": null
+    },
+    {
+      "turn": 4,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_FcgEjeCKWWwM3mPRWgAYOQBG",
+            "output": "{\"ok\": true, \"result\": {\"upstream_prediction_dataset\": \"no_special_cosine_mrpc_similarity_prediction\", \"decision_rule\": \"threshold >= 0.85\", \"similarity_metric\": \"cosine similarity\", \"embedding_pooling\": \"mean excluding special tokens\", \"label_type\": \"binary\", \"input_type\": \"sentence pairs\", \"model\": \"distilbert-base-uncased\", \"size\": \"408\", \"split\": \"validation\", \"source\": \"glue/mrpc\", \"task\": \"paraphrase detection\", \"artifact_type\": \"evaluation summary\"}}"
+          }
+        ],
+        "previous_response_id": "resp_0c9826dea94254760069d9b536903c8199a6848990eb88f11a"
+      },
+      "model_output": {
+        "response_id": "resp_0c9826dea94254760069d9b536903c8199a6848990eb88f11a",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item_properties",
+            "call_id": "call_YZAO9RGwQap2Vx4K6hVf0zXy",
+            "arguments": {
+              "name": "distilbert_max_pool_cosine_mrpc_summary"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item_properties",
+        "call_id": "call_YZAO9RGwQap2Vx4K6hVf0zXy",
+        "arguments": {
+          "name": "distilbert_max_pool_cosine_mrpc_summary"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": {
+          "process": "distilbert_max_pool_cosine_mrpc",
+          "outputs": "accuracy, f1, classification report",
+          "inputs": "sentence pair",
+          "threshold": "0.85",
+          "decision_rule": "threshold-based binary classification",
+          "similarity_metric": "cosine similarity",
+          "embedding_pooling": "masked max pooling",
+          "model": "distilbert-base-uncased",
+          "size": "408",
+          "split": "validation",
+          "source": "glue/mrpc",
+          "dataset_type": "evaluation summary",
+          "task": "paraphrase detection"
+        }
+      },
+      "metrics": {
+        "input_tokens": 3097,
+        "output_tokens": 28,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 1150,
+        "api_latency_s": 1.2529,
+        "exec_latency_s": 0.0149
+      },
+      "error": null
+    },
+    {
+      "turn": 5,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_YZAO9RGwQap2Vx4K6hVf0zXy",
+            "output": "{\"ok\": true, \"result\": {\"process\": \"distilbert_max_pool_cosine_mrpc\", \"outputs\": \"accuracy, f1, classification report\", \"inputs\": \"sentence pair\", \"threshold\": \"0.85\", \"decision_rule\": \"threshold-based binary classification\", \"similarity_metric\": \"cosine similarity\", \"embedding_pooling\": \"masked max pooling\", \"model\": \"distilbert-base-uncased\", \"size\": \"408\", \"split\": \"validation\", \"source\": \"glue/mrpc\", \"dataset_type\": \"evaluation summary\", \"task\": \"paraphrase detection\"}}"
+          }
+        ],
+        "previous_response_id": "resp_0c9826dea94254760069d9b537d4188199838d87962e0a7233"
+      },
+      "model_output": {
+        "response_id": "resp_0c9826dea94254760069d9b537d4188199838d87962e0a7233",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "properties_search",
+            "call_id": "call_2mghJIkn1XeDYvYIYCAbahZF",
+            "arguments": {
+              "description_text": "embedding pooling"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "properties_search",
+        "call_id": "call_2mghJIkn1XeDYvYIYCAbahZF",
+        "arguments": {
+          "description_text": "embedding pooling"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          [
+            "embedding_pooling",
+            "mean pooling",
+            "threshold_cosine_mrpc_similarity_prediction",
+            "record_list"
+          ],
+          [
+            "embedding_pooling",
+            "mean excluding special tokens",
+            "distilbert_no_special_tokens_mean_cosine_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "embedding_pooling",
+            "masked max pooling",
+            "distilbert_max_pool_cosine_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "embedding_pooling",
+            "mean pooling excluding [CLS] and [SEP]",
+            "no_special_cosine_mrpc_similarity_prediction",
+            "record_list"
+          ],
+          [
+            "embedding_normalization",
+            "true",
+            "minilm_cosine_threshold_prediction",
+            "record_list"
+          ],
+          [
+            "embedding_dim",
+            "384",
+            "sentence-transformers-sentence-2-threshold",
+            "embedding_list"
+          ],
+          [
+            "embedding_dim",
+            "768",
+            "sentence-transformers-sentence-2-threshold_2",
+            "embedding_list"
+          ],
+          [
+            "embedding_dim",
+            "384",
+            "sentence-transformers-sentence-1-threshold",
+            "embedding_list"
+          ],
+          [
+            "embedding_dim",
+            "384",
+            "sentence-transformers-sentence-2-max64",
+            "embedding_list"
+          ],
+          [
+            "embedding_dim",
+            "384",
+            "sentence-transformers-sentence-1-max64",
+            "embedding_list"
+          ]
+        ]
+      },
+      "metrics": {
+        "input_tokens": 3266,
+        "output_tokens": 46,
+        "reasoning_tokens": 24,
+        "conversation_tokens": 1319,
+        "api_latency_s": 1.1686,
+        "exec_latency_s": 0.2608
+      },
+      "error": null
+    },
+    {
+      "turn": 6,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_2mghJIkn1XeDYvYIYCAbahZF",
+            "output": "{\"ok\": true, \"result\": [[\"embedding_pooling\", \"mean pooling\", \"threshold_cosine_mrpc_similarity_prediction\", \"record_list\"], [\"embedding_pooling\", \"mean excluding special tokens\", \"distilbert_no_special_tokens_mean_cosine_mrpc_summary\", \"record_list\"], [\"embedding_pooling\", \"masked max pooling\", \"distilbert_max_pool_cosine_mrpc_summary\", \"record_list\"], [\"embedding_pooling\", \"mean pooling excluding [CLS] and [SEP]\", \"no_special_cosine_mrpc_similarity_prediction\", \"record_list\"], [\"embedding_normalization\", \"true\", \"minilm_cosine_threshold_prediction\", \"record_list\"], [\"embedding_dim\", \"384\", \"sentence-transformers-sentence-2-threshold\", \"embedding_list\"], [\"embedding_dim\", \"768\", \"sentence-transformers-sentence-2-threshold_2\", \"embedding_list\"], [\"embedding_dim\", \"384\", \"sentence-transformers-sentence-1-threshold\", \"embedding_list\"], [\"embedding_dim\", \"384\", \"sentence-transformers-sentence-2-max64\", \"embedding_list\"], [\"embedding_dim\", \"384\", \"sentence-transformers-sentence-1-max64\", \"embedding_list\"]]}"
+          }
+        ],
+        "previous_response_id": "resp_0c9826dea94254760069d9b539412c81998bb33a498b3e1123"
+      },
+      "model_output": {
+        "response_id": "resp_0c9826dea94254760069d9b539412c81998bb33a498b3e1123",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "properties_search",
+            "call_id": "call_LqwBWAsxzbP3sH0uMDW7Q5LZ",
+            "arguments": {
+              "description_text": "pooling"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "properties_search",
+        "call_id": "call_LqwBWAsxzbP3sH0uMDW7Q5LZ",
+        "arguments": {
+          "description_text": "pooling"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          [
+            "pooling",
+            "mean pooling",
+            "distilbert_mean_cosine_median_threshold_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "pooling",
+            "masked max pooling",
+            "cosine_mrpc_max_pool_similarity_prediction",
+            "record_list"
+          ],
+          [
+            "embedding_pooling",
+            "mean pooling",
+            "threshold_cosine_mrpc_similarity_prediction",
+            "record_list"
+          ],
+          [
+            "embedding_pooling",
+            "masked max pooling",
+            "distilbert_max_pool_cosine_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "embedding_pooling",
+            "mean excluding special tokens",
+            "distilbert_no_special_tokens_mean_cosine_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "embedding_pooling",
+            "mean pooling excluding [CLS] and [SEP]",
+            "no_special_cosine_mrpc_similarity_prediction",
+            "record_list"
+          ],
+          [
+            "sampling",
+            "first 10 misclassifications",
+            "mrpc_paraphrase_inference_distilbert_mistakes",
+            "record_list"
+          ],
+          [
+            "dataset",
+            "MRPC",
+            "min_direction_margin_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "dataset",
+            "MRPC",
+            "flan_t5_full_answer_logprob_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "dataset",
+            "GLUE MRPC",
+            "hf_pipeline_mrpc_threshold_070_summary",
+            "record_list"
+          ]
+        ]
+      },
+      "metrics": {
+        "input_tokens": 3571,
+        "output_tokens": 34,
+        "reasoning_tokens": 12,
+        "conversation_tokens": 1624,
+        "api_latency_s": 1.2779,
+        "exec_latency_s": 0.3042
+      },
+      "error": null
+    },
+    {
+      "turn": 7,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_LqwBWAsxzbP3sH0uMDW7Q5LZ",
+            "output": "{\"ok\": true, \"result\": [[\"pooling\", \"mean pooling\", \"distilbert_mean_cosine_median_threshold_mrpc_summary\", \"record_list\"], [\"pooling\", \"masked max pooling\", \"cosine_mrpc_max_pool_similarity_prediction\", \"record_list\"], [\"embedding_pooling\", \"mean pooling\", \"threshold_cosine_mrpc_similarity_prediction\", \"record_list\"], [\"embedding_pooling\", \"masked max pooling\", \"distilbert_max_pool_cosine_mrpc_summary\", \"record_list\"], [\"embedding_pooling\", \"mean excluding special tokens\", \"distilbert_no_special_tokens_mean_cosine_mrpc_summary\", \"record_list\"], [\"embedding_pooling\", \"mean pooling excluding [CLS] and [SEP]\", \"no_special_cosine_mrpc_similarity_prediction\", \"record_list\"], [\"sampling\", \"first 10 misclassifications\", \"mrpc_paraphrase_inference_distilbert_mistakes\", \"record_list\"], [\"dataset\", \"MRPC\", \"min_direction_margin_mrpc_summary\", \"record_list\"], [\"dataset\", \"MRPC\", \"flan_t5_full_answer_logprob_mrpc_summary\", \"record_list\"], [\"dataset\", \"GLUE MRPC\", \"hf_pipeline_mrpc_threshold_070_summary\", \"record_list\"]]}"
+          }
+        ],
+        "previous_response_id": "resp_0c9826dea94254760069d9b53adb988199a217b7bf77970c3e"
+      },
+      "model_output": {
+        "response_id": "resp_0c9826dea94254760069d9b53adb988199a217b7bf77970c3e",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_dfA1jUdXOjveowe3V7qxzwVj",
+            "arguments": {
+              "item_name": "distilbert_mean_cosine_median_threshold_mrpc_summary",
+              "start_position": null,
+              "end_position": null
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_dfA1jUdXOjveowe3V7qxzwVj",
+        "arguments": {
+          "item_name": "distilbert_mean_cosine_median_threshold_mrpc_summary",
+          "start_position": null,
+          "end_position": null
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.6495098039215687,
+            "f1": 0.7039337474120083,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.47      0.74      0.57       129\n    paraphrase       0.83      0.61      0.70       279\n\n      accuracy                           0.65       408\n     macro avg       0.65      0.67      0.64       408\n  weighted avg       0.72      0.65      0.66       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 3877,
+        "output_tokens": 82,
+        "reasoning_tokens": 40,
+        "conversation_tokens": 1930,
+        "api_latency_s": 2.2236,
+        "exec_latency_s": 0.0073
+      },
+      "error": null
+    },
+    {
+      "turn": 8,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_dfA1jUdXOjveowe3V7qxzwVj",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.6495098039215687, \"f1\": 0.7039337474120083, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.47      0.74      0.57       129\\n    paraphrase       0.83      0.61      0.70       279\\n\\n      accuracy                           0.65       408\\n     macro avg       0.65      0.67      0.64       408\\n  weighted avg       0.72      0.65      0.66       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_0c9826dea94254760069d9b53d1b748199aaab4b03a540fdeb"
+      },
+      "model_output": {
+        "response_id": "resp_0c9826dea94254760069d9b53d1b748199aaab4b03a540fdeb",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_dCrcxrj0JJlophKgDoPP36lU",
+            "arguments": {
+              "item_name": "distilbert_no_special_tokens_mean_cosine_mrpc_summary",
+              "start_position": null,
+              "end_position": null
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_dCrcxrj0JJlophKgDoPP36lU",
+        "arguments": {
+          "item_name": "distilbert_no_special_tokens_mean_cosine_mrpc_summary",
+          "start_position": null,
+          "end_position": null
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.7034313725490197,
+            "f1": 0.8212703101920237,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.90      0.07      0.13       129\n    paraphrase       0.70      1.00      0.82       279\n\n      accuracy                           0.70       408\n     macro avg       0.80      0.53      0.48       408\n  weighted avg       0.76      0.70      0.60       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 4125,
+        "output_tokens": 40,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 2178,
+        "api_latency_s": 1.1824,
+        "exec_latency_s": 0.0065
+      },
+      "error": null
+    },
+    {
+      "turn": 9,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_dCrcxrj0JJlophKgDoPP36lU",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.7034313725490197, \"f1\": 0.8212703101920237, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.90      0.07      0.13       129\\n    paraphrase       0.70      1.00      0.82       279\\n\\n      accuracy                           0.70       408\\n     macro avg       0.80      0.53      0.48       408\\n  weighted avg       0.76      0.70      0.60       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_0c9826dea94254760069d9b53e42b88199b01b0ca858118323"
+      },
+      "model_output": {
+        "response_id": "resp_0c9826dea94254760069d9b53e42b88199b01b0ca858118323",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_AnFuEziyEikSXSi2jlyqojZM",
+            "arguments": {
+              "item_name": "distilbert_max_pool_cosine_mrpc_summary",
+              "start_position": null,
+              "end_position": null
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_AnFuEziyEikSXSi2jlyqojZM",
+        "arguments": {
+          "item_name": "distilbert_max_pool_cosine_mrpc_summary",
+          "start_position": null,
+          "end_position": null
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.6838235294117647,
+            "f1": 0.8122270742358079,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.00      0.00      0.00       129\n    paraphrase       0.68      1.00      0.81       279\n\n      accuracy                           0.68       408\n     macro avg       0.34      0.50      0.41       408\n  weighted avg       0.47      0.68      0.56       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 4331,
+        "output_tokens": 38,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 2384,
+        "api_latency_s": 1.3621,
+        "exec_latency_s": 0.0217
+      },
+      "error": null
+    },
+    {
+      "turn": 10,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_AnFuEziyEikSXSi2jlyqojZM",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.6838235294117647, \"f1\": 0.8122270742358079, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.00      0.00      0.00       129\\n    paraphrase       0.68      1.00      0.81       279\\n\\n      accuracy                           0.68       408\\n     macro avg       0.34      0.50      0.41       408\\n  weighted avg       0.47      0.68      0.56       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_0c9826dea94254760069d9b53faaa481998bd26c44b94c8bf4"
+      },
+      "model_output": {
+        "response_id": "resp_0c9826dea94254760069d9b53faaa481998bd26c44b94c8bf4",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item_properties",
+            "call_id": "call_A38ihTuoCjTO0JbHbWtuCD4P",
+            "arguments": {
+              "name": "threshold_cosine_mrpc_similarity_prediction"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item_properties",
+        "call_id": "call_A38ihTuoCjTO0JbHbWtuCD4P",
+        "arguments": {
+          "name": "threshold_cosine_mrpc_similarity_prediction"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": {
+          "domain": "news",
+          "label_space": "0=not_paraphrase,1=paraphrase",
+          "output_columns": "prediction, cosine_scores",
+          "input_type": "sentence pair",
+          "decision_rule": "median threshold",
+          "similarity_metric": "cosine similarity",
+          "embedding_pooling": "mean pooling",
+          "model": "distilbert-base-uncased",
+          "size": "408",
+          "split": "validation",
+          "source": "glue/mrpc",
+          "dataset_type": "model predictions",
+          "task": "paraphrase detection"
+        }
+      },
+      "metrics": {
+        "input_tokens": 4535,
+        "output_tokens": 122,
+        "reasoning_tokens": 95,
+        "conversation_tokens": 2588,
+        "api_latency_s": 2.4065,
+        "exec_latency_s": 0.0065
+      },
+      "error": null
+    },
+    {
+      "turn": 11,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_A38ihTuoCjTO0JbHbWtuCD4P",
+            "output": "{\"ok\": true, \"result\": {\"domain\": \"news\", \"label_space\": \"0=not_paraphrase,1=paraphrase\", \"output_columns\": \"prediction, cosine_scores\", \"input_type\": \"sentence pair\", \"decision_rule\": \"median threshold\", \"similarity_metric\": \"cosine similarity\", \"embedding_pooling\": \"mean pooling\", \"model\": \"distilbert-base-uncased\", \"size\": \"408\", \"split\": \"validation\", \"source\": \"glue/mrpc\", \"dataset_type\": \"model predictions\", \"task\": \"paraphrase detection\"}}"
+          }
+        ],
+        "previous_response_id": "resp_0c9826dea94254760069d9b5420ee88199985babe4f24e9014"
+      },
+      "model_output": {
+        "response_id": "resp_0c9826dea94254760069d9b5420ee88199985babe4f24e9014",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item_properties",
+            "call_id": "call_TcKosnTxgLiRd7cXvmoBP81x",
+            "arguments": {
+              "name": "cosine_mrpc_max_pool_similarity_prediction"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item_properties",
+        "call_id": "call_TcKosnTxgLiRd7cXvmoBP81x",
+        "arguments": {
+          "name": "cosine_mrpc_max_pool_similarity_prediction"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": {
+          "text_fields": "sentence1,sentence2",
+          "label_space": "0=not_paraphrase, 1=paraphrase",
+          "size": "408",
+          "split": "validation",
+          "dataset": "MRPC",
+          "source": "glue/mrpc",
+          "input_type": "sentence pair",
+          "similarity_threshold": "0.85",
+          "embedding_model": "distilbert-base-uncased",
+          "pooling": "masked max pooling",
+          "score_type": "cosine similarity",
+          "prediction_type": "binary classification",
+          "artifact_type": "prediction dataset",
+          "task": "paraphrase detection"
+        }
+      },
+      "metrics": {
+        "input_tokens": 4796,
+        "output_tokens": 67,
+        "reasoning_tokens": 39,
+        "conversation_tokens": 2849,
+        "api_latency_s": 1.6421,
+        "exec_latency_s": 0.0144
+      },
+      "error": null
+    },
+    {
+      "turn": 12,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_TcKosnTxgLiRd7cXvmoBP81x",
+            "output": "{\"ok\": true, \"result\": {\"text_fields\": \"sentence1,sentence2\", \"label_space\": \"0=not_paraphrase, 1=paraphrase\", \"size\": \"408\", \"split\": \"validation\", \"dataset\": \"MRPC\", \"source\": \"glue/mrpc\", \"input_type\": \"sentence pair\", \"similarity_threshold\": \"0.85\", \"embedding_model\": \"distilbert-base-uncased\", \"pooling\": \"masked max pooling\", \"score_type\": \"cosine similarity\", \"prediction_type\": \"binary classification\", \"artifact_type\": \"prediction dataset\", \"task\": \"paraphrase detection\"}}"
+          }
+        ],
+        "previous_response_id": "resp_0c9826dea94254760069d9b543b99081999e3cb41658dd242d"
+      },
+      "model_output": {
+        "response_id": "resp_0c9826dea94254760069d9b543b99081999e3cb41658dd242d",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item_properties",
+            "call_id": "call_6ruCu8puR037yEfci1sCXTmD",
+            "arguments": {
+              "name": "no_special_cosine_mrpc_similarity_prediction"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item_properties",
+        "call_id": "call_6ruCu8puR037yEfci1sCXTmD",
+        "arguments": {
+          "name": "no_special_cosine_mrpc_similarity_prediction"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": {
+          "token_truncation_max_length": "128",
+          "output_fields": "prediction,cosine_scores",
+          "label_field": "label",
+          "text_fields": "sentence1,sentence2",
+          "threshold": "0.85",
+          "similarity_metric": "cosine similarity",
+          "embedding_pooling": "mean pooling excluding [CLS] and [SEP]",
+          "model": "distilbert-base-uncased",
+          "size": "408",
+          "split": "validation",
+          "source": "glue/mrpc",
+          "dataset_type": "model predictions",
+          "task": "paraphrase detection"
+        }
+      },
+      "metrics": {
+        "input_tokens": 5015,
+        "output_tokens": 26,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 3068,
+        "api_latency_s": 1.3065,
+        "exec_latency_s": 0.008
+      },
+      "error": null
+    },
+    {
+      "turn": 13,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_6ruCu8puR037yEfci1sCXTmD",
+            "output": "{\"ok\": true, \"result\": {\"token_truncation_max_length\": \"128\", \"output_fields\": \"prediction,cosine_scores\", \"label_field\": \"label\", \"text_fields\": \"sentence1,sentence2\", \"threshold\": \"0.85\", \"similarity_metric\": \"cosine similarity\", \"embedding_pooling\": \"mean pooling excluding [CLS] and [SEP]\", \"model\": \"distilbert-base-uncased\", \"size\": \"408\", \"split\": \"validation\", \"source\": \"glue/mrpc\", \"dataset_type\": \"model predictions\", \"task\": \"paraphrase detection\"}}"
+          }
+        ],
+        "previous_response_id": "resp_0c9826dea94254760069d9b54509488199ba9d50881e17e8d4"
+      },
+      "model_output": {
+        "response_id": "resp_0c9826dea94254760069d9b54509488199ba9d50881e17e8d4",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item_properties",
+            "call_id": "call_k0QoB5mk8e0QFjFt8mjiYyoA",
+            "arguments": {
+              "name": "glue_mrpc_validation"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item_properties",
+        "call_id": "call_k0QoB5mk8e0QFjFt8mjiYyoA",
+        "arguments": {
+          "name": "glue_mrpc_validation"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": {
+          "domain": "news",
+          "labels": "0:not_paraphrase,1:paraphrase",
+          "input_type": "sentence pair",
+          "modality": "text",
+          "language": "English",
+          "size": "408",
+          "split": "validation",
+          "source": "glue/mrpc",
+          "dataset": "MRPC",
+          "benchmark": "GLUE",
+          "task": "paraphrase detection"
+        }
+      },
+      "metrics": {
+        "input_tokens": 5185,
+        "output_tokens": 357,
+        "reasoning_tokens": 332,
+        "conversation_tokens": 3238,
+        "api_latency_s": 5.726,
+        "exec_latency_s": 0.0062
+      },
+      "error": null
+    },
+    {
+      "turn": 14,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_k0QoB5mk8e0QFjFt8mjiYyoA",
+            "output": "{\"ok\": true, \"result\": {\"domain\": \"news\", \"labels\": \"0:not_paraphrase,1:paraphrase\", \"input_type\": \"sentence pair\", \"modality\": \"text\", \"language\": \"English\", \"size\": \"408\", \"split\": \"validation\", \"source\": \"glue/mrpc\", \"dataset\": \"MRPC\", \"benchmark\": \"GLUE\", \"task\": \"paraphrase detection\"}}"
+          }
+        ],
+        "previous_response_id": "resp_0c9826dea94254760069d9b54ac5dc8199bb520c55cdadf251"
+      },
+      "model_output": {
+        "response_id": "resp_0c9826dea94254760069d9b54ac5dc8199bb520c55cdadf251",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "properties_search",
+            "call_id": "call_TsgbqB1JKls3521ltswZCRCC",
+            "arguments": {
+              "description_text": "model"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "properties_search",
+        "call_id": "call_TsgbqB1JKls3521ltswZCRCC",
+        "arguments": {
+          "description_text": "model"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          [
+            "model",
+            "cross-encoder/quora-distilroberta-base",
+            "distilbert_cross_text_prediction_cutoff",
+            "record_list"
+          ],
+          [
+            "model",
+            "sentence-transformers/all-distilroberta-v1",
+            "sentence-transformers-sentence-1-threshold_2",
+            "embedding_list"
+          ],
+          [
+            "model",
+            "textattack/distilbert-base-uncased-MRPC",
+            "mrpc_distilbert_predictions",
+            "record_list"
+          ],
+          [
+            "model",
+            "google/flan-t5-small",
+            "flan_t5_full_answer_logprob_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "model",
+            "distilbert-base-uncased",
+            "distilbert_max_pool_cosine_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "model",
+            "textattack/distilbert-base-uncased-MRPC",
+            "mrpc_paraphrase_inference_distilbert_output",
+            "record_list"
+          ],
+          [
+            "model",
+            "textattack/distilbert-base-uncased-MRPC",
+            "hf_pipeline_mrpc_short_maxlen_64_summary",
+            "record_list"
+          ],
+          [
+            "model",
+            "sentence-transformers/paraphrase-MiniLM-L6-v2",
+            "minilm_cosine_threshold_prediction",
+            "record_list"
+          ],
+          [
+            "model",
+            "typeform/distilbert-base-uncased-mnli",
+            "mrpc_neutral_penalty_prediction",
+            "record_list"
+          ],
+          [
+            "model",
+            "sentence-transformers/paraphrase-MiniLM-L3-v2",
+            "sentence-transformers-sentence-1-threshold",
+            "embedding_list"
+          ]
+        ]
+      },
+      "metrics": {
+        "input_tokens": 5649,
+        "output_tokens": 161,
+        "reasoning_tokens": 140,
+        "conversation_tokens": 3702,
+        "api_latency_s": 3.2747,
+        "exec_latency_s": 0.3875
+      },
+      "error": null
+    },
+    {
+      "turn": 15,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_TsgbqB1JKls3521ltswZCRCC",
+            "output": "{\"ok\": true, \"result\": [[\"model\", \"cross-encoder/quora-distilroberta-base\", \"distilbert_cross_text_prediction_cutoff\", \"record_list\"], [\"model\", \"sentence-transformers/all-distilroberta-v1\", \"sentence-transformers-sentence-1-threshold_2\", \"embedding_list\"], [\"model\", \"textattack/distilbert-base-uncased-MRPC\", \"mrpc_distilbert_predictions\", \"record_list\"], [\"model\", \"google/flan-t5-small\", \"flan_t5_full_answer_logprob_mrpc_summary\", \"record_list\"], [\"model\", \"distilbert-base-uncased\", \"distilbert_max_pool_cosine_mrpc_summary\", \"record_list\"], [\"model\", \"textattack/distilbert-base-uncased-MRPC\", \"mrpc_paraphrase_inference_distilbert_output\", \"record_list\"], [\"model\", \"textattack/distilbert-base-uncased-MRPC\", \"hf_pipeline_mrpc_short_maxlen_64_summary\", \"record_list\"], [\"model\", \"sentence-transformers/paraphrase-MiniLM-L6-v2\", \"minilm_cosine_threshold_prediction\", \"record_list\"], [\"model\", \"typeform/distilbert-base-uncased-mnli\", \"mrpc_neutral_penalty_prediction\", \"record_list\"], [\"model\", \"sentence-transformers/paraphrase-MiniLM-L3-v2\", \"sentence-transformers-sentence-1-threshold\", \"embedding_list\"]]}"
+          }
+        ],
+        "previous_response_id": "resp_0c9826dea94254760069d9b54e6ca88199bbf1ffac2f12a2d8"
+      },
+      "model_output": {
+        "response_id": "resp_0c9826dea94254760069d9b54e6ca88199bbf1ffac2f12a2d8",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "properties_search",
+            "call_id": "call_klll8IjZm0YqGoC42kPP8ZZz",
+            "arguments": {
+              "description_text": "embedding model"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "properties_search",
+        "call_id": "call_klll8IjZm0YqGoC42kPP8ZZz",
+        "arguments": {
+          "description_text": "embedding model"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          [
+            "embedding_model",
+            "sentence-transformers/all-distilroberta-v1",
+            "sentence-transformers-sentence-2-threshold_2",
+            "embedding_list"
+          ],
+          [
+            "embedding_model",
+            "sentence-transformers/paraphrase-MiniLM-L3-v2",
+            "sentence-transformers-sentence-2-threshold",
+            "embedding_list"
+          ],
+          [
+            "embedding_model",
+            "sentence-transformers/all-MiniLM-L6-v2",
+            "sentence-transformers-sentence-1-max64",
+            "embedding_list"
+          ],
+          [
+            "embedding_model",
+            "sentence-transformers/all-MiniLM-L6-v2",
+            "sentence-transformers-sentence-2-distance_threshold",
+            "embedding_list"
+          ],
+          [
+            "embedding_model",
+            "distilbert-base-uncased",
+            "cosine_mrpc_max_pool_similarity_prediction",
+            "record_list"
+          ],
+          [
+            "embedding_strategy",
+            "last4_layers_mean_pooling",
+            "cosine_mrpc_mean_similarity_prediction",
+            "record_list"
+          ],
+          [
+            "embedding_strategy",
+            "last4-layer mean pooling",
+            "distilbert_last4_mean_cosine_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "embedding_dim",
+            "384",
+            "sentence-transformers-sentence-2-threshold",
+            "embedding_list"
+          ],
+          [
+            "embedding_dim",
+            "768",
+            "sentence-transformers-sentence-2-threshold_2",
+            "embedding_list"
+          ],
+          [
+            "embedding_dim",
+            "384",
+            "sentence-transformers-sentence-1-distance_threshold",
+            "embedding_list"
+          ]
+        ]
+      },
+      "metrics": {
+        "input_tokens": 6133,
+        "output_tokens": 31,
+        "reasoning_tokens": 9,
+        "conversation_tokens": 4186,
+        "api_latency_s": 1.3516,
+        "exec_latency_s": 0.4522
+      },
+      "error": null
+    },
+    {
+      "turn": 16,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_klll8IjZm0YqGoC42kPP8ZZz",
+            "output": "{\"ok\": true, \"result\": [[\"embedding_model\", \"sentence-transformers/all-distilroberta-v1\", \"sentence-transformers-sentence-2-threshold_2\", \"embedding_list\"], [\"embedding_model\", \"sentence-transformers/paraphrase-MiniLM-L3-v2\", \"sentence-transformers-sentence-2-threshold\", \"embedding_list\"], [\"embedding_model\", \"sentence-transformers/all-MiniLM-L6-v2\", \"sentence-transformers-sentence-1-max64\", \"embedding_list\"], [\"embedding_model\", \"sentence-transformers/all-MiniLM-L6-v2\", \"sentence-transformers-sentence-2-distance_threshold\", \"embedding_list\"], [\"embedding_model\", \"distilbert-base-uncased\", \"cosine_mrpc_max_pool_similarity_prediction\", \"record_list\"], [\"embedding_strategy\", \"last4_layers_mean_pooling\", \"cosine_mrpc_mean_similarity_prediction\", \"record_list\"], [\"embedding_strategy\", \"last4-layer mean pooling\", \"distilbert_last4_mean_cosine_mrpc_summary\", \"record_list\"], [\"embedding_dim\", \"384\", \"sentence-transformers-sentence-2-threshold\", \"embedding_list\"], [\"embedding_dim\", \"768\", \"sentence-transformers-sentence-2-threshold_2\", \"embedding_list\"], [\"embedding_dim\", \"384\", \"sentence-transformers-sentence-1-distance_threshold\", \"embedding_list\"]]}"
+          }
+        ],
+        "previous_response_id": "resp_0c9826dea94254760069d9b5503ab8819990c18cd448ffaff1"
+      },
+      "model_output": {
+        "response_id": "resp_0c9826dea94254760069d9b5503ab8819990c18cd448ffaff1",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item_properties",
+            "call_id": "call_9dQAMqCTStcA6bYL5lv6TgoO",
+            "arguments": {
+              "name": "distilbert_last4_mean_cosine_mrpc_summary"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item_properties",
+        "call_id": "call_9dQAMqCTStcA6bYL5lv6TgoO",
+        "arguments": {
+          "name": "distilbert_last4_mean_cosine_mrpc_summary"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": {
+          "metrics": "accuracy,f1,classification_report",
+          "input_type": "sentence pair",
+          "decision_rule": "threshold >= 0.85",
+          "similarity_metric": "cosine similarity",
+          "embedding_strategy": "last4-layer mean pooling",
+          "model": "distilbert-base-uncased",
+          "size": "408",
+          "split": "validation",
+          "source": "glue/mrpc",
+          "artifact_type": "evaluation summary",
+          "task": "paraphrase detection"
+        }
+      },
+      "metrics": {
+        "input_tokens": 6463,
+        "output_tokens": 73,
+        "reasoning_tokens": 42,
+        "conversation_tokens": 4516,
+        "api_latency_s": 1.637,
+        "exec_latency_s": 0.0087
+      },
+      "error": null
+    },
+    {
+      "turn": 17,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_9dQAMqCTStcA6bYL5lv6TgoO",
+            "output": "{\"ok\": true, \"result\": {\"metrics\": \"accuracy,f1,classification_report\", \"input_type\": \"sentence pair\", \"decision_rule\": \"threshold >= 0.85\", \"similarity_metric\": \"cosine similarity\", \"embedding_strategy\": \"last4-layer mean pooling\", \"model\": \"distilbert-base-uncased\", \"size\": \"408\", \"split\": \"validation\", \"source\": \"glue/mrpc\", \"artifact_type\": \"evaluation summary\", \"task\": \"paraphrase detection\"}}"
+          }
+        ],
+        "previous_response_id": "resp_0c9826dea94254760069d9b551e008819982031b77e173186f"
+      },
+      "model_output": {
+        "response_id": "resp_0c9826dea94254760069d9b551e008819982031b77e173186f",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_ECZN3DCVkpuzknHjkIBcGgU9",
+            "arguments": {
+              "item_name": "distilbert_last4_mean_cosine_mrpc_summary",
+              "start_position": null,
+              "end_position": null
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_ECZN3DCVkpuzknHjkIBcGgU9",
+        "arguments": {
+          "item_name": "distilbert_last4_mean_cosine_mrpc_summary",
+          "start_position": null,
+          "end_position": null
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.6838235294117647,
+            "f1": 0.8122270742358079,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.00      0.00      0.00       129\n    paraphrase       0.68      1.00      0.81       279\n\n      accuracy                           0.68       408\n     macro avg       0.34      0.50      0.41       408\n  weighted avg       0.47      0.68      0.56       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 6658,
+        "output_tokens": 49,
+        "reasoning_tokens": 8,
+        "conversation_tokens": 4711,
+        "api_latency_s": 1.4867,
+        "exec_latency_s": 0.0208
+      },
+      "error": null
+    },
+    {
+      "turn": 18,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_ECZN3DCVkpuzknHjkIBcGgU9",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.6838235294117647, \"f1\": 0.8122270742358079, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.00      0.00      0.00       129\\n    paraphrase       0.68      1.00      0.81       279\\n\\n      accuracy                           0.68       408\\n     macro avg       0.34      0.50      0.41       408\\n  weighted avg       0.47      0.68      0.56       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_0c9826dea94254760069d9b55362f881998027079898e1d423"
+      },
+      "model_output": {
+        "response_id": "resp_0c9826dea94254760069d9b55362f881998027079898e1d423",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "properties_search",
+            "call_id": "call_tCZgXgANbFTajP31fD28rpYa",
+            "arguments": {
+              "description_text": "sentence representation extraction"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "properties_search",
+        "call_id": "call_tCZgXgANbFTajP31fD28rpYa",
+        "arguments": {
+          "description_text": "sentence representation extraction"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          [
+            "sentence_field",
+            "sentence1",
+            "sentence-transformers-sentence-1-threshold",
+            "embedding_list"
+          ],
+          [
+            "summary_for",
+            "hf_pipeline_mrpc_short_maxlen_64",
+            "hf_pipeline_mrpc_short_maxlen_64_summary",
+            "record_list"
+          ],
+          [
+            "text_preprocessing",
+            "unicode NFKC normalization and whitespace normalization",
+            "distilbert-normalized-text-prediction",
+            "record_list"
+          ],
+          [
+            "text_preprocessing",
+            "unicode NFKC normalization and whitespace normalization",
+            "quora_cross_encoder_text_normalized_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "embedding_strategy",
+            "last4_layers_mean_pooling",
+            "cosine_mrpc_mean_similarity_prediction",
+            "record_list"
+          ],
+          [
+            "embedding_strategy",
+            "last4-layer mean pooling",
+            "distilbert_last4_mean_cosine_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "source_split",
+            "validation",
+            "distilbert_margin_score_prediction_values",
+            "record_list"
+          ],
+          [
+            "source_split",
+            "validation",
+            "flan_prediction_logit_calibrated",
+            "record_list"
+          ],
+          [
+            "embedding_dim",
+            "768",
+            "sentence-transformers-sentence-2-threshold_2",
+            "embedding_list"
+          ],
+          [
+            "embedding_dim",
+            "384",
+            "sentence-transformers-sentence-2-threshold",
+            "embedding_list"
+          ]
+        ]
+      },
+      "metrics": {
+        "input_tokens": 6873,
+        "output_tokens": 89,
+        "reasoning_tokens": 66,
+        "conversation_tokens": 4926,
+        "api_latency_s": 2.1501,
+        "exec_latency_s": 0.3101
+      },
+      "error": null
+    },
+    {
+      "turn": 19,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_tCZgXgANbFTajP31fD28rpYa",
+            "output": "{\"ok\": true, \"result\": [[\"sentence_field\", \"sentence1\", \"sentence-transformers-sentence-1-threshold\", \"embedding_list\"], [\"summary_for\", \"hf_pipeline_mrpc_short_maxlen_64\", \"hf_pipeline_mrpc_short_maxlen_64_summary\", \"record_list\"], [\"text_preprocessing\", \"unicode NFKC normalization and whitespace normalization\", \"distilbert-normalized-text-prediction\", \"record_list\"], [\"text_preprocessing\", \"unicode NFKC normalization and whitespace normalization\", \"quora_cross_encoder_text_normalized_mrpc_summary\", \"record_list\"], [\"embedding_strategy\", \"last4_layers_mean_pooling\", \"cosine_mrpc_mean_similarity_prediction\", \"record_list\"], [\"embedding_strategy\", \"last4-layer mean pooling\", \"distilbert_last4_mean_cosine_mrpc_summary\", \"record_list\"], [\"source_split\", \"validation\", \"distilbert_margin_score_prediction_values\", \"record_list\"], [\"source_split\", \"validation\", \"flan_prediction_logit_calibrated\", \"record_list\"], [\"embedding_dim\", \"768\", \"sentence-transformers-sentence-2-threshold_2\", \"embedding_list\"], [\"embedding_dim\", \"384\", \"sentence-transformers-sentence-2-threshold\", \"embedding_list\"]]}"
+          }
+        ],
+        "previous_response_id": "resp_0c9826dea94254760069d9b555d7908199a499ac2fcdb7f325"
+      },
+      "model_output": {
+        "response_id": "resp_0c9826dea94254760069d9b555d7908199a499ac2fcdb7f325",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item_properties",
+            "call_id": "call_OVCxeWFgpVzXdaqwvWuMo410",
+            "arguments": {
+              "name": "cosine_mrpc_mean_similarity_prediction"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item_properties",
+        "call_id": "call_OVCxeWFgpVzXdaqwvWuMo410",
+        "arguments": {
+          "name": "cosine_mrpc_mean_similarity_prediction"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": {
+          "output_fields": "prediction,similarities",
+          "label_field": "label",
+          "text_fields": "sentence1,sentence2",
+          "decision_rule": "threshold >= 0.85",
+          "similarity_metric": "cosine similarity",
+          "embedding_strategy": "last4_layers_mean_pooling",
+          "model": "distilbert-base-uncased",
+          "size": "408",
+          "split": "validation",
+          "input_dataset": "glue_mrpc_validation",
+          "source": "glue/mrpc",
+          "dataset_role": "prediction output",
+          "task": "paraphrase detection"
+        }
+      },
+      "metrics": {
+        "input_tokens": 7237,
+        "output_tokens": 47,
+        "reasoning_tokens": 20,
+        "conversation_tokens": 5290,
+        "api_latency_s": 1.4096,
+        "exec_latency_s": 0.0144
+      },
+      "error": null
+    },
+    {
+      "turn": 20,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_OVCxeWFgpVzXdaqwvWuMo410",
+            "output": "{\"ok\": true, \"result\": {\"output_fields\": \"prediction,similarities\", \"label_field\": \"label\", \"text_fields\": \"sentence1,sentence2\", \"decision_rule\": \"threshold >= 0.85\", \"similarity_metric\": \"cosine similarity\", \"embedding_strategy\": \"last4_layers_mean_pooling\", \"model\": \"distilbert-base-uncased\", \"size\": \"408\", \"split\": \"validation\", \"input_dataset\": \"glue_mrpc_validation\", \"source\": \"glue/mrpc\", \"dataset_role\": \"prediction output\", \"task\": \"paraphrase detection\"}}"
+          }
+        ],
+        "previous_response_id": "resp_0c9826dea94254760069d9b55744c881999dcb76a614fab155"
+      },
+      "model_output": {
+        "response_id": "resp_0c9826dea94254760069d9b55744c881999dcb76a614fab155",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "properties_search",
+            "call_id": "call_LgSs9n4YMN5INAky28tWHffG",
+            "arguments": {
+              "description_text": "summary for"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "properties_search",
+        "call_id": "call_LgSs9n4YMN5INAky28tWHffG",
+        "arguments": {
+          "description_text": "summary for"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          [
+            "summary_for",
+            "hf_pipeline_mrpc_short_maxlen_64",
+            "hf_pipeline_mrpc_short_maxlen_64_summary",
+            "record_list"
+          ],
+          [
+            "features",
+            "prediction,dir12,dir21",
+            "mrpc_entailment_prediction",
+            "record_list"
+          ],
+          [
+            "method",
+            "bi-encoder cosine similarity thresholding",
+            "st_paraphrase_minilm_l3_cosine_threshold_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "method",
+            "neutral-penalized entailment margin",
+            "neutral_penalized_margin_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "method",
+            "minimum directional entailment-contradiction margin",
+            "mrpc_min_margin_prediction",
+            "record_list"
+          ],
+          [
+            "method",
+            "consensus then average entailment-contradiction margin",
+            "consensus_then_avg_margin_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "method",
+            "l2 distance threshold on normalized sentence embeddings",
+            "sentence_transformers_mrpc_prediction_distance",
+            "record_list"
+          ],
+          [
+            "method",
+            "sentence-embedding l2 distance threshold",
+            "st_all_minilm_l6_l2_distance_threshold_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "method",
+            "cosine similarity thresholding",
+            "minilm_cosine_threshold_prediction",
+            "record_list"
+          ],
+          [
+            "method",
+            "cosine similarity thresholding",
+            "st_paraphrase_minilm_l6_cosine_threshold_mrpc_summary",
+            "record_list"
+          ]
+        ]
+      },
+      "metrics": {
+        "input_tokens": 7427,
+        "output_tokens": 89,
+        "reasoning_tokens": 67,
+        "conversation_tokens": 5480,
+        "api_latency_s": 1.831,
+        "exec_latency_s": 0.2972
+      },
+      "error": null
+    },
+    {
+      "turn": 21,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_LgSs9n4YMN5INAky28tWHffG",
+            "output": "{\"ok\": true, \"result\": [[\"summary_for\", \"hf_pipeline_mrpc_short_maxlen_64\", \"hf_pipeline_mrpc_short_maxlen_64_summary\", \"record_list\"], [\"features\", \"prediction,dir12,dir21\", \"mrpc_entailment_prediction\", \"record_list\"], [\"method\", \"bi-encoder cosine similarity thresholding\", \"st_paraphrase_minilm_l3_cosine_threshold_mrpc_summary\", \"record_list\"], [\"method\", \"neutral-penalized entailment margin\", \"neutral_penalized_margin_mrpc_summary\", \"record_list\"], [\"method\", \"minimum directional entailment-contradiction margin\", \"mrpc_min_margin_prediction\", \"record_list\"], [\"method\", \"consensus then average entailment-contradiction margin\", \"consensus_then_avg_margin_mrpc_summary\", \"record_list\"], [\"method\", \"l2 distance threshold on normalized sentence embeddings\", \"sentence_transformers_mrpc_prediction_distance\", \"record_list\"], [\"method\", \"sentence-embedding l2 distance threshold\", \"st_all_minilm_l6_l2_distance_threshold_mrpc_summary\", \"record_list\"], [\"method\", \"cosine similarity thresholding\", \"minilm_cosine_threshold_prediction\", \"record_list\"], [\"method\", \"cosine similarity thresholding\", \"st_paraphrase_minilm_l6_cosine_threshold_mrpc_summary\", \"record_list\"]]}"
+          }
+        ],
+        "previous_response_id": "resp_0c9826dea94254760069d9b55964d8819992beea9f2d98543c"
+      },
+      "model_output": {
+        "response_id": "resp_0c9826dea94254760069d9b55964d8819992beea9f2d98543c",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "properties_search",
+            "call_id": "call_L0Y94obSZIgnrAgvChOJcq1w",
+            "arguments": {
+              "description_text": "threshold"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "properties_search",
+        "call_id": "call_L0Y94obSZIgnrAgvChOJcq1w",
+        "arguments": {
+          "description_text": "threshold"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          [
+            "threshold",
+            "0.80",
+            "st_all_minilm_l6_max_seq_len_64_cosine_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "threshold",
+            "0.74",
+            "sentence-transformers-sentence-2-threshold",
+            "embedding_list"
+          ],
+          [
+            "threshold",
+            "0.70",
+            "pipeline_distilbert_threshold",
+            "record_list"
+          ],
+          [
+            "threshold",
+            "0.63",
+            "sentence_transformers_mrpc_prediction_distance",
+            "record_list"
+          ],
+          [
+            "threshold",
+            "0.65",
+            "distilbert_quora_softmax_prediction",
+            "record_list"
+          ],
+          [
+            "threshold",
+            "0.65",
+            "quora_cross_encoder_softmax_threshold_065_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "threshold",
+            "0.78",
+            "st_paraphrase_minilm_l6_cosine_threshold_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "threshold",
+            "0.80",
+            "sentence_transformers_mrpc_prediction_max64",
+            "record_list"
+          ],
+          [
+            "threshold",
+            "0.70",
+            "hf_pipeline_mrpc_threshold_070_summary",
+            "record_list"
+          ],
+          [
+            "threshold",
+            "0.74",
+            "sentence_transformers_mrpc_prediction_threshold",
+            "record_list"
+          ]
+        ]
+      },
+      "metrics": {
+        "input_tokens": 7814,
+        "output_tokens": 416,
+        "reasoning_tokens": 395,
+        "conversation_tokens": 5867,
+        "api_latency_s": 6.4577,
+        "exec_latency_s": 0.3675
+      },
+      "error": null
+    },
+    {
+      "turn": 22,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_L0Y94obSZIgnrAgvChOJcq1w",
+            "output": "{\"ok\": true, \"result\": [[\"threshold\", \"0.80\", \"st_all_minilm_l6_max_seq_len_64_cosine_mrpc_summary\", \"record_list\"], [\"threshold\", \"0.74\", \"sentence-transformers-sentence-2-threshold\", \"embedding_list\"], [\"threshold\", \"0.70\", \"pipeline_distilbert_threshold\", \"record_list\"], [\"threshold\", \"0.63\", \"sentence_transformers_mrpc_prediction_distance\", \"record_list\"], [\"threshold\", \"0.65\", \"distilbert_quora_softmax_prediction\", \"record_list\"], [\"threshold\", \"0.65\", \"quora_cross_encoder_softmax_threshold_065_mrpc_summary\", \"record_list\"], [\"threshold\", \"0.78\", \"st_paraphrase_minilm_l6_cosine_threshold_mrpc_summary\", \"record_list\"], [\"threshold\", \"0.80\", \"sentence_transformers_mrpc_prediction_max64\", \"record_list\"], [\"threshold\", \"0.70\", \"hf_pipeline_mrpc_threshold_070_summary\", \"record_list\"], [\"threshold\", \"0.74\", \"sentence_transformers_mrpc_prediction_threshold\", \"record_list\"]]}"
+          }
+        ],
+        "previous_response_id": "resp_0c9826dea94254760069d9b5603b00819999daf21881a67d16"
+      },
+      "model_output": {
+        "response_id": "resp_0c9826dea94254760069d9b5603b00819999daf21881a67d16",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "properties_search",
+            "call_id": "call_s1SAx46AHmylgSbbc4CFlEsy",
+            "arguments": {
+              "description_text": "similarity threshold"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "properties_search",
+        "call_id": "call_s1SAx46AHmylgSbbc4CFlEsy",
+        "arguments": {
+          "description_text": "similarity threshold"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          [
+            "similarity_threshold",
+            "0.85",
+            "cosine_mrpc_max_pool_similarity_prediction",
+            "record_list"
+          ],
+          [
+            "similarity",
+            "cosine",
+            "sentence-transformers-sentence-2-threshold_2",
+            "embedding_list"
+          ],
+          [
+            "similarity",
+            "cosine",
+            "sentence-transformers-sentence-2-threshold",
+            "embedding_list"
+          ],
+          [
+            "similarity",
+            "cosine",
+            "sentence-transformers-sentence-1-threshold_2",
+            "embedding_list"
+          ],
+          [
+            "similarity",
+            "cosine",
+            "sentence-transformers-sentence-1-threshold",
+            "embedding_list"
+          ],
+          [
+            "similarity_metric",
+            "cosine similarity",
+            "st_all_distilroberta_v1_cosine_threshold_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "similarity_metric",
+            "cosine similarity",
+            "distilbert_mean_cosine_median_threshold_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "similarity_metric",
+            "cosine similarity",
+            "sentence_transformers_mrpc_prediction_threshold_2",
+            "record_list"
+          ],
+          [
+            "similarity_metric",
+            "cosine similarity",
+            "distilbert_max_pool_cosine_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "similarity_metric",
+            "cosine similarity",
+            "no_special_cosine_mrpc_similarity_prediction",
+            "record_list"
+          ]
+        ]
+      },
+      "metrics": {
+        "input_tokens": 8484,
+        "output_tokens": 65,
+        "reasoning_tokens": 42,
+        "conversation_tokens": 6537,
+        "api_latency_s": 2.0884,
+        "exec_latency_s": 0.2892
+      },
+      "error": null
+    },
+    {
+      "turn": 23,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_s1SAx46AHmylgSbbc4CFlEsy",
+            "output": "{\"ok\": true, \"result\": [[\"similarity_threshold\", \"0.85\", \"cosine_mrpc_max_pool_similarity_prediction\", \"record_list\"], [\"similarity\", \"cosine\", \"sentence-transformers-sentence-2-threshold_2\", \"embedding_list\"], [\"similarity\", \"cosine\", \"sentence-transformers-sentence-2-threshold\", \"embedding_list\"], [\"similarity\", \"cosine\", \"sentence-transformers-sentence-1-threshold_2\", \"embedding_list\"], [\"similarity\", \"cosine\", \"sentence-transformers-sentence-1-threshold\", \"embedding_list\"], [\"similarity_metric\", \"cosine similarity\", \"st_all_distilroberta_v1_cosine_threshold_mrpc_summary\", \"record_list\"], [\"similarity_metric\", \"cosine similarity\", \"distilbert_mean_cosine_median_threshold_mrpc_summary\", \"record_list\"], [\"similarity_metric\", \"cosine similarity\", \"sentence_transformers_mrpc_prediction_threshold_2\", \"record_list\"], [\"similarity_metric\", \"cosine similarity\", \"distilbert_max_pool_cosine_mrpc_summary\", \"record_list\"], [\"similarity_metric\", \"cosine similarity\", \"no_special_cosine_mrpc_similarity_prediction\", \"record_list\"]]}"
+          }
+        ],
+        "previous_response_id": "resp_0c9826dea94254760069d9b5629824819988200ded675922a2"
+      },
+      "model_output": {
+        "response_id": "resp_0c9826dea94254760069d9b5629824819988200ded675922a2",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "properties_search",
+            "call_id": "call_CyvYj82I4yKp3nrbYimmZEM7",
+            "arguments": {
+              "description_text": "decision rule"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "properties_search",
+        "call_id": "call_CyvYj82I4yKp3nrbYimmZEM7",
+        "arguments": {
+          "description_text": "decision rule"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          [
+            "decision_rule",
+            "threshold >= 0.85",
+            "cosine_mrpc_mean_similarity_prediction",
+            "record_list"
+          ],
+          [
+            "decision_rule",
+            "median threshold",
+            "threshold_cosine_mrpc_similarity_prediction",
+            "record_list"
+          ],
+          [
+            "decision_rule",
+            "threshold >= 0.85",
+            "distilbert_no_special_tokens_mean_cosine_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "decision_rule",
+            "threshold >= 0.85",
+            "cosine_mrpc_threshold_score",
+            "record_list"
+          ],
+          [
+            "decision_rule",
+            "threshold-based binary classification",
+            "distilbert_max_pool_cosine_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "decision_rule",
+            "threshold",
+            "st_all_distilroberta_v1_cosine_threshold_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "decision_rule",
+            "thresholded cosine similarity",
+            "st_all_minilm_l6_max_seq_len_64_cosine_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "decision_rule",
+            "threshold",
+            "distilbert_cls_cosine_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "decision_rule",
+            "threshold >= 0.85",
+            "distilbert_last4_mean_cosine_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "prediction_rule",
+            "margin threshold on softmax scores",
+            "distilbert_margin_score_prediction_values",
+            "record_list"
+          ]
+        ]
+      },
+      "metrics": {
+        "input_tokens": 8822,
+        "output_tokens": 858,
+        "reasoning_tokens": 836,
+        "conversation_tokens": 6875,
+        "api_latency_s": 11.8953,
+        "exec_latency_s": 0.2446
+      },
+      "error": null
+    },
+    {
+      "turn": 24,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_CyvYj82I4yKp3nrbYimmZEM7",
+            "output": "{\"ok\": true, \"result\": [[\"decision_rule\", \"threshold >= 0.85\", \"cosine_mrpc_mean_similarity_prediction\", \"record_list\"], [\"decision_rule\", \"median threshold\", \"threshold_cosine_mrpc_similarity_prediction\", \"record_list\"], [\"decision_rule\", \"threshold >= 0.85\", \"distilbert_no_special_tokens_mean_cosine_mrpc_summary\", \"record_list\"], [\"decision_rule\", \"threshold >= 0.85\", \"cosine_mrpc_threshold_score\", \"record_list\"], [\"decision_rule\", \"threshold-based binary classification\", \"distilbert_max_pool_cosine_mrpc_summary\", \"record_list\"], [\"decision_rule\", \"threshold\", \"st_all_distilroberta_v1_cosine_threshold_mrpc_summary\", \"record_list\"], [\"decision_rule\", \"thresholded cosine similarity\", \"st_all_minilm_l6_max_seq_len_64_cosine_mrpc_summary\", \"record_list\"], [\"decision_rule\", \"threshold\", \"distilbert_cls_cosine_mrpc_summary\", \"record_list\"], [\"decision_rule\", \"threshold >= 0.85\", \"distilbert_last4_mean_cosine_mrpc_summary\", \"record_list\"], [\"prediction_rule\", \"margin threshold on softmax scores\", \"distilbert_margin_score_prediction_values\", \"record_list\"]]}"
+          }
+        ],
+        "previous_response_id": "resp_0c9826dea94254760069d9b56ebc748199815b1a4252456405"
+      },
+      "model_output": {
+        "response_id": "resp_0c9826dea94254760069d9b56ebc748199815b1a4252456405",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item_properties",
+            "call_id": "call_gArFZljUreHigVZvtZj1gR7M",
+            "arguments": {
+              "name": "distilbert_cls_cosine_mrpc_summary"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item_properties",
+        "call_id": "call_gArFZljUreHigVZvtZj1gR7M",
+        "arguments": {
+          "name": "distilbert_cls_cosine_mrpc_summary"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": {
+          "process": "distilbert_cls_cosine_mrpc",
+          "upstream_record_list": "cosine_mrpc_threshold_score",
+          "labels": "binary paraphrase/non-paraphrase",
+          "input": "sentence pairs",
+          "metrics": "accuracy,f1,classification_report",
+          "framework": "transformers",
+          "threshold": "0.85",
+          "decision_rule": "threshold",
+          "similarity_metric": "cosine similarity",
+          "representation": "cls first-token embedding",
+          "model": "distilbert-base-uncased",
+          "size": "408",
+          "split": "validation",
+          "source": "glue/mrpc",
+          "dataset_type": "evaluation summary",
+          "task": "paraphrase detection"
+        }
+      },
+      "metrics": {
+        "input_tokens": 9961,
+        "output_tokens": 85,
+        "reasoning_tokens": 56,
+        "conversation_tokens": 8014,
+        "api_latency_s": 3.6747,
+        "exec_latency_s": 0.0107
+      },
+      "error": null
+    },
+    {
+      "turn": 25,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_gArFZljUreHigVZvtZj1gR7M",
+            "output": "{\"ok\": true, \"result\": {\"process\": \"distilbert_cls_cosine_mrpc\", \"upstream_record_list\": \"cosine_mrpc_threshold_score\", \"labels\": \"binary paraphrase/non-paraphrase\", \"input\": \"sentence pairs\", \"metrics\": \"accuracy,f1,classification_report\", \"framework\": \"transformers\", \"threshold\": \"0.85\", \"decision_rule\": \"threshold\", \"similarity_metric\": \"cosine similarity\", \"representation\": \"cls first-token embedding\", \"model\": \"distilbert-base-uncased\", \"size\": \"408\", \"split\": \"validation\", \"source\": \"glue/mrpc\", \"dataset_type\": \"evaluation summary\", \"task\": \"paraphrase detection\"}}"
+          }
+        ],
+        "previous_response_id": "resp_0c9826dea94254760069d9b5726da08199b0c5d6fb8ea3d16c"
+      },
+      "model_output": {
+        "response_id": "resp_0c9826dea94254760069d9b5726da08199b0c5d6fb8ea3d16c",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_MAyH5bxFurNWbaws9Uf5XlGb",
+            "arguments": {
+              "item_name": "distilbert_cls_cosine_mrpc_summary",
+              "start_position": null,
+              "end_position": null
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_MAyH5bxFurNWbaws9Uf5XlGb",
+        "arguments": {
+          "item_name": "distilbert_cls_cosine_mrpc_summary",
+          "start_position": null,
+          "end_position": null
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.6862745098039216,
+            "f1": 0.8134110787172012,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       1.00      0.01      0.02       129\n    paraphrase       0.69      1.00      0.81       279\n\n      accuracy                           0.69       408\n     macro avg       0.84      0.50      0.41       408\n  weighted avg       0.78      0.69      0.56       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 10214,
+        "output_tokens": 37,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 8267,
+        "api_latency_s": 1.2927,
+        "exec_latency_s": 0.0118
+      },
+      "error": null
+    },
+    {
+      "turn": 26,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_MAyH5bxFurNWbaws9Uf5XlGb",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.6862745098039216, \"f1\": 0.8134110787172012, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       1.00      0.01      0.02       129\\n    paraphrase       0.69      1.00      0.81       279\\n\\n      accuracy                           0.69       408\\n     macro avg       0.84      0.50      0.41       408\\n  weighted avg       0.78      0.69      0.56       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_0c9826dea94254760069d9b573b8a08199aaefc396e691e693"
+      },
+      "model_output": {
+        "response_id": "resp_0c9826dea94254760069d9b573b8a08199aaefc396e691e693",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "properties_search",
+            "call_id": "call_0TSrm92Uzy8WNnQUHUiZV0vZ",
+            "arguments": {
+              "description_text": "representation"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "properties_search",
+        "call_id": "call_0TSrm92Uzy8WNnQUHUiZV0vZ",
+        "arguments": {
+          "description_text": "representation"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          [
+            "representation",
+            "sentence embedding",
+            "sentence-transformers-sentence-1-threshold",
+            "embedding_list"
+          ],
+          [
+            "representation",
+            "sentence embedding",
+            "sentence-transformers-sentence-2-distance_threshold",
+            "embedding_list"
+          ],
+          [
+            "representation",
+            "text embedding",
+            "sentence-transformers-sentence-1-threshold_2",
+            "embedding_list"
+          ],
+          [
+            "representation",
+            "sentence embedding",
+            "sentence-transformers-sentence-1-distance_threshold",
+            "embedding_list"
+          ],
+          [
+            "representation",
+            "sentence embedding",
+            "sentence-transformers-sentence-2-threshold",
+            "embedding_list"
+          ],
+          [
+            "representation",
+            "sentence embedding",
+            "sentence-transformers-sentence-1-max64",
+            "embedding_list"
+          ],
+          [
+            "representation",
+            "sentence embeddings",
+            "st_all_distilroberta_v1_cosine_threshold_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "representation",
+            "cls first-token embedding",
+            "distilbert_cls_cosine_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "representation",
+            "sentence embedding",
+            "sentence-transformers-sentence-2-threshold_2",
+            "embedding_list"
+          ],
+          [
+            "embedding_representation",
+            "first-token CLS-like embedding",
+            "cosine_mrpc_threshold_score",
+            "record_list"
+          ]
+        ]
+      },
+      "metrics": {
+        "input_tokens": 10417,
+        "output_tokens": 128,
+        "reasoning_tokens": 107,
+        "conversation_tokens": 8470,
+        "api_latency_s": 2.7531,
+        "exec_latency_s": 0.409
+      },
+      "error": null
+    },
+    {
+      "turn": 27,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_0TSrm92Uzy8WNnQUHUiZV0vZ",
+            "output": "{\"ok\": true, \"result\": [[\"representation\", \"sentence embedding\", \"sentence-transformers-sentence-1-threshold\", \"embedding_list\"], [\"representation\", \"sentence embedding\", \"sentence-transformers-sentence-2-distance_threshold\", \"embedding_list\"], [\"representation\", \"text embedding\", \"sentence-transformers-sentence-1-threshold_2\", \"embedding_list\"], [\"representation\", \"sentence embedding\", \"sentence-transformers-sentence-1-distance_threshold\", \"embedding_list\"], [\"representation\", \"sentence embedding\", \"sentence-transformers-sentence-2-threshold\", \"embedding_list\"], [\"representation\", \"sentence embedding\", \"sentence-transformers-sentence-1-max64\", \"embedding_list\"], [\"representation\", \"sentence embeddings\", \"st_all_distilroberta_v1_cosine_threshold_mrpc_summary\", \"record_list\"], [\"representation\", \"cls first-token embedding\", \"distilbert_cls_cosine_mrpc_summary\", \"record_list\"], [\"representation\", \"sentence embedding\", \"sentence-transformers-sentence-2-threshold_2\", \"embedding_list\"], [\"embedding_representation\", \"first-token CLS-like embedding\", \"cosine_mrpc_threshold_score\", \"record_list\"]]}"
+          }
+        ],
+        "previous_response_id": "resp_0c9826dea94254760069d9b576e5688199a0783628fb162254"
+      },
+      "model_output": {
+        "response_id": "resp_0c9826dea94254760069d9b576e5688199a0783628fb162254",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item_properties",
+            "call_id": "call_630AXL8pqCBKIGXnst4cLidg",
+            "arguments": {
+              "name": "cosine_mrpc_threshold_score"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item_properties",
+        "call_id": "call_630AXL8pqCBKIGXnst4cLidg",
+        "arguments": {
+          "name": "cosine_mrpc_threshold_score"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": {
+          "process": "distilbert_cls_cosine_mrpc",
+          "upstream_item": "glue_mrpc_validation",
+          "framework": "transformers+pytorch",
+          "label_space": "0=not_paraphrase,1=paraphrase",
+          "output_fields": "prediction,score",
+          "input_fields": "sentence1,sentence2",
+          "decision_rule": "threshold >= 0.85",
+          "similarity_metric": "cosine similarity",
+          "embedding_representation": "first-token CLS-like embedding",
+          "model": "distilbert-base-uncased",
+          "size": "408",
+          "split": "validation",
+          "source": "glue/mrpc",
+          "prediction_type": "binary classification with cosine similarity score",
+          "dataset_role": "model predictions",
+          "task": "paraphrase detection"
+        }
+      },
+      "metrics": {
+        "input_tokens": 10798,
+        "output_tokens": 39,
+        "reasoning_tokens": 13,
+        "conversation_tokens": 8851,
+        "api_latency_s": 1.5383,
+        "exec_latency_s": 0.0099
+      },
+      "error": null
+    },
+    {
+      "turn": 28,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_630AXL8pqCBKIGXnst4cLidg",
+            "output": "{\"ok\": true, \"result\": {\"process\": \"distilbert_cls_cosine_mrpc\", \"upstream_item\": \"glue_mrpc_validation\", \"framework\": \"transformers+pytorch\", \"label_space\": \"0=not_paraphrase,1=paraphrase\", \"output_fields\": \"prediction,score\", \"input_fields\": \"sentence1,sentence2\", \"decision_rule\": \"threshold >= 0.85\", \"similarity_metric\": \"cosine similarity\", \"embedding_representation\": \"first-token CLS-like embedding\", \"model\": \"distilbert-base-uncased\", \"size\": \"408\", \"split\": \"validation\", \"source\": \"glue/mrpc\", \"prediction_type\": \"binary classification with cosine similarity score\", \"dataset_role\": \"model predictions\", \"task\": \"paraphrase detection\"}}"
+          }
+        ],
+        "previous_response_id": "resp_0c9826dea94254760069d9b5786c188199b16a6d61d30d6f82"
+      },
+      "model_output": {
+        "response_id": "resp_0c9826dea94254760069d9b5786c188199b16a6d61d30d6f82",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "properties_search",
+            "call_id": "call_BGSWuoANwdzDm3qqgaE9iDG4",
+            "arguments": {
+              "description_text": "embedding type"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "properties_search",
+        "call_id": "call_BGSWuoANwdzDm3qqgaE9iDG4",
+        "arguments": {
+          "description_text": "embedding type"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          [
+            "embedding_type",
+            "sentence embedding from last hidden state",
+            "distilbert_mean_cosine_median_threshold_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "embedding_strategy",
+            "last4_layers_mean_pooling",
+            "cosine_mrpc_mean_similarity_prediction",
+            "record_list"
+          ],
+          [
+            "embedding_strategy",
+            "last4-layer mean pooling",
+            "distilbert_last4_mean_cosine_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "embedding_normalization",
+            "true",
+            "minilm_cosine_threshold_prediction",
+            "record_list"
+          ],
+          [
+            "embedding_model",
+            "sentence-transformers/all-distilroberta-v1",
+            "sentence-transformers-sentence-2-threshold_2",
+            "embedding_list"
+          ],
+          [
+            "embedding_model",
+            "sentence-transformers/all-MiniLM-L6-v2",
+            "sentence-transformers-sentence-1-max64",
+            "embedding_list"
+          ],
+          [
+            "embedding_model",
+            "distilbert-base-uncased",
+            "cosine_mrpc_max_pool_similarity_prediction",
+            "record_list"
+          ],
+          [
+            "embedding_model",
+            "sentence-transformers/all-MiniLM-L6-v2",
+            "sentence-transformers-sentence-2-distance_threshold",
+            "embedding_list"
+          ],
+          [
+            "embedding_model",
+            "sentence-transformers/paraphrase-MiniLM-L3-v2",
+            "sentence-transformers-sentence-2-threshold",
+            "embedding_list"
+          ],
+          [
+            "embedding_dim",
+            "768",
+            "sentence-transformers-sentence-2-threshold_2",
+            "embedding_list"
+          ]
+        ]
+      },
+      "metrics": {
+        "input_tokens": 11025,
+        "output_tokens": 232,
+        "reasoning_tokens": 210,
+        "conversation_tokens": 9078,
+        "api_latency_s": 3.9815,
+        "exec_latency_s": 0.4413
+      },
+      "error": null
+    },
+    {
+      "turn": 29,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_BGSWuoANwdzDm3qqgaE9iDG4",
+            "output": "{\"ok\": true, \"result\": [[\"embedding_type\", \"sentence embedding from last hidden state\", \"distilbert_mean_cosine_median_threshold_mrpc_summary\", \"record_list\"], [\"embedding_strategy\", \"last4_layers_mean_pooling\", \"cosine_mrpc_mean_similarity_prediction\", \"record_list\"], [\"embedding_strategy\", \"last4-layer mean pooling\", \"distilbert_last4_mean_cosine_mrpc_summary\", \"record_list\"], [\"embedding_normalization\", \"true\", \"minilm_cosine_threshold_prediction\", \"record_list\"], [\"embedding_model\", \"sentence-transformers/all-distilroberta-v1\", \"sentence-transformers-sentence-2-threshold_2\", \"embedding_list\"], [\"embedding_model\", \"sentence-transformers/all-MiniLM-L6-v2\", \"sentence-transformers-sentence-1-max64\", \"embedding_list\"], [\"embedding_model\", \"distilbert-base-uncased\", \"cosine_mrpc_max_pool_similarity_prediction\", \"record_list\"], [\"embedding_model\", \"sentence-transformers/all-MiniLM-L6-v2\", \"sentence-transformers-sentence-2-distance_threshold\", \"embedding_list\"], [\"embedding_model\", \"sentence-transformers/paraphrase-MiniLM-L3-v2\", \"sentence-transformers-sentence-2-threshold\", \"embedding_list\"], [\"embedding_dim\", \"768\", \"sentence-transformers-sentence-2-threshold_2\", \"embedding_list\"]]}"
+          }
+        ],
+        "previous_response_id": "resp_0c9826dea94254760069d9b57cdd348199898947e4203fbe09"
+      },
+      "model_output": {
+        "response_id": "resp_0c9826dea94254760069d9b57cdd348199898947e4203fbe09",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "finalize_result",
+            "call_id": "call_em4zcPXADWAUIcohF0ZaxewO",
+            "arguments": {
+              "summary": "{\"rows\":[{\"source_item\":\"distilbert_no_special_tokens_mean_cosine_mrpc_summary\",\"representation_strategy\":\"mean pooling excluding [CLS]/[SEP]\",\"threshold_rule\":\"threshold >= 0.85\",\"accuracy\":0.7034313725490197,\"f1\":0.8212703101920237,\"not_paraphrase_recall\":0.07,\"paraphrase_recall\":1.0},{\"source_item\":\"distilbert_cls_cosine_mrpc_summary\",\"representation_strategy\":\"CLS first-token embedding\",\"threshold_rule\":\"threshold >= 0.85\",\"accuracy\":0.6862745098039216,\"f1\":0.8134110787172012,\"not_paraphrase_recall\":0.01,\"paraphrase_recall\":1.0},{\"source_item\":\"distilbert_max_pool_cosine_mrpc_summary\",\"representation_strategy\":\"masked max pooling\",\"threshold_rule\":\"threshold >= 0.85\",\"accuracy\":0.6838235294117647,\"f1\":0.8122270742358079,\"not_paraphrase_recall\":0.0,\"paraphrase_recall\":1.0},{\"source_item\":\"distilbert_last4_mean_cosine_mrpc_summary\",\"representation_strategy\":\"last-4-layer mean pooling\",\"threshold_rule\":\"threshold >= 0.85\",\"accuracy\":0.6838235294117647,\"f1\":0.8122270742358079,\"not_paraphrase_recall\":0.0,\"paraphrase_recall\":1.0},{\"source_item\":\"distilbert_mean_cosine_median_threshold_mrpc_summary\",\"representation_strategy\":\"mean pooling over last hidden state\",\"threshold_rule\":\"median threshold\",\"accuracy\":0.6495098039215687,\"f1\":0.7039337474120083,\"not_paraphrase_recall\":0.74,\"paraphrase_recall\":0.61}],\"summary\":\"Across five DistilBERT-based sentence-representation evaluations on GLUE MRPC validation (n=408), the observed effect of pooling/representation choice on accuracy is modest in absolute terms but large in class behavior. The highest stored accuracy is from mean pooling that excludes special tokens (70.34%), followed by CLS pooling (68.63%), masked max pooling (68.38%), and last-4-layer mean pooling (68.38%). However, the fixed-threshold (>=0.85) variants are strongly biased toward predicting the paraphrase class: paraphrase recall is 1.00 for all four of those settings, while non-paraphrase recall collapses to 0.00-0.07. Because the MRPC validation split is paraphrase-heavy (279/408 = 68.4%), masked max pooling and last-4-layer mean pooling effectively match a majority-class baseline, and the small apparent gain from excluding special tokens likely reflects the same bias more than improved sentence representation quality. The only configuration showing materially better balance between classes is full mean pooling with a median threshold, which raises non-paraphrase recall to 0.74 and lowers paraphrase recall to 0.61, but its overall accuracy drops to 64.95%. Thus, the repository evidence suggests that changing pooling strategy alone does not yield a robust accuracy improvement for DistilBERT on MRPC; most of the apparent differences are small and confounded by the decision threshold used for cosine-similarity classification. The table should therefore be interpreted as a comparison of stored MRPC validation summaries, not as a perfectly controlled pooling-only ablation.\"}"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "finalize_result",
+        "call_id": "call_em4zcPXADWAUIcohF0ZaxewO",
+        "arguments": {
+          "summary": "{\"rows\":[{\"source_item\":\"distilbert_no_special_tokens_mean_cosine_mrpc_summary\",\"representation_strategy\":\"mean pooling excluding [CLS]/[SEP]\",\"threshold_rule\":\"threshold >= 0.85\",\"accuracy\":0.7034313725490197,\"f1\":0.8212703101920237,\"not_paraphrase_recall\":0.07,\"paraphrase_recall\":1.0},{\"source_item\":\"distilbert_cls_cosine_mrpc_summary\",\"representation_strategy\":\"CLS first-token embedding\",\"threshold_rule\":\"threshold >= 0.85\",\"accuracy\":0.6862745098039216,\"f1\":0.8134110787172012,\"not_paraphrase_recall\":0.01,\"paraphrase_recall\":1.0},{\"source_item\":\"distilbert_max_pool_cosine_mrpc_summary\",\"representation_strategy\":\"masked max pooling\",\"threshold_rule\":\"threshold >= 0.85\",\"accuracy\":0.6838235294117647,\"f1\":0.8122270742358079,\"not_paraphrase_recall\":0.0,\"paraphrase_recall\":1.0},{\"source_item\":\"distilbert_last4_mean_cosine_mrpc_summary\",\"representation_strategy\":\"last-4-layer mean pooling\",\"threshold_rule\":\"threshold >= 0.85\",\"accuracy\":0.6838235294117647,\"f1\":0.8122270742358079,\"not_paraphrase_recall\":0.0,\"paraphrase_recall\":1.0},{\"source_item\":\"distilbert_mean_cosine_median_threshold_mrpc_summary\",\"representation_strategy\":\"mean pooling over last hidden state\",\"threshold_rule\":\"median threshold\",\"accuracy\":0.6495098039215687,\"f1\":0.7039337474120083,\"not_paraphrase_recall\":0.74,\"paraphrase_recall\":0.61}],\"summary\":\"Across five DistilBERT-based sentence-representation evaluations on GLUE MRPC validation (n=408), the observed effect of pooling/representation choice on accuracy is modest in absolute terms but large in class behavior. The highest stored accuracy is from mean pooling that excludes special tokens (70.34%), followed by CLS pooling (68.63%), masked max pooling (68.38%), and last-4-layer mean pooling (68.38%). However, the fixed-threshold (>=0.85) variants are strongly biased toward predicting the paraphrase class: paraphrase recall is 1.00 for all four of those settings, while non-paraphrase recall collapses to 0.00-0.07. Because the MRPC validation split is paraphrase-heavy (279/408 = 68.4%), masked max pooling and last-4-layer mean pooling effectively match a majority-class baseline, and the small apparent gain from excluding special tokens likely reflects the same bias more than improved sentence representation quality. The only configuration showing materially better balance between classes is full mean pooling with a median threshold, which raises non-paraphrase recall to 0.74 and lowers paraphrase recall to 0.61, but its overall accuracy drops to 64.95%. Thus, the repository evidence suggests that changing pooling strategy alone does not yield a robust accuracy improvement for DistilBERT on MRPC; most of the apparent differences are small and confounded by the decision threshold used for cosine-similarity classification. The table should therefore be interpreted as a comparison of stored MRPC validation summaries, not as a perfectly controlled pooling-only ablation.\"}"
+        }
+      },
+      "tool_output": {
+        "summary": "{\"rows\":[{\"source_item\":\"distilbert_no_special_tokens_mean_cosine_mrpc_summary\",\"representation_strategy\":\"mean pooling excluding [CLS]/[SEP]\",\"threshold_rule\":\"threshold >= 0.85\",\"accuracy\":0.7034313725490197,\"f1\":0.8212703101920237,\"not_paraphrase_recall\":0.07,\"paraphrase_recall\":1.0},{\"source_item\":\"distilbert_cls_cosine_mrpc_summary\",\"representation_strategy\":\"CLS first-token embedding\",\"threshold_rule\":\"threshold >= 0.85\",\"accuracy\":0.6862745098039216,\"f1\":0.8134110787172012,\"not_paraphrase_recall\":0.01,\"paraphrase_recall\":1.0},{\"source_item\":\"distilbert_max_pool_cosine_mrpc_summary\",\"representation_strategy\":\"masked max pooling\",\"threshold_rule\":\"threshold >= 0.85\",\"accuracy\":0.6838235294117647,\"f1\":0.8122270742358079,\"not_paraphrase_recall\":0.0,\"paraphrase_recall\":1.0},{\"source_item\":\"distilbert_last4_mean_cosine_mrpc_summary\",\"representation_strategy\":\"last-4-layer mean pooling\",\"threshold_rule\":\"threshold >= 0.85\",\"accuracy\":0.6838235294117647,\"f1\":0.8122270742358079,\"not_paraphrase_recall\":0.0,\"paraphrase_recall\":1.0},{\"source_item\":\"distilbert_mean_cosine_median_threshold_mrpc_summary\",\"representation_strategy\":\"mean pooling over last hidden state\",\"threshold_rule\":\"median threshold\",\"accuracy\":0.6495098039215687,\"f1\":0.7039337474120083,\"not_paraphrase_recall\":0.74,\"paraphrase_recall\":0.61}],\"summary\":\"Across five DistilBERT-based sentence-representation evaluations on GLUE MRPC validation (n=408), the observed effect of pooling/representation choice on accuracy is modest in absolute terms but large in class behavior. The highest stored accuracy is from mean pooling that excludes special tokens (70.34%), followed by CLS pooling (68.63%), masked max pooling (68.38%), and last-4-layer mean pooling (68.38%). However, the fixed-threshold (>=0.85) variants are strongly biased toward predicting the paraphrase class: paraphrase recall is 1.00 for all four of those settings, while non-paraphrase recall collapses to 0.00-0.07. Because the MRPC validation split is paraphrase-heavy (279/408 = 68.4%), masked max pooling and last-4-layer mean pooling effectively match a majority-class baseline, and the small apparent gain from excluding special tokens likely reflects the same bias more than improved sentence representation quality. The only configuration showing materially better balance between classes is full mean pooling with a median threshold, which raises non-paraphrase recall to 0.74 and lowers paraphrase recall to 0.61, but its overall accuracy drops to 64.95%. Thus, the repository evidence suggests that changing pooling strategy alone does not yield a robust accuracy improvement for DistilBERT on MRPC; most of the apparent differences are small and confounded by the decision threshold used for cosine-similarity classification. The table should therefore be interpreted as a comparison of stored MRPC validation summaries, not as a perfectly controlled pooling-only ablation.\"}"
+      },
+      "metrics": {
+        "input_tokens": 11562,
+        "output_tokens": 3166,
+        "reasoning_tokens": 2415,
+        "conversation_tokens": 9615,
+        "api_latency_s": 37.4458,
+        "exec_latency_s": 0.0
+      },
+      "error": null
+    }
+  ],
+  "final_result": {
+    "summary": "{\"rows\":[{\"source_item\":\"distilbert_no_special_tokens_mean_cosine_mrpc_summary\",\"representation_strategy\":\"mean pooling excluding [CLS]/[SEP]\",\"threshold_rule\":\"threshold >= 0.85\",\"accuracy\":0.7034313725490197,\"f1\":0.8212703101920237,\"not_paraphrase_recall\":0.07,\"paraphrase_recall\":1.0},{\"source_item\":\"distilbert_cls_cosine_mrpc_summary\",\"representation_strategy\":\"CLS first-token embedding\",\"threshold_rule\":\"threshold >= 0.85\",\"accuracy\":0.6862745098039216,\"f1\":0.8134110787172012,\"not_paraphrase_recall\":0.01,\"paraphrase_recall\":1.0},{\"source_item\":\"distilbert_max_pool_cosine_mrpc_summary\",\"representation_strategy\":\"masked max pooling\",\"threshold_rule\":\"threshold >= 0.85\",\"accuracy\":0.6838235294117647,\"f1\":0.8122270742358079,\"not_paraphrase_recall\":0.0,\"paraphrase_recall\":1.0},{\"source_item\":\"distilbert_last4_mean_cosine_mrpc_summary\",\"representation_strategy\":\"last-4-layer mean pooling\",\"threshold_rule\":\"threshold >= 0.85\",\"accuracy\":0.6838235294117647,\"f1\":0.8122270742358079,\"not_paraphrase_recall\":0.0,\"paraphrase_recall\":1.0},{\"source_item\":\"distilbert_mean_cosine_median_threshold_mrpc_summary\",\"representation_strategy\":\"mean pooling over last hidden state\",\"threshold_rule\":\"median threshold\",\"accuracy\":0.6495098039215687,\"f1\":0.7039337474120083,\"not_paraphrase_recall\":0.74,\"paraphrase_recall\":0.61}],\"summary\":\"Across five DistilBERT-based sentence-representation evaluations on GLUE MRPC validation (n=408), the observed effect of pooling/representation choice on accuracy is modest in absolute terms but large in class behavior. The highest stored accuracy is from mean pooling that excludes special tokens (70.34%), followed by CLS pooling (68.63%), masked max pooling (68.38%), and last-4-layer mean pooling (68.38%). However, the fixed-threshold (>=0.85) variants are strongly biased toward predicting the paraphrase class: paraphrase recall is 1.00 for all four of those settings, while non-paraphrase recall collapses to 0.00-0.07. Because the MRPC validation split is paraphrase-heavy (279/408 = 68.4%), masked max pooling and last-4-layer mean pooling effectively match a majority-class baseline, and the small apparent gain from excluding special tokens likely reflects the same bias more than improved sentence representation quality. The only configuration showing materially better balance between classes is full mean pooling with a median threshold, which raises non-paraphrase recall to 0.74 and lowers paraphrase recall to 0.61, but its overall accuracy drops to 64.95%. Thus, the repository evidence suggests that changing pooling strategy alone does not yield a robust accuracy improvement for DistilBERT on MRPC; most of the apparent differences are small and confounded by the decision threshold used for cosine-similarity classification. The table should therefore be interpreted as a comparison of stored MRPC validation summaries, not as a perfectly controlled pooling-only ablation.\"}"
+  },
+  "run_error": null,
+  "metrics_summary": {
+    "tokens": {
+      "input": 186964,
+      "output": 6849,
+      "reasoning": 5306,
+      "total": 193813,
+      "system_estimate": 1947,
+      "conversation": 128692
+    },
+    "code": {
+      "executions": 0,
+      "failed_executions": 0,
+      "total_lines": 0
+    },
+    "timing": {
+      "api_latency_s": 114.34,
+      "exec_latency_s": 4.629,
+      "wall_time_s": 118.969
+    },
+    "api_calls": 30,
+    "cost": null
+  }
+}

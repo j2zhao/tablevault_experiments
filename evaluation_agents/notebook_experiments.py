@@ -32,8 +32,8 @@ from openai import OpenAI
 # Ensure the evaluation_agents package is importable when run from the repo root.
 sys.path.insert(0, os.path.dirname(__file__))
 
-from eval_agent import AgenticWorkflow, SYSTEM_PROMPT
-from api_functions import FUNCTION_EXPERIMENTS
+from eval_agent_functions import AgenticWorkflow, SYSTEM_PROMPT
+from api_functions import FUNCTION_EXPERIMENTS, initialization
 
 # ---------------------------------------------------------------------------
 # Task list with ground-truth metadata for evaluation
@@ -63,10 +63,17 @@ TASK_SPECS: list[dict] = [
             "A simple name enumeration is sufficient to find them."
         ),
         "key_finding": (
-            "Mean pooling (with or without special tokens) generally outperforms "
-            "CLS-token and max-pool extraction under cosine-similarity-based "
-            "classification. The agent should report accuracy and F1 per pooling "
-            "variant and identify which strategy performs best."
+            "Last-layer mean pooling (with or without special tokens) marginally "
+            "outperforms CLS-token and max-pool extraction, but differences are small "
+            "(accuracy ~0.696–0.703 vs ~0.684–0.686 at threshold=0.85). Averaging the "
+            "last four hidden layers before mean-pooling does not improve over "
+            "single-layer mean pooling and performs on par with CLS and max-pool. "
+            "Note: distilbert_mean_cosine_median_threshold_mrpc uses a data-driven "
+            "median threshold rather than 0.85 and shows substantially lower performance "
+            "(accuracy ~0.65, F1 ~0.70) — this reflects threshold sensitivity, not "
+            "pooling quality, and should not be interpreted as a pooling result. "
+            "The agent should report accuracy and F1 per pooling variant at a fixed "
+            "threshold and note that the overall spread across strategies is narrow."
         ),
     },
     {
@@ -83,11 +90,13 @@ TASK_SPECS: list[dict] = [
             "st_paraphrase_minilm_l6_cosine_threshold_mrpc",
             "st_paraphrase_minilm_l3_cosine_threshold_mrpc",
             "st_all_minilm_l6_l2_distance_threshold_mrpc",
+            "st_all_distilroberta_v1_cosine_threshold_mrpc",
             "distilbert_mean_cosine_median_threshold_mrpc",
             "hf_pipeline_mrpc_threshold_070",
             "quora_cross_encoder_softmax_threshold_065_mrpc",
+            "paraphrase_score_threshold_zero_shot_mrpc",
         ],
-        "min_notebooks_expected": 5,
+        "min_notebooks_expected": 6,
         "discovery_hint": (
             "Relevant notebooks span three families (sentence-transformers bi-encoder, "
             "distilbert feature extraction, HF pipeline, cross-encoder). "
@@ -97,9 +106,17 @@ TASK_SPECS: list[dict] = [
         ),
         "key_finding": (
             "Threshold choice significantly shifts the precision/recall trade-off. "
-            "The agent should identify notebooks from multiple families that vary only "
-            "the threshold, report how accuracy and F1 change with threshold, and note "
-            "that the optimal threshold differs by model family and similarity metric."
+            "The fine-tuned HF pipeline at threshold=0.70 (acc ~0.848, F1 ~0.890) "
+            "stays close to its argmax baseline, while bi-encoder cosine models "
+            "(paraphrase-MiniLM-L6 at 0.78: acc ~0.701, F1 ~0.771; all-distilroberta-v1 "
+            "at 0.72: acc ~0.723, F1 ~0.806) and the cross-encoder (quora-distilroberta "
+            "at 0.65: acc ~0.679, F1 ~0.758) degrade more sharply at non-optimal "
+            "thresholds. Zero-shot NLI models are especially sensitive: applying a "
+            "threshold of 0.55 (paraphrase_score_threshold_zero_shot_mrpc) yields "
+            "acc ~0.578, F1 ~0.674. The agent should identify notebooks from multiple "
+            "families that vary the threshold, report how accuracy and F1 change, and "
+            "note that the optimal threshold and sensitivity to its choice differ "
+            "substantially by model family and similarity metric."
         ),
     },
     {
@@ -121,6 +138,7 @@ TASK_SPECS: list[dict] = [
             "bidirectional_averaged_zero_shot_mrpc",
             "hf_pipeline_mrpc_bidirectional_order_average",
             "quora_cross_encoder_symmetric_average_mrpc",
+            "flan_t5_symmetric_prompt_average_mrpc",
         ],
         "min_notebooks_expected": 6,
         "discovery_hint": (
@@ -131,11 +149,22 @@ TASK_SPECS: list[dict] = [
             "description/property search for symmetry-related concepts."
         ),
         "key_finding": (
-            "Bidirectional averaging generally improves over single-direction scoring. "
-            "The agent should identify notebooks that process both (S1→S2) and (S2→S1) "
-            "and compare aggregation strategies (average margin, min-direction, consensus "
-            "vote, neutral penalty). Improvements vary by model family and are more "
-            "pronounced for NLI models than for cross-encoders."
+            "The effect of bidirectional symmetry enforcement is highly model-family "
+            "dependent and does not uniformly improve accuracy. For zero-shot NLI "
+            "pipelines, bidirectional averaging slightly hurts performance relative to "
+            "single-direction scoring (acc ~0.613 vs ~0.630). For the fine-tuned HF "
+            "pipeline, the effect is negligible (acc ~0.850 vs ~0.858). Only for the "
+            "cross-encoder does bidirectional averaging provide a modest gain "
+            "(acc ~0.699 vs ~0.679). Among aggregation strategies, average-margin "
+            "outperforms min-direction by a large margin (acc ~0.703 vs ~0.586 for "
+            "direct NLI); min-direction is overly conservative and collapses recall. "
+            "The agent should compare aggregation strategies within each family and "
+            "note that improvements from bidirectionality are more pronounced for "
+            "cross-encoders than for NLI or zero-shot models. Flan-T5 "
+            "(flan_t5_symmetric_prompt_average_mrpc) uses a generative symmetry strategy "
+            "(averaging yes/no logits for both prompt orderings) and achieves acc ~0.738, "
+            "F1 ~0.807, representing a distinct symmetry approach outside the NLI/pipeline "
+            "families."
         ),
     },
 ]
@@ -273,11 +302,18 @@ def evaluate_results(
 
     response = client.responses.create(**create_kwargs)
 
-    raw_text = ""
+    raw_text_parts: list[str] = []
     for item in response.output or []:
         if getattr(item, "type", None) in ("text", "message"):
-            raw_text = getattr(item, "text", None) or getattr(item, "content", None) or ""
-            break
+            part = getattr(item, "text", None) or getattr(item, "content", None) or ""
+            if isinstance(part, list):
+                for block in part:
+                    text = getattr(block, "text", None) or ""
+                    if isinstance(text, str) and text:
+                        raw_text_parts.append(text)
+            elif isinstance(part, str) and part:
+                raw_text_parts.append(part)
+    raw_text = "".join(raw_text_parts)
 
     try:
         text = raw_text.strip()
@@ -305,10 +341,13 @@ def _extract_summary_stats(metrics: Any) -> dict[str, Any]:
         "input_tokens": s["tokens"]["input"],
         "output_tokens": s["tokens"]["output"],
         "reasoning_tokens": s["tokens"]["reasoning"],
-        # num_api_calls == total OpenAI API calls == number of turns in the loop
+        # num_turns == total OpenAI API calls == number of turns in the loop
         "num_turns": s["api_calls"],
-        # num_executions == execute_python calls == vault API function call batches
-        "num_api_function_calls": s["code"]["executions"],
+        # num_api_function_calls == tool calls that are not finalize_result or no-tool turns
+        "num_api_function_calls": sum(
+            1 for t in metrics.turns
+            if t.tool_name is not None and t.tool_name != "finalize_result"
+        ),
         "wall_time_s": s["timing"]["wall_time_s"],
     }
 
@@ -360,6 +399,8 @@ def run_experiments(
         os.environ["OPENAI_API_KEY"] = f.read().strip()
     client = OpenAI()
 
+    vault = initialization(vault_name)
+
     run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     run_dir = os.path.join(output_root, run_id)
     os.makedirs(run_dir, exist_ok=True)
@@ -396,7 +437,7 @@ def run_experiments(
                     client=client,
                     model=agent_model,
                     system_prompt=SYSTEM_PROMPT,
-                    vault_name=vault_name,
+                    vault=vault,
                     workflow_key=exp_name,
                     max_turns=max_turns,
                     trace_output_dir=exp_dir,
