@@ -1,0 +1,68 @@
+{
+  "task": "How sensitive are similarity-based paraphrase classifiers to the choice of decision threshold, and does this vary across model families?",
+  "ratings": {
+    "ratings": {
+      "items_only": {
+        "score": 3,
+        "notebook_coverage": "4 of 9 expected notebooks cited",
+        "rationale": "Cites distilbert_mean_cosine_median_threshold_mrpc, st_paraphrase_minilm_l6_cosine_threshold_mrpc, st_all_minilm_l6_l2_distance_threshold_mrpc, and st_all_distilroberta_v1_cosine_threshold_mrpc. The summary correctly says threshold choice changes the operating point and varies by family, with good discussion of class-wise recall and limitations, but it misses the HF pipeline, cross-encoder, zero-shot, and MiniLM-L3 evidence from the reference set."
+      },
+      "dataset_search": {
+        "score": 1,
+        "notebook_coverage": "0 of 9 expected notebooks cited",
+        "rationale": "No finalized result was produced, so there is no notebook coverage, finding, or analysis to assess."
+      },
+      "dataset_description": {
+        "score": 3,
+        "notebook_coverage": "4 of 9 expected notebooks cited",
+        "rationale": "Finds distilbert_mean_cosine_median_threshold_mrpc plus MiniLM-L3, MiniLM-L6, and all-distilroberta threshold notebooks. It correctly identifies threshold sensitivity and discusses family differences and MRPC imbalance, but coverage is below the 6-notebook minimum and it omits the HF pipeline, cross-encoder, zero-shot, and expected L2-distance notebook."
+      },
+      "dataset_description_embedding": {
+        "score": 3,
+        "notebook_coverage": "4 of 9 expected notebooks cited",
+        "rationale": "Uses four expected notebooks and gives a solid interpretation with macro-F1 and recall balance, so the qualitative point about threshold sensitivity is reasonable. Still, it falls short of minimum coverage and misses the key reference contrast that the HF pipeline is relatively robust while zero-shot models are especially sensitive."
+      },
+      "dataset_properties": {
+        "score": 1,
+        "notebook_coverage": "0 of 9 expected notebooks cited",
+        "rationale": "No finalized result was produced, so it does not address the task."
+      },
+      "items_and_code": {
+        "score": 1,
+        "notebook_coverage": "0 of 9 expected notebooks cited",
+        "rationale": "No finalized result was produced, so there is no usable evidence or summary."
+      },
+      "items_and_lineage": {
+        "score": 3,
+        "notebook_coverage": "5 of 9 expected notebooks cited",
+        "rationale": "This is one of the strongest non-error submissions, citing MiniLM-L3, MiniLM-L6, all-distilroberta, the all-MiniLM L2-distance notebook, and distilbert_mean_cosine_median_threshold_mrpc. The analysis is thoughtful and notes score geometry and limitations, but it is still below the 6-notebook minimum and misses the HF pipeline, cross-encoder, and zero-shot notebooks central to the reference finding."
+      },
+      "code_search": {
+        "score": 1,
+        "notebook_coverage": "0 of 9 expected notebooks cited",
+        "rationale": "No finalized result was produced."
+      },
+      "code_description": {
+        "score": 1,
+        "notebook_coverage": "0 of 9 expected notebooks cited",
+        "rationale": "No finalized result was produced."
+      },
+      "code_description_embedding": {
+        "score": 1,
+        "notebook_coverage": "0 of 9 expected notebooks cited",
+        "rationale": "No finalized result was produced."
+      },
+      "code_properties": {
+        "score": 3,
+        "notebook_coverage": "5 of 9 expected notebooks cited",
+        "rationale": "Cites distilbert_mean_cosine_median_threshold_mrpc, MiniLM-L3, MiniLM-L6, all-distilroberta, and quora_cross_encoder_softmax_threshold_065_mrpc. It correctly emphasizes threshold sensitivity, family-specific score scales, and the danger of relying on positive-class F1 alone, but it misses the HF pipeline, zero-shot, and expected all-MiniLM L2-distance notebook, so it remains below minimum coverage."
+      },
+      "all_functions": {
+        "score": 1,
+        "notebook_coverage": "0 of 9 expected notebooks cited",
+        "rationale": "No finalized result was produced, so it cannot be credited with coverage or correctness."
+      }
+    },
+    "overall_comment": "No agent met the minimum coverage of 6 of 9 expected notebooks. The best non-error results were items_and_lineage and code_properties at 5 of 9, with code_properties usefully covering the cross-encoder and items_and_lineage covering the L2-distance variant. Several other agents gave reasonable qualitative summaries that thresholds shift the precision/recall trade-off and that calibration differs by family, but most overfocused on raw DistilBERT embedding baselines rather than the ground-truth comparison across expected families. In particular, none of the successful agents captured the full key finding that the HF pipeline at threshold 0.70 stays close to baseline while zero-shot NLI is especially sensitive, with bi-encoders and the cross-encoder degrading more at non-optimal thresholds. Multiple agents failed to finalize and therefore score 1."
+  }
+}

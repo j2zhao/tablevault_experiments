@@ -1,0 +1,1838 @@
+{
+  "run_id": "20260411T143624Z",
+  "timestamp": "2026-04-11T14:36:24.749116+00:00",
+  "model": "gpt-5.4",
+  "task": "How do different strategies for enforcing prediction symmetry affect accuracy when using NLI-based and zero-shot models for paraphrase detection on MRPC?",
+  "system_prompt": "You are a data analyst assistant with access to a TableVault repository.\n\nYour goal is to investigate the repository and extract **structured evidence**\nrelevant to the user task.\n\nThe final output should summarize the evidence stored in the TableVault\nrepository in the form of:\n\n1. a **results table** (structured rows), and\n2. a **scientific-style summary** interpreting that evidence.\n\nThe results table should represent **summary evidence extracted from the\nrepository**. Each row corresponds to a piece of evidence such as an experiment\nresult, dataset observation, workflow output, or other structured record.\n\nExample result table schemas:\n\nExample 1 \u2014 workflow evaluation evidence\n\n[\n  {\n    \"workflow\": \"baseline_xgboost\",\n    \"model\": \"xgboost\",\n    \"running_time\": 132.4,\n    \"accuracy\": 0.91\n  },\n  {\n    \"workflow\": \"llm_augmented_pipeline\",\n    \"model\": \"gpt-4o-mini\",\n    \"running_time\": 245.8,\n    \"accuracy\": 0.94\n  }\n]\n\nExample 2 \u2014 sample-level classification evidence\n\n[\n  {\n    \"data_sample\": \"sample_001\",\n    \"true_label\": \"sports\",\n    \"predicted_label\": \"sports\",\n    \"reasoning_strategy\": \"few-shot classification\"\n  },\n  {\n    \"data_sample\": \"sample_002\",\n    \"true_label\": \"business\",\n    \"predicted_label\": \"technology\",\n    \"reasoning_strategy\": \"two-step reasoning + classification\"\n  }\n]\n\nThe columns depend on what evidence exists in the repository. Choose columns\nthat best summarize the relevant structured evidence. Don't include unnecessary columns.\n\n------------------------------------------------------------\n\n## What is TableVault?\n\nTableVault is a centralized data repository (backed by ArangoDB) that stores\n**item lists** \u2014 ordered collections of data items. Every item list has a\nunique name and belongs to one of four types:\n\n| Type          | Stores                                         |\n|---------------|------------------------------------------------|\n| **file**      | References (paths) to external files           |\n| **document**  | Text strings (paragraphs, logs, notes, etc.)   |\n| **embedding** | Fixed-dimension float vectors                  |\n| **record**    | Structured rows (dict with predefined columns) |\n\n------------------------------------------------------------\n\n## How data gets into TableVault\n\nData is ingested by Python processes. A Python script or notebook initialises\na `Vault` object, and then calls `append_*` helpers to add items to the\nrelevant lists.\n\nThere may also be additional context about the lists stored in the repository.\nThe available tool functions expose what context is accessible.\n\n------------------------------------------------------------\n\n## Tools\n\nCall the available TableVault query functions directly as tool calls \u2014 you do\nnot need to write Python code. Use `finalize_result` to return the final answer.\n\n------------------------------------------------------------\n\n## Rules\n\n- Always act via tool calls \u2014 never just describe what you would do.\n- On errors, read the error message and retry with corrected arguments.\n- **Do not make direct HuggingFace model calls** \u2014 all model inference results\n  are pre-computed and stored in the TableVault repository. Retrieve them there.\n- **Minimize token usage**: gather enough evidence to answer the question well,\n  then stop. More specific queries and filters reduce the number of calls needed \u2014\n  prefer targeted searches over broad scans. Stop as soon as you have sufficient\n  evidence to give a confident, well-supported answer.\n\n------------------------------------------------------------\n\n## Your output\n\nWhen you have enough information, call `finalize_result` with exactly this shape:\n\n{\n  \"rows\": [\n    {\"column1\": \"value1\", \"column2\": \"value2\"}\n  ],\n  \"summary\": \"Scientific-style description of the evidence and interpretation.\"\n}\n\n------------------------------------------------------------\n\n## Summary expectations\n\nThe **summary** should interpret the evidence in a research-style description.\nIt should explain:\n\n\u2022 what the repository evidence suggests about the user's task\n\u2022 key findings or patterns in the retrieved data\n\u2022 notable issues, biases, or inconsistencies in existing workflows or results\n\u2022 limitations or gaps in the available evidence\n\u2022 how the returned table should be interpreted\n\nThe summary should read like a short analytical explanation of the evidence,\nnot just a description of the table.\n\n------------------------------------------------------------\n",
+  "turns": [
+    {
+      "turn": 0,
+      "model_input": {
+        "pending_messages": [
+          {
+            "role": "user",
+            "content": "How do different strategies for enforcing prediction symmetry affect accuracy when using NLI-based and zero-shot models for paraphrase detection on MRPC?"
+          }
+        ],
+        "previous_response_id": "resp_045b918d8e92e6c60069da5c68ce148196ae0eac02ef0d9326"
+      },
+      "model_output": {
+        "response_id": "resp_045b918d8e92e6c60069da5c68ce148196ae0eac02ef0d9326",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "code_description_search",
+            "call_id": "call_gVVQ9H2GQUbokOl26oZK8xBr",
+            "arguments": {
+              "description_text": "MRPC paraphrase detection symmetry prediction accuracy NLI zero-shot strategy enforce prediction symmetry"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "code_description_search",
+        "call_id": "call_gVVQ9H2GQUbokOl26oZK8xBr",
+        "arguments": {
+          "description_text": "MRPC paraphrase detection symmetry prediction accuracy NLI zero-shot strategy enforce prediction symmetry"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": []
+      },
+      "metrics": {
+        "input_tokens": 1620,
+        "output_tokens": 129,
+        "reasoning_tokens": 92,
+        "conversation_tokens": 0,
+        "api_latency_s": 2.5299,
+        "exec_latency_s": 0.0564
+      },
+      "error": null
+    },
+    {
+      "turn": 1,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_gVVQ9H2GQUbokOl26oZK8xBr",
+            "output": "{\"ok\": true, \"result\": []}"
+          }
+        ],
+        "previous_response_id": "resp_045b918d8e92e6c60069da5c6b646c819682fe2dcfbd3a6e4d"
+      },
+      "model_output": {
+        "response_id": "resp_045b918d8e92e6c60069da5c6b646c819682fe2dcfbd3a6e4d",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "code_description_search",
+            "call_id": "call_dnmaK1FN1MHr7IU3b3ob6N0F",
+            "arguments": {
+              "description_text": "MRPC paraphrase detection"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "code_description_search",
+        "call_id": "call_dnmaK1FN1MHr7IU3b3ob6N0F",
+        "arguments": {
+          "description_text": "MRPC paraphrase detection"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          [
+            "BASE",
+            "This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using the typeform/distilbert-base-uncased-mnli natural language inference model. For each sentence pair, it runs inference in both directions (sentence1\u2192sentence2 and sentence2\u2192sentence1), computes an entailment-versus-contradiction margin for each direction, averages the two margins, and predicts paraphrase only when neither direction is classified as contradiction and the average margin is positive. The notebook stores per-example predictions, directional margins, and gate decisions in TableVault, computes accuracy, F1, and a classification report against the MRPC labels, logs error analysis examples, and saves dataset-, prediction-, summary-, and notebook-level metadata and embeddings for later retrieval and documentation.",
+            "consensus_then_avg_margin_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook evaluates a simple paraphrase detection workflow on the GLUE MRPC validation set using DistilBERT sentence representations and cosine similarity. It loads sentence pairs and labels from TableVault, encodes each sentence with distilbert-base-uncased, uses the first-token ([CLS]-style) hidden state as a normalized embedding, computes cosine similarity between the two sentence embeddings, and applies a fixed threshold of 0.85 to predict whether the pair is a paraphrase. The notebook then measures performance with accuracy, F1, and a classification report, prints example predictions and errors for inspection, and stores per-example scores, summary metrics, and semantic descriptions back into TableVault for experiment tracking and retrieval.",
+            "distilbert_cls_cosine_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook evaluates a simple semantic-similarity baseline for paraphrase detection on the GLUE MRPC validation set. It uses distilbert-base-uncased to encode each sentence, averages the last four hidden layers, applies mean pooling over tokens, and L2-normalizes the resulting sentence embeddings. For each sentence pair, it computes cosine similarity between the two embeddings and converts similarity scores into binary paraphrase predictions using a fixed threshold of 0.85. The workflow loads MRPC examples from TableVault, generates pairwise predictions and similarity scores, computes evaluation metrics including accuracy, F1, and a classification report, inspects example predictions and errors, and stores both per-example outputs and summary results back into TableVault with descriptive metadata.",
+            "distilbert_last4_mean_cosine_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook evaluates a simple paraphrase detection pipeline on the GLUE MRPC validation set using DistilBERT sentence embeddings. It loads sentence pairs and labels from TableVault, encodes each sentence with distilbert-base-uncased, applies masked max pooling over token embeddings, L2-normalizes the pooled vectors, and computes cosine similarity between the two sentence embeddings. A fixed cosine threshold is used to convert similarity scores into binary paraphrase predictions, and the notebook reports accuracy, F1, a full classification report, and example errors. It also records per-example predictions, summary metrics, and workflow metadata back into TableVault, with OpenAI-generated description embeddings for searchable experiment documentation.",
+            "distilbert_max_pool_cosine_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook runs a simple unsupervised paraphrase detection experiment on the GLUE MRPC validation set using distilbert-base-uncased sentence embeddings. It loads sentence pairs and labels from TableVault, encodes each sentence with DistilBERT, applies attention-mask mean pooling and L2 normalization, computes cosine similarity between the two sentence embeddings, and converts similarity scores into binary paraphrase predictions using the median similarity as the decision threshold. It then evaluates performance with accuracy, F1, and a classification report, inspects sample predictions and errors, and stores per-example predictions, cosine scores, summary metrics, and notebook-level metadata/descriptions in TableVault with OpenAI-generated description embeddings for documentation and retrieval.",
+            "distilbert_mean_cosine_median_threshold_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook evaluates a simple paraphrase detection baseline on the GLUE MRPC validation set using DistilBERT sentence embeddings. It loads the distilbert-base-uncased model, encodes each sentence in a pair, mean-pools token embeddings while excluding special tokens such as [CLS] and [SEP], L2-normalizes the pooled vectors, and computes cosine similarity between the two sentence embeddings. A fixed similarity threshold of 0.85 is used to predict whether each pair is a paraphrase. The notebook then measures accuracy, F1, and a full classification report, inspects example predictions and errors, and stores per-example predictions, cosine scores, summary metrics, and notebook/process metadata in TableVault with embedding-based descriptions for later retrieval and documentation.",
+            "distilbert_no_special_tokens_mean_cosine_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using an NLI model. It loads sentence pairs and labels from TableVault, applies the typeform/distilbert-base-uncased-mnli sequence classification model, and treats paraphrase detection as entailment scoring: for each pair, it computes the log-probability difference between entailment and contradiction for both sentence orders (sentence1\u2192sentence2 and sentence2\u2192sentence1), averages the two directional scores, and predicts paraphrase when the averaged score is positive. The notebook stores per-example predictions and directional entailment log-odds in TableVault, computes evaluation metrics including accuracy, F1, and a classification report, inspects sample predictions and errors, and saves both dataset-level summaries and notebook-level metadata/descriptions with OpenAI embeddings for documentation and retrieval.",
+            "entailment_logprob_odds_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook evaluates google/flan-t5-small on the GLUE MRPC validation set for binary paraphrase detection. It loads sentence pairs and labels from TableVault, converts each pair into a natural-language prompt asking whether the two sentences have the same meaning, and runs FLAN-T5 as a seq2seq model on MPS or CPU. Using the decoder prefix Answer:, it compares the next-token logits for yes and no to make a classification without full text generation. The workflow saves per-example predictions and yes/no logits to TableVault, computes accuracy, F1, and a classification report, reviews sample predictions and errors, and stores both dataset-level outputs and experiment summary metadata/descriptions back into TableVault for tracking and retrieval.",
+            "flan_t5_answer_prefix_yes_no_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook runs a zero-shot paraphrase detection experiment on the GLUE MRPC validation set using google/flan-t5-small. It frames each sentence pair as an instruction prompt asking whether the two sentences are paraphrases and scores the first decoder-step logits for the single-token answers yes and no. To reduce prompt bias, it applies contextual calibration by subtracting baseline yes/no logits computed from a null prompt with placeholder inputs (\u201cN/A\u201d, \u201cN/A\u201d), then predicts the label from the higher calibrated logit. The workflow loads MRPC examples from TableVault, generates batch predictions, stores raw and calibrated logits plus final predictions back into TableVault, computes evaluation metrics including accuracy, F1, and a classification report, inspects sample predictions and errors, and saves summary records and semantic descriptions for the prediction outputs, summary table, and overall notebook process.",
+            "flan_t5_contextual_calibrated_yes_no_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook runs a prompt-based paraphrase detection experiment on the GLUE MRPC validation set using google/flan-t5-small. For each sentence pair, it builds an instruction prompt asking whether the two sentences are paraphrases and scores the full decoder log probability of the candidate answers \u201cyes\u201d and \u201cno\u201d (including EOS). The predicted label is chosen by comparing these two sequence log probabilities.\n\nThe workflow loads MRPC validation data from TableVault, tokenizes prompts, performs batched inference with FLAN-T5, records per-example predictions and yes/no scores, and evaluates performance with accuracy, F1, and a classification report. It also prints sample predictions and error cases for qualitative inspection.\n\nResults are written back to TableVault as a scored prediction record list and a summary record list, with dataset lineage links and embedding-based descriptions/metadata for both the outputs and the overall notebook process.",
+            "flan_t5_full_answer_logprob_mrpc",
+            "process_list"
+          ]
+        ]
+      },
+      "metrics": {
+        "input_tokens": 1771,
+        "output_tokens": 36,
+        "reasoning_tokens": 10,
+        "conversation_tokens": 39,
+        "api_latency_s": 1.6029,
+        "exec_latency_s": 0.0412
+      },
+      "error": null
+    },
+    {
+      "turn": 2,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_dnmaK1FN1MHr7IU3b3ob6N0F",
+            "output": "{\"ok\": true, \"result\": [[\"BASE\", \"This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using the typeform/distilbert-base-uncased-mnli natural language inference model. For each sentence pair, it runs inference in both directions (sentence1\\u2192sentence2 and sentence2\\u2192sentence1), computes an entailment-versus-contradiction margin for each direction, averages the two margins, and predicts paraphrase only when neither direction is classified as contradiction and the average margin is positive. The notebook stores per-example predictions, directional margins, and gate decisions in TableVault, computes accuracy, F1, and a classification report against the MRPC labels, logs error analysis examples, and saves dataset-, prediction-, summary-, and notebook-level metadata and embeddings for later retrieval and documentation.\", \"consensus_then_avg_margin_mrpc\", \"process_list\"], [\"BASE\", \"This notebook evaluates a simple paraphrase detection workflow on the GLUE MRPC validation set using DistilBERT sentence representations and cosine similarity. It loads sentence pairs and labels from TableVault, encodes each sentence with distilbert-base-uncased, uses the first-token ([CLS]-style) hidden state as a normalized embedding, computes cosine similarity between the two sentence embeddings, and applies a fixed threshold of 0.85 to predict whether the pair is a paraphrase. The notebook then measures performance with accuracy, F1, and a classification report, prints example predictions and errors for inspection, and stores per-example scores, summary metrics, and semantic descriptions back into TableVault for experiment tracking and retrieval.\", \"distilbert_cls_cosine_mrpc\", \"process_list\"], [\"BASE\", \"This notebook evaluates a simple semantic-similarity baseline for paraphrase detection on the GLUE MRPC validation set. It uses distilbert-base-uncased to encode each sentence, averages the last four hidden layers, applies mean pooling over tokens, and L2-normalizes the resulting sentence embeddings. For each sentence pair, it computes cosine similarity between the two embeddings and converts similarity scores into binary paraphrase predictions using a fixed threshold of 0.85. The workflow loads MRPC examples from TableVault, generates pairwise predictions and similarity scores, computes evaluation metrics including accuracy, F1, and a classification report, inspects example predictions and errors, and stores both per-example outputs and summary results back into TableVault with descriptive metadata.\", \"distilbert_last4_mean_cosine_mrpc\", \"process_list\"], [\"BASE\", \"This notebook evaluates a simple paraphrase detection pipeline on the GLUE MRPC validation set using DistilBERT sentence embeddings. It loads sentence pairs and labels from TableVault, encodes each sentence with distilbert-base-uncased, applies masked max pooling over token embeddings, L2-normalizes the pooled vectors, and computes cosine similarity between the two sentence embeddings. A fixed cosine threshold is used to convert similarity scores into binary paraphrase predictions, and the notebook reports accuracy, F1, a full classification report, and example errors. It also records per-example predictions, summary metrics, and workflow metadata back into TableVault, with OpenAI-generated description embeddings for searchable experiment documentation.\", \"distilbert_max_pool_cosine_mrpc\", \"process_list\"], [\"BASE\", \"This notebook runs a simple unsupervised paraphrase detection experiment on the GLUE MRPC validation set using distilbert-base-uncased sentence embeddings. It loads sentence pairs and labels from TableVault, encodes each sentence with DistilBERT, applies attention-mask mean pooling and L2 normalization, computes cosine similarity between the two sentence embeddings, and converts similarity scores into binary paraphrase predictions using the median similarity as the decision threshold. It then evaluates performance with accuracy, F1, and a classification report, inspects sample predictions and errors, and stores per-example predictions, cosine scores, summary metrics, and notebook-level metadata/descriptions in TableVault with OpenAI-generated description embeddings for documentation and retrieval.\", \"distilbert_mean_cosine_median_threshold_mrpc\", \"process_list\"], [\"BASE\", \"This notebook evaluates a simple paraphrase detection baseline on the GLUE MRPC validation set using DistilBERT sentence embeddings. It loads the distilbert-base-uncased model, encodes each sentence in a pair, mean-pools token embeddings while excluding special tokens such as [CLS] and [SEP], L2-normalizes the pooled vectors, and computes cosine similarity between the two sentence embeddings. A fixed similarity threshold of 0.85 is used to predict whether each pair is a paraphrase. The notebook then measures accuracy, F1, and a full classification report, inspects example predictions and errors, and stores per-example predictions, cosine scores, summary metrics, and notebook/process metadata in TableVault with embedding-based descriptions for later retrieval and documentation.\", \"distilbert_no_special_tokens_mean_cosine_mrpc\", \"process_list\"], [\"BASE\", \"This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using an NLI model. It loads sentence pairs and labels from TableVault, applies the typeform/distilbert-base-uncased-mnli sequence classification model, and treats paraphrase detection as entailment scoring: for each pair, it computes the log-probability difference between entailment and contradiction for both sentence orders (sentence1\\u2192sentence2 and sentence2\\u2192sentence1), averages the two directional scores, and predicts paraphrase when the averaged score is positive. The notebook stores per-example predictions and directional entailment log-odds in TableVault, computes evaluation metrics including accuracy, F1, and a classification report, inspects sample predictions and errors, and saves both dataset-level summaries and notebook-level metadata/descriptions with OpenAI embeddings for documentation and retrieval.\", \"entailment_logprob_odds_mrpc\", \"process_list\"], [\"BASE\", \"This notebook evaluates google/flan-t5-small on the GLUE MRPC validation set for binary paraphrase detection. It loads sentence pairs and labels from TableVault, converts each pair into a natural-language prompt asking whether the two sentences have the same meaning, and runs FLAN-T5 as a seq2seq model on MPS or CPU. Using the decoder prefix Answer:, it compares the next-token logits for yes and no to make a classification without full text generation. The workflow saves per-example predictions and yes/no logits to TableVault, computes accuracy, F1, and a classification report, reviews sample predictions and errors, and stores both dataset-level outputs and experiment summary metadata/descriptions back into TableVault for tracking and retrieval.\", \"flan_t5_answer_prefix_yes_no_mrpc\", \"process_list\"], [\"BASE\", \"This notebook runs a zero-shot paraphrase detection experiment on the GLUE MRPC validation set using google/flan-t5-small. It frames each sentence pair as an instruction prompt asking whether the two sentences are paraphrases and scores the first decoder-step logits for the single-token answers yes and no. To reduce prompt bias, it applies contextual calibration by subtracting baseline yes/no logits computed from a null prompt with placeholder inputs (\\u201cN/A\\u201d, \\u201cN/A\\u201d), then predicts the label from the higher calibrated logit. The workflow loads MRPC examples from TableVault, generates batch predictions, stores raw and calibrated logits plus final predictions back into TableVault, computes evaluation metrics including accuracy, F1, and a classification report, inspects sample predictions and errors, and saves summary records and semantic descriptions for the prediction outputs, summary table, and overall notebook process.\", \"flan_t5_contextual_calibrated_yes_no_mrpc\", \"process_list\"], [\"BASE\", \"This notebook runs a prompt-based paraphrase detection experiment on the GLUE MRPC validation set using google/flan-t5-small. For each sentence pair, it builds an instruction prompt asking whether the two sentences are paraphrases and scores the full decoder log probability of the candidate answers \\u201cyes\\u201d and \\u201cno\\u201d (including EOS). The predicted label is chosen by comparing these two sequence log probabilities.\\n\\nThe workflow loads MRPC validation data from TableVault, tokenizes prompts, performs batched inference with FLAN-T5, records per-example predictions and yes/no scores, and evaluates performance with accuracy, F1, and a classification report. It also prints sample predictions and error cases for qualitative inspection.\\n\\nResults are written back to TableVault as a scored prediction record list and a summary record list, with dataset lineage links and embedding-based descriptions/metadata for both the outputs and the overall notebook process.\", \"flan_t5_full_answer_logprob_mrpc\", \"process_list\"]]}"
+          }
+        ],
+        "previous_response_id": "resp_045b918d8e92e6c60069da5c6d0b008196a1166d2213f692b0"
+      },
+      "model_output": {
+        "response_id": "resp_045b918d8e92e6c60069da5c6d0b008196a1166d2213f692b0",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "code_description_search",
+            "call_id": "call_faIN9ldsnnmpp9gv3PNy9V0p",
+            "arguments": {
+              "description_text": "symmetry symmetric prompt order direction average max min consistency MRPC NLI zero-shot"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "code_description_search",
+        "call_id": "call_faIN9ldsnnmpp9gv3PNy9V0p",
+        "arguments": {
+          "description_text": "symmetry symmetric prompt order direction average max min consistency MRPC NLI zero-shot"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": []
+      },
+      "metrics": {
+        "input_tokens": 3607,
+        "output_tokens": 76,
+        "reasoning_tokens": 39,
+        "conversation_tokens": 1875,
+        "api_latency_s": 2.0076,
+        "exec_latency_s": 0.0425
+      },
+      "error": null
+    },
+    {
+      "turn": 3,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_faIN9ldsnnmpp9gv3PNy9V0p",
+            "output": "{\"ok\": true, \"result\": []}"
+          }
+        ],
+        "previous_response_id": "resp_045b918d8e92e6c60069da5c6f19688196b864354b3d3696e3"
+      },
+      "model_output": {
+        "response_id": "resp_045b918d8e92e6c60069da5c6f19688196b864354b3d3696e3",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "code_description_search",
+            "call_id": "call_EEpVobUG6gOwNFnmQW4QbOGu",
+            "arguments": {
+              "description_text": "both directions sentence order swap prompt MRPC"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "code_description_search",
+        "call_id": "call_EEpVobUG6gOwNFnmQW4QbOGu",
+        "arguments": {
+          "description_text": "both directions sentence order swap prompt MRPC"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": []
+      },
+      "metrics": {
+        "input_tokens": 3705,
+        "output_tokens": 139,
+        "reasoning_tokens": 110,
+        "conversation_tokens": 1973,
+        "api_latency_s": 2.9253,
+        "exec_latency_s": 0.0355
+      },
+      "error": null
+    },
+    {
+      "turn": 4,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_EEpVobUG6gOwNFnmQW4QbOGu",
+            "output": "{\"ok\": true, \"result\": []}"
+          }
+        ],
+        "previous_response_id": "resp_045b918d8e92e6c60069da5c720f04819682b7d8bd22c2c94b"
+      },
+      "model_output": {
+        "response_id": "resp_045b918d8e92e6c60069da5c720f04819682b7d8bd22c2c94b",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "code_description_search",
+            "call_id": "call_pWTO9q9zXE6RuUhKpH49Wmor",
+            "arguments": {
+              "description_text": "FLAN MRPC direction"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "code_description_search",
+        "call_id": "call_pWTO9q9zXE6RuUhKpH49Wmor",
+        "arguments": {
+          "description_text": "FLAN MRPC direction"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": []
+      },
+      "metrics": {
+        "input_tokens": 3866,
+        "output_tokens": 43,
+        "reasoning_tokens": 17,
+        "conversation_tokens": 2134,
+        "api_latency_s": 1.6095,
+        "exec_latency_s": 0.0393
+      },
+      "error": null
+    },
+    {
+      "turn": 5,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_pWTO9q9zXE6RuUhKpH49Wmor",
+            "output": "{\"ok\": true, \"result\": []}"
+          }
+        ],
+        "previous_response_id": "resp_045b918d8e92e6c60069da5c73b3a48196868943be47c044ec"
+      },
+      "model_output": {
+        "response_id": "resp_045b918d8e92e6c60069da5c73b3a48196868943be47c044ec",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "code_description_search",
+            "call_id": "call_Mt7OCOyt2mDXUPJ6VQ5hAlVf",
+            "arguments": {
+              "description_text": "zero-shot paraphrase detection workflow order"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "code_description_search",
+        "call_id": "call_Mt7OCOyt2mDXUPJ6VQ5hAlVf",
+        "arguments": {
+          "description_text": "zero-shot paraphrase detection workflow order"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          [
+            "BASE",
+            "This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using an NLI model. It loads sentence pairs and labels from TableVault, applies the typeform/distilbert-base-uncased-mnli sequence classification model, and treats paraphrase detection as entailment scoring: for each pair, it computes the log-probability difference between entailment and contradiction for both sentence orders (sentence1\u2192sentence2 and sentence2\u2192sentence1), averages the two directional scores, and predicts paraphrase when the averaged score is positive. The notebook stores per-example predictions and directional entailment log-odds in TableVault, computes evaluation metrics including accuracy, F1, and a classification report, inspects sample predictions and errors, and saves both dataset-level summaries and notebook-level metadata/descriptions with OpenAI embeddings for documentation and retrieval.",
+            "entailment_logprob_odds_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using google/flan-t5-small. It frames MRPC as a yes/no text-to-text classification task by prompting the model with two sentences and asking whether they are paraphrases. To reduce order sensitivity, each sentence pair is scored twice\u2014once in the original order and once with the sentences swapped\u2014and the first-token logits for yes and no are averaged across both prompts to produce the final prediction. The notebook loads the validation data from TableVault, runs batched inference with Hugging Face Transformers on MPS or CPU, computes accuracy, F1, and a classification report, inspects example predictions and errors, and stores per-example predictions, logits, summary metrics, and metadata back into TableVault with embedding-based descriptions.",
+            "flan_t5_symmetric_prompt_average_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook runs a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using the NLI model typeform/distilbert-base-uncased-mnli. Its purpose is to score sentence pairs as paraphrase vs. not paraphrase without task-specific fine-tuning, using a neutral-penalized entailment margin. For each MRPC pair, the notebook evaluates both sentence orders, computes an entailment score minus the larger of the contradiction or neutral scores, averages the two directional margins, and predicts paraphrase when the averaged margin is positive. It then stores per-example predictions and scores in TableVault, links them back to the source validation records, computes evaluation metrics including accuracy, F1, and a classification report, inspects example predictions and errors, and saves dataset-, prediction-, summary-, and process-level metadata and semantic descriptions using OpenAI embeddings.",
+            "neutral_penalized_margin_mrpc",
+            "process_list"
+          ]
+        ]
+      },
+      "metrics": {
+        "input_tokens": 3931,
+        "output_tokens": 43,
+        "reasoning_tokens": 15,
+        "conversation_tokens": 2199,
+        "api_latency_s": 1.6622,
+        "exec_latency_s": 0.0444
+      },
+      "error": null
+    },
+    {
+      "turn": 6,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_Mt7OCOyt2mDXUPJ6VQ5hAlVf",
+            "output": "{\"ok\": true, \"result\": [[\"BASE\", \"This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using an NLI model. It loads sentence pairs and labels from TableVault, applies the typeform/distilbert-base-uncased-mnli sequence classification model, and treats paraphrase detection as entailment scoring: for each pair, it computes the log-probability difference between entailment and contradiction for both sentence orders (sentence1\\u2192sentence2 and sentence2\\u2192sentence1), averages the two directional scores, and predicts paraphrase when the averaged score is positive. The notebook stores per-example predictions and directional entailment log-odds in TableVault, computes evaluation metrics including accuracy, F1, and a classification report, inspects sample predictions and errors, and saves both dataset-level summaries and notebook-level metadata/descriptions with OpenAI embeddings for documentation and retrieval.\", \"entailment_logprob_odds_mrpc\", \"process_list\"], [\"BASE\", \"This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using google/flan-t5-small. It frames MRPC as a yes/no text-to-text classification task by prompting the model with two sentences and asking whether they are paraphrases. To reduce order sensitivity, each sentence pair is scored twice\\u2014once in the original order and once with the sentences swapped\\u2014and the first-token logits for yes and no are averaged across both prompts to produce the final prediction. The notebook loads the validation data from TableVault, runs batched inference with Hugging Face Transformers on MPS or CPU, computes accuracy, F1, and a classification report, inspects example predictions and errors, and stores per-example predictions, logits, summary metrics, and metadata back into TableVault with embedding-based descriptions.\", \"flan_t5_symmetric_prompt_average_mrpc\", \"process_list\"], [\"BASE\", \"This notebook runs a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using the NLI model typeform/distilbert-base-uncased-mnli. Its purpose is to score sentence pairs as paraphrase vs. not paraphrase without task-specific fine-tuning, using a neutral-penalized entailment margin. For each MRPC pair, the notebook evaluates both sentence orders, computes an entailment score minus the larger of the contradiction or neutral scores, averages the two directional margins, and predicts paraphrase when the averaged margin is positive. It then stores per-example predictions and scores in TableVault, links them back to the source validation records, computes evaluation metrics including accuracy, F1, and a classification report, inspects example predictions and errors, and saves dataset-, prediction-, summary-, and process-level metadata and semantic descriptions using OpenAI embeddings.\", \"neutral_penalized_margin_mrpc\", \"process_list\"]]}"
+          }
+        ],
+        "previous_response_id": "resp_045b918d8e92e6c60069da5c7566f48196a05ac5a36a284723"
+      },
+      "model_output": {
+        "response_id": "resp_045b918d8e92e6c60069da5c7566f48196a05ac5a36a284723",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "code_description_search",
+            "call_id": "call_TQpP9QFUPUg8UXNL39XzenHF",
+            "arguments": {
+              "description_text": "symmetric prompt average MRPC flan_t5"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "code_description_search",
+        "call_id": "call_TQpP9QFUPUg8UXNL39XzenHF",
+        "arguments": {
+          "description_text": "symmetric prompt average MRPC flan_t5"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": []
+      },
+      "metrics": {
+        "input_tokens": 4571,
+        "output_tokens": 45,
+        "reasoning_tokens": 14,
+        "conversation_tokens": 2839,
+        "api_latency_s": 1.5289,
+        "exec_latency_s": 0.0367
+      },
+      "error": null
+    },
+    {
+      "turn": 7,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_TQpP9QFUPUg8UXNL39XzenHF",
+            "output": "{\"ok\": true, \"result\": []}"
+          }
+        ],
+        "previous_response_id": "resp_045b918d8e92e6c60069da5c76fea8819693d5916017f25e50"
+      },
+      "model_output": {
+        "response_id": "resp_045b918d8e92e6c60069da5c76fea8819693d5916017f25e50",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_code",
+            "call_id": "call_JyxyhNoiCCPLpcvFKK3uaKaT",
+            "arguments": {
+              "name": "consensus_then_avg_margin_mrpc"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_code",
+        "call_id": "call_JyxyhNoiCCPLpcvFKK3uaKaT",
+        "arguments": {
+          "name": "consensus_then_avg_margin_mrpc"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          "def get_embeddings(text):\n    return client.embeddings.create(\n            input=text,\n            model=\"text-embedding-3-large\"\n        ).data[0].embedding",
+          "import torch\nimport numpy as np\nfrom datasets import Dataset\nfrom transformers import AutoTokenizer, AutoModelForSequenceClassification\nfrom sklearn.metrics import accuracy_score, f1_score, classification_report\nfrom tqdm.auto import tqdm\n\ndevice = torch.device(\"mps\" if torch.backends.mps.is_available() else \"cpu\")\nprint(\"device:\", device)\n",
+          "model_name = \"typeform/distilbert-base-uncased-mnli\"\n\ntokenizer = AutoTokenizer.from_pretrained(model_name)\nmodel = AutoModelForSequenceClassification.from_pretrained(model_name).to(device)\nmodel.eval()\n\nid2label = {int(k): v for k, v in model.config.id2label.items()}\nlabel_lookup = {idx: str(label).lower().strip() for idx, label in id2label.items()}\n\ndef find_label_id(target):\n    matches = [idx for idx, label in label_lookup.items() if label == target]\n    if not matches:\n        raise ValueError(f\"Could not find label id for {target!r} in {label_lookup}\")\n    return matches[0]\n\ncontradiction_id = find_label_id(\"contradiction\")\nentailment_id = find_label_id(\"entailment\")\n\nprint(\"model:\", model_name)\nprint(\"id2label:\", id2label)\nprint(\"contradiction_id:\", contradiction_id)\nprint(\"entailment_id:\", entailment_id)\n",
+          "ds = vault.query_item_content(\"glue_mrpc_validation\")\nds = Dataset.from_list(ds)\nprint(ds)\nprint(ds[0])\n\nsent1 = ds[\"sentence1\"]\nsent2 = ds[\"sentence2\"]\ny_true = np.array(ds[\"label\"])\n\nprint(\"num_examples:\", len(y_true))\nprint(\"positive_rate:\", float(y_true.mean()))\n",
+          "batch_size = 64\nlogits_12_parts = []\nlogits_21_parts = []\nargmax_12_parts = []\nargmax_21_parts = []\n\nwith torch.no_grad():\n    for i in tqdm(range(0, len(ds), batch_size)):\n        batch_s1 = sent1[i:i + batch_size]\n        batch_s2 = sent2[i:i + batch_size]\n\n        enc_12 = tokenizer(\n            batch_s1,\n            batch_s2,\n            padding=True,\n            truncation=True,\n            max_length=128,\n            return_tensors=\"pt\",\n        )\n        enc_21 = tokenizer(\n            batch_s2,\n            batch_s1,\n            padding=True,\n            truncation=True,\n            max_length=128,\n            return_tensors=\"pt\",\n        )\n\n        enc_12 = {k: v.to(device) for k, v in enc_12.items()}\n        enc_21 = {k: v.to(device) for k, v in enc_21.items()}\n\n        logits_12 = model(**enc_12).logits\n        logits_21 = model(**enc_21).logits\n\n        logits_12_parts.append(logits_12.cpu().numpy())\n        logits_21_parts.append(logits_21.cpu().numpy())\n        argmax_12_parts.append(torch.argmax(logits_12, dim=-1).cpu().numpy())\n        argmax_21_parts.append(torch.argmax(logits_21, dim=-1).cpu().numpy())\n\nlogits_12 = np.concatenate(logits_12_parts, axis=0)\nlogits_21 = np.concatenate(logits_21_parts, axis=0)\nargmax_12 = np.concatenate(argmax_12_parts, axis=0)\nargmax_21 = np.concatenate(argmax_21_parts, axis=0)\n\nprint(\"done\")\nprint(\"logits_12 shape:\", logits_12.shape)\nprint(\"logits_21 shape:\", logits_21.shape)\n",
+          "margin_12 = logits_12[:, entailment_id] - logits_12[:, contradiction_id]\nmargin_21 = logits_21[:, entailment_id] - logits_21[:, contradiction_id]\navg_margin = (margin_12 + margin_21) / 2.0\n\ngate = (argmax_12 != contradiction_id) & (argmax_21 != contradiction_id)\ny_pred = ((avg_margin > 0.0) & gate).astype(int)\n\n",
+          "vault.create_record_list(\"mrpc_gate_margin_prediction\", column_names=[\"prediction\", \"margin_12\", \"margin_21\", \"gate\"])\n\nfor i in range(len(y_pred)):\n    vault.append_record(\"mrpc_gate_margin_prediction\", \n                        {\n                            \"prediction\": int(y_pred[i]),\n                            \"margin_12\": float(margin_12[i]),\n                            \"margin_21\": float(margin_21[i]),\n                            \"gate\": int(gate[i]),\n                        },\n                       input_items = {\n                           \"glue_mrpc_validation\": [i, i + 1],\n                       }\n                       )\n\ndescription = \"mrpc_gate_margin_prediction is a per-example prediction dataset derived from the GLUE MRPC validation split. For each validation pair (sentence1, sentence2), the notebook runs the NLI model typeform/distilbert-base-uncased-mnli in both input orders, sentence1\\u2192sentence2 and sentence2\\u2192sentence1, and stores the resulting decision signals used for paraphrase classification. The dataset has four fields: prediction (final binary paraphrase prediction, 1 for paraphrase and 0 for not paraphrase), margin_12 (entailment logit minus contradiction logit for sentence1 paired with sentence2), margin_21 (the same margin for the reversed order), and gate (boolean flag that is true only when neither direction\\u2019s argmax label is contradiction). The final prediction is produced by requiring gate = true and the average of margin_12 and margin_21 to be greater than 0. This dataset serves as the main intermediate output of the workflow: it preserves the model\\u2019s directional margin scores and final gated prediction for each MRPC example, and it is then used to compute the summary accuracy, F1, and classification report.\"\nembedding = get_embeddings(description)\nvault.create_description(\"mrpc_gate_margin_prediction\", description, embedding)\n\nproperties = {\"task\": \"paraphrase detection\", \"dataset_type\": \"model predictions\", \"granularity\": \"pair-level\", \"source\": \"glue/mrpc\", \"input_dataset\": \"glue_mrpc_validation\", \"split\": \"validation\", \"size\": \"408\", \"domain\": \"news\", \"model\": \"typeform/distilbert-base-uncased-mnli\", \"inference_strategy\": \"bidirectional consensus then average entailment-contradiction margin\", \"input_fields\": \"sentence1,sentence2\", \"output_fields\": \"prediction,margin_12,margin_21,gate\", \"label_space\": \"binary\", \"labels\": \"not_paraphrase,paraphrase\"} #e.g. task: paraphrase detection\n\nfor prop, cat in properties.items():\n    embedding = get_embeddings(prop)\n    vault.create_description(\"mrpc_gate_margin_prediction\", cat, embedding, prop)",
+          "acc = accuracy_score(y_true, y_pred)\nf1 = f1_score(y_true, y_pred)\nreport = classification_report(y_true, y_pred, target_names=[\"not_paraphrase\", \"paraphrase\"])\nprint({\"accuracy\": acc, \"f1\": f1})\nprint(classification_report(y_true, y_pred, target_names=[\"not_paraphrase\", \"paraphrase\"]))\n",
+          "for i in range(5):\n    print(\"=\" * 100)\n    print(\"sentence1:\", sent1[i])\n    print(\"sentence2:\", sent2[i])\n    print(\"dir_12_argmax:\", int(argmax_12[i]), id2label[int(argmax_12[i])])\n    print(\"dir_21_argmax:\", int(argmax_21[i]), id2label[int(argmax_21[i])])\n    print(\"margin_12:\", float(margin_12[i]))\n    print(\"margin_21:\", float(margin_21[i]))\n    print(\"gate:\", bool(gate[i]))\n    print(\"avg_margin:\", float(avg_margin[i]))\n    print(\"true:\", int(y_true[i]))\n    print(\"pred:\", int(y_pred[i]))\n",
+          "mistakes = np.where(y_true != y_pred)[0][:10]\nprint(\"num_errors:\", int((y_true != y_pred).sum()))\n\nfor i in mistakes:\n    print(\"=\" * 100)\n    print(\"idx:\", int(i))\n    print(\"sentence1:\", sent1[i])\n    print(\"sentence2:\", sent2[i])\n    print(\"dir_12_argmax:\", int(argmax_12[i]), id2label[int(argmax_12[i])])\n    print(\"dir_21_argmax:\", int(argmax_21[i]), id2label[int(argmax_21[i])])\n    print(\"margin_12:\", float(margin_12[i]))\n    print(\"margin_21:\", float(margin_21[i]))\n    print(\"gate:\", bool(gate[i]))\n    print(\"avg_margin:\", float(avg_margin[i]))\n    print(\"true:\", int(y_true[i]), \"pred:\", int(y_pred[i]))\n",
+          "vault.create_record_list(\"consensus_then_avg_margin_mrpc_summary\", column_names=[\"accuracy\", \"f1\", \"classification_report\"])\n\n\nsummary = {\n    \"accuracy\": float(acc),\n    \"f1\": float(f1),\n    \"classification_report\": str(report)\n}\n\nvault.append_record(\"consensus_then_avg_margin_mrpc_summary\", summary,\n                    input_items = {\n                        \"glue_mrpc_validation\": [0, len(ds)],\n                        \"mrpc_gate_margin_prediction\": [0, len(ds)]\n                    })\n\nsummary\n\ndescription = \"Summary dataset for the MRPC validation evaluation of the consensus-then-average-margin inference method. It contains aggregate performance results computed by comparing the generated paraphrase predictions against the true labels from glue_mrpc_validation, using prediction records stored in mrpc_gate_margin_prediction. The dataset is structured as a record list with columns: accuracy (float), f1 (float), and classification_report (string containing the full per-class sklearn classification report for not_paraphrase and paraphrase). In this workflow, it serves as the final evaluation artifact for the notebook, linking the full MRPC validation set and the per-example prediction dataset to a compact summary of model performance.\"\nembedding = get_embeddings(description)\nvault.create_description(\"consensus_then_avg_margin_mrpc_summary\", description, embedding)\n\nproperties = {\"task\": \"paraphrase detection\", \"dataset_role\": \"evaluation summary\", \"source\": \"glue/mrpc\", \"split\": \"validation\", \"size\": \"408\", \"model\": \"typeform/distilbert-base-uncased-mnli\", \"method\": \"consensus then average entailment-contradiction margin\", \"input_type\": \"sentence pair\", \"output_type\": \"aggregate metrics\", \"metrics\": \"accuracy,f1,classification_report\", \"prediction_source\": \"mrpc_gate_margin_prediction\", \"domain\": \"news\"} #e.g. task: paraphrase detection\n\nfor prop, cat in properties.items():\n    embedding = get_embeddings(prop)\n    vault.create_description(\"consensus_then_avg_margin_mrpc_summary\", cat, embedding, prop)\n\n",
+          "description = \"This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using the typeform/distilbert-base-uncased-mnli natural language inference model. For each sentence pair, it runs inference in both directions (sentence1\\u2192sentence2 and sentence2\\u2192sentence1), computes an entailment-versus-contradiction margin for each direction, averages the two margins, and predicts paraphrase only when neither direction is classified as contradiction and the average margin is positive. The notebook stores per-example predictions, directional margins, and gate decisions in TableVault, computes accuracy, F1, and a classification report against the MRPC labels, logs error analysis examples, and saves dataset-, prediction-, summary-, and notebook-level metadata and embeddings for later retrieval and documentation.\" # description of whole notebook\nembedding = get_embeddings(description)\nvault.create_description(\"consensus_then_avg_margin_mrpc\", description, embedding)\n\nproperties = {\"task\": \"paraphrase detection\", \"dataset\": \"glue/mrpc\", \"dataset_split\": \"validation\", \"model\": \"typeform/distilbert-base-uncased-mnli\", \"model_type\": \"NLI sequence classification\", \"approach\": \"zero-shot paraphrase detection via NLI\", \"inference_strategy\": \"bidirectional sentence-pair scoring\", \"decision_rule\": \"consensus non-contradiction gate with averaged entailment-contradiction margin\", \"frameworks\": \"transformers, pytorch, datasets, sklearn\", \"metrics\": \"accuracy, f1-score, classification_report\", \"storage\": \"TableVault with ArangoDB\", \"embedding_model\": \"text-embedding-3-large\", \"process_name\": \"consensus_then_avg_margin_mrpc\"} #e.g. model: distilbert-base-uncased-MRPC\n\nfor prop, cat in properties.items():\n    embedding = get_embeddings(prop)\n    vault.create_description(\"consensus_then_avg_margin_mrpc\", cat, embedding, prop)"
+        ]
+      },
+      "metrics": {
+        "input_tokens": 4638,
+        "output_tokens": 148,
+        "reasoning_tokens": 122,
+        "conversation_tokens": 2906,
+        "api_latency_s": 3.0409,
+        "exec_latency_s": 0.0214
+      },
+      "error": null
+    },
+    {
+      "turn": 8,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_JyxyhNoiCCPLpcvFKK3uaKaT",
+            "output": "{\"ok\": true, \"result\": [\"def get_embeddings(text):\\n    return client.embeddings.create(\\n            input=text,\\n            model=\\\"text-embedding-3-large\\\"\\n        ).data[0].embedding\", \"import torch\\nimport numpy as np\\nfrom datasets import Dataset\\nfrom transformers import AutoTokenizer, AutoModelForSequenceClassification\\nfrom sklearn.metrics import accuracy_score, f1_score, classification_report\\nfrom tqdm.auto import tqdm\\n\\ndevice = torch.device(\\\"mps\\\" if torch.backends.mps.is_available() else \\\"cpu\\\")\\nprint(\\\"device:\\\", device)\\n\", \"model_name = \\\"typeform/distilbert-base-uncased-mnli\\\"\\n\\ntokenizer = AutoTokenizer.from_pretrained(model_name)\\nmodel = AutoModelForSequenceClassification.from_pretrained(model_name).to(device)\\nmodel.eval()\\n\\nid2label = {int(k): v for k, v in model.config.id2label.items()}\\nlabel_lookup = {idx: str(label).lower().strip() for idx, label in id2label.items()}\\n\\ndef find_label_id(target):\\n    matches = [idx for idx, label in label_lookup.items() if label == target]\\n    if not matches:\\n        raise ValueError(f\\\"Could not find label id for {target!r} in {label_lookup}\\\")\\n    return matches[0]\\n\\ncontradiction_id = find_label_id(\\\"contradiction\\\")\\nentailment_id = find_label_id(\\\"entailment\\\")\\n\\nprint(\\\"model:\\\", model_name)\\nprint(\\\"id2label:\\\", id2label)\\nprint(\\\"contradiction_id:\\\", contradiction_id)\\nprint(\\\"entailment_id:\\\", entailment_id)\\n\", \"ds = vault.query_item_content(\\\"glue_mrpc_validation\\\")\\nds = Dataset.from_list(ds)\\nprint(ds)\\nprint(ds[0])\\n\\nsent1 = ds[\\\"sentence1\\\"]\\nsent2 = ds[\\\"sentence2\\\"]\\ny_true = np.array(ds[\\\"label\\\"])\\n\\nprint(\\\"num_examples:\\\", len(y_true))\\nprint(\\\"positive_rate:\\\", float(y_true.mean()))\\n\", \"batch_size = 64\\nlogits_12_parts = []\\nlogits_21_parts = []\\nargmax_12_parts = []\\nargmax_21_parts = []\\n\\nwith torch.no_grad():\\n    for i in tqdm(range(0, len(ds), batch_size)):\\n        batch_s1 = sent1[i:i + batch_size]\\n        batch_s2 = sent2[i:i + batch_size]\\n\\n        enc_12 = tokenizer(\\n            batch_s1,\\n            batch_s2,\\n            padding=True,\\n            truncation=True,\\n            max_length=128,\\n            return_tensors=\\\"pt\\\",\\n        )\\n        enc_21 = tokenizer(\\n            batch_s2,\\n            batch_s1,\\n            padding=True,\\n            truncation=True,\\n            max_length=128,\\n            return_tensors=\\\"pt\\\",\\n        )\\n\\n        enc_12 = {k: v.to(device) for k, v in enc_12.items()}\\n        enc_21 = {k: v.to(device) for k, v in enc_21.items()}\\n\\n        logits_12 = model(**enc_12).logits\\n        logits_21 = model(**enc_21).logits\\n\\n        logits_12_parts.append(logits_12.cpu().numpy())\\n        logits_21_parts.append(logits_21.cpu().numpy())\\n        argmax_12_parts.append(torch.argmax(logits_12, dim=-1).cpu().numpy())\\n        argmax_21_parts.append(torch.argmax(logits_21, dim=-1).cpu().numpy())\\n\\nlogits_12 = np.concatenate(logits_12_parts, axis=0)\\nlogits_21 = np.concatenate(logits_21_parts, axis=0)\\nargmax_12 = np.concatenate(argmax_12_parts, axis=0)\\nargmax_21 = np.concatenate(argmax_21_parts, axis=0)\\n\\nprint(\\\"done\\\")\\nprint(\\\"logits_12 shape:\\\", logits_12.shape)\\nprint(\\\"logits_21 shape:\\\", logits_21.shape)\\n\", \"margin_12 = logits_12[:, entailment_id] - logits_12[:, contradiction_id]\\nmargin_21 = logits_21[:, entailment_id] - logits_21[:, contradiction_id]\\navg_margin = (margin_12 + margin_21) / 2.0\\n\\ngate = (argmax_12 != contradiction_id) & (argmax_21 != contradiction_id)\\ny_pred = ((avg_margin > 0.0) & gate).astype(int)\\n\\n\", \"vault.create_record_list(\\\"mrpc_gate_margin_prediction\\\", column_names=[\\\"prediction\\\", \\\"margin_12\\\", \\\"margin_21\\\", \\\"gate\\\"])\\n\\nfor i in range(len(y_pred)):\\n    vault.append_record(\\\"mrpc_gate_margin_prediction\\\", \\n                        {\\n                            \\\"prediction\\\": int(y_pred[i]),\\n                            \\\"margin_12\\\": float(margin_12[i]),\\n                            \\\"margin_21\\\": float(margin_21[i]),\\n                            \\\"gate\\\": int(gate[i]),\\n                        },\\n                       input_items = {\\n                           \\\"glue_mrpc_validation\\\": [i, i + 1],\\n                       }\\n                       )\\n\\ndescription = \\\"mrpc_gate_margin_prediction is a per-example prediction dataset derived from the GLUE MRPC validation split. For each validation pair (sentence1, sentence2), the notebook runs the NLI model typeform/distilbert-base-uncased-mnli in both input orders, sentence1\\\\u2192sentence2 and sentence2\\\\u2192sentence1, and stores the resulting decision signals used for paraphrase classification. The dataset has four fields: prediction (final binary paraphrase prediction, 1 for paraphrase and 0 for not paraphrase), margin_12 (entailment logit minus contradiction logit for sentence1 paired with sentence2), margin_21 (the same margin for the reversed order), and gate (boolean flag that is true only when neither direction\\\\u2019s argmax label is contradiction). The final prediction is produced by requiring gate = true and the average of margin_12 and margin_21 to be greater than 0. This dataset serves as the main intermediate output of the workflow: it preserves the model\\\\u2019s directional margin scores and final gated prediction for each MRPC example, and it is then used to compute the summary accuracy, F1, and classification report.\\\"\\nembedding = get_embeddings(description)\\nvault.create_description(\\\"mrpc_gate_margin_prediction\\\", description, embedding)\\n\\nproperties = {\\\"task\\\": \\\"paraphrase detection\\\", \\\"dataset_type\\\": \\\"model predictions\\\", \\\"granularity\\\": \\\"pair-level\\\", \\\"source\\\": \\\"glue/mrpc\\\", \\\"input_dataset\\\": \\\"glue_mrpc_validation\\\", \\\"split\\\": \\\"validation\\\", \\\"size\\\": \\\"408\\\", \\\"domain\\\": \\\"news\\\", \\\"model\\\": \\\"typeform/distilbert-base-uncased-mnli\\\", \\\"inference_strategy\\\": \\\"bidirectional consensus then average entailment-contradiction margin\\\", \\\"input_fields\\\": \\\"sentence1,sentence2\\\", \\\"output_fields\\\": \\\"prediction,margin_12,margin_21,gate\\\", \\\"label_space\\\": \\\"binary\\\", \\\"labels\\\": \\\"not_paraphrase,paraphrase\\\"} #e.g. task: paraphrase detection\\n\\nfor prop, cat in properties.items():\\n    embedding = get_embeddings(prop)\\n    vault.create_description(\\\"mrpc_gate_margin_prediction\\\", cat, embedding, prop)\", \"acc = accuracy_score(y_true, y_pred)\\nf1 = f1_score(y_true, y_pred)\\nreport = classification_report(y_true, y_pred, target_names=[\\\"not_paraphrase\\\", \\\"paraphrase\\\"])\\nprint({\\\"accuracy\\\": acc, \\\"f1\\\": f1})\\nprint(classification_report(y_true, y_pred, target_names=[\\\"not_paraphrase\\\", \\\"paraphrase\\\"]))\\n\", \"for i in range(5):\\n    print(\\\"=\\\" * 100)\\n    print(\\\"sentence1:\\\", sent1[i])\\n    print(\\\"sentence2:\\\", sent2[i])\\n    print(\\\"dir_12_argmax:\\\", int(argmax_12[i]), id2label[int(argmax_12[i])])\\n    print(\\\"dir_21_argmax:\\\", int(argmax_21[i]), id2label[int(argmax_21[i])])\\n    print(\\\"margin_12:\\\", float(margin_12[i]))\\n    print(\\\"margin_21:\\\", float(margin_21[i]))\\n    print(\\\"gate:\\\", bool(gate[i]))\\n    print(\\\"avg_margin:\\\", float(avg_margin[i]))\\n    print(\\\"true:\\\", int(y_true[i]))\\n    print(\\\"pred:\\\", int(y_pred[i]))\\n\", \"mistakes = np.where(y_true != y_pred)[0][:10]\\nprint(\\\"num_errors:\\\", int((y_true != y_pred).sum()))\\n\\nfor i in mistakes:\\n    print(\\\"=\\\" * 100)\\n    print(\\\"idx:\\\", int(i))\\n    print(\\\"sentence1:\\\", sent1[i])\\n    print(\\\"sentence2:\\\", sent2[i])\\n    print(\\\"dir_12_argmax:\\\", int(argmax_12[i]), id2label[int(argmax_12[i])])\\n    print(\\\"dir_21_argmax:\\\", int(argmax_21[i]), id2label[int(argmax_21[i])])\\n    print(\\\"margin_12:\\\", float(margin_12[i]))\\n    print(\\\"margin_21:\\\", float(margin_21[i]))\\n    print(\\\"gate:\\\", bool(gate[i]))\\n    print(\\\"avg_margin:\\\", float(avg_margin[i]))\\n    print(\\\"true:\\\", int(y_true[i]), \\\"pred:\\\", int(y_pred[i]))\\n\", \"vault.create_record_list(\\\"consensus_then_avg_margin_mrpc_summary\\\", column_names=[\\\"accuracy\\\", \\\"f1\\\", \\\"classification_report\\\"])\\n\\n\\nsummary = {\\n    \\\"accuracy\\\": float(acc),\\n    \\\"f1\\\": float(f1),\\n    \\\"classification_report\\\": str(report)\\n}\\n\\nvault.append_record(\\\"consensus_then_avg_margin_mrpc_summary\\\", summary,\\n                    input_items = {\\n                        \\\"glue_mrpc_validation\\\": [0, len(ds)],\\n                        \\\"mrpc_gate_margin_prediction\\\": [0, len(ds)]\\n                    })\\n\\nsummary\\n\\ndescription = \\\"Summary dataset for the MRPC validation evaluation of the consensus-then-average-margin inference method. It contains aggregate performance results computed by comparing the generated paraphrase predictions against the true labels from glue_mrpc_validation, using prediction records stored in mrpc_gate_margin_prediction. The dataset is structured as a record list with columns: accuracy (float), f1 (float), and classification_report (string containing the full per-class sklearn classification report for not_paraphrase and paraphrase). In this workflow, it serves as the final evaluation artifact for the notebook, linking the full MRPC validation set and the per-example prediction dataset to a compact summary of model performance.\\\"\\nembedding = get_embeddings(description)\\nvault.create_description(\\\"consensus_then_avg_margin_mrpc_summary\\\", description, embedding)\\n\\nproperties = {\\\"task\\\": \\\"paraphrase detection\\\", \\\"dataset_role\\\": \\\"evaluation summary\\\", \\\"source\\\": \\\"glue/mrpc\\\", \\\"split\\\": \\\"validation\\\", \\\"size\\\": \\\"408\\\", \\\"model\\\": \\\"typeform/distilbert-base-uncased-mnli\\\", \\\"method\\\": \\\"consensus then average entailment-contradiction margin\\\", \\\"input_type\\\": \\\"sentence pair\\\", \\\"output_type\\\": \\\"aggregate metrics\\\", \\\"metrics\\\": \\\"accuracy,f1,classification_report\\\", \\\"prediction_source\\\": \\\"mrpc_gate_margin_prediction\\\", \\\"domain\\\": \\\"news\\\"} #e.g. task: paraphrase detection\\n\\nfor prop, cat in properties.items():\\n    embedding = get_embeddings(prop)\\n    vault.create_description(\\\"consensus_then_avg_margin_mrpc_summary\\\", cat, embedding, prop)\\n\\n\", \"description = \\\"This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using the typeform/distilbert-base-uncased-mnli natural language inference model. For each sentence pair, it runs inference in both directions (sentence1\\\\u2192sentence2 and sentence2\\\\u2192sentence1), computes an entailment-versus-contradiction margin for each direction, averages the two margins, and predicts paraphrase only when neither direction is classified as contradiction and the average margin is positive. The notebook stores per-example predictions, directional margins, and gate decisions in TableVault, computes accuracy, F1, and a classification report against the MRPC labels, logs error analysis examples, and saves dataset-, prediction-, summary-, and notebook-level metadata and embeddings for later retrieval and documentation.\\\" # description of whole notebook\\nembedding = get_embeddings(description)\\nvault.create_description(\\\"consensus_then_avg_margin_mrpc\\\", description, embedding)\\n\\nproperties = {\\\"task\\\": \\\"paraphrase detection\\\", \\\"dataset\\\": \\\"glue/mrpc\\\", \\\"dataset_split\\\": \\\"validation\\\", \\\"model\\\": \\\"typeform/distilbert-base-uncased-mnli\\\", \\\"model_type\\\": \\\"NLI sequence classification\\\", \\\"approach\\\": \\\"zero-shot paraphrase detection via NLI\\\", \\\"inference_strategy\\\": \\\"bidirectional sentence-pair scoring\\\", \\\"decision_rule\\\": \\\"consensus non-contradiction gate with averaged entailment-contradiction margin\\\", \\\"frameworks\\\": \\\"transformers, pytorch, datasets, sklearn\\\", \\\"metrics\\\": \\\"accuracy, f1-score, classification_report\\\", \\\"storage\\\": \\\"TableVault with ArangoDB\\\", \\\"embedding_model\\\": \\\"text-embedding-3-large\\\", \\\"process_name\\\": \\\"consensus_then_avg_margin_mrpc\\\"} #e.g. model: distilbert-base-uncased-MRPC\\n\\nfor prop, cat in properties.items():\\n    embedding = get_embeddings(prop)\\n    vault.create_description(\\\"consensus_then_avg_margin_mrpc\\\", cat, embedding, prop)\"]}"
+          }
+        ],
+        "previous_response_id": "resp_045b918d8e92e6c60069da5c7a092c8196a71c00e6607414d1"
+      },
+      "model_output": {
+        "response_id": "resp_045b918d8e92e6c60069da5c7a092c8196a71c00e6607414d1",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_t6JLD4v0QWziFCjRrF455TKt",
+            "arguments": {
+              "item_name": "consensus_then_avg_margin_mrpc_summary",
+              "start_position": 0,
+              "end_position": 5
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_t6JLD4v0QWziFCjRrF455TKt",
+        "arguments": {
+          "item_name": "consensus_then_avg_margin_mrpc_summary",
+          "start_position": 0,
+          "end_position": 5
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.7009803921568627,
+            "f1": 0.769811320754717,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.52      0.64      0.57       129\n    paraphrase       0.81      0.73      0.77       279\n\n      accuracy                           0.70       408\n     macro avg       0.67      0.68      0.67       408\n  weighted avg       0.72      0.70      0.71       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 7870,
+        "output_tokens": 62,
+        "reasoning_tokens": 24,
+        "conversation_tokens": 6138,
+        "api_latency_s": 1.7106,
+        "exec_latency_s": 0.0208
+      },
+      "error": null
+    },
+    {
+      "turn": 9,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_t6JLD4v0QWziFCjRrF455TKt",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.7009803921568627, \"f1\": 0.769811320754717, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.52      0.64      0.57       129\\n    paraphrase       0.81      0.73      0.77       279\\n\\n      accuracy                           0.70       408\\n     macro avg       0.67      0.68      0.67       408\\n  weighted avg       0.72      0.70      0.71       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_045b918d8e92e6c60069da5c7bc87c81969f69dc4eff1c2304"
+      },
+      "model_output": {
+        "response_id": "resp_045b918d8e92e6c60069da5c7bc87c81969f69dc4eff1c2304",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "code_description_search",
+            "call_id": "call_fUMCvj4WWOswKjPpCsLkgMp5",
+            "arguments": {
+              "description_text": "MRPC NLI paraphrase detection entailment contradiction validation"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "code_description_search",
+        "call_id": "call_fUMCvj4WWOswKjPpCsLkgMp5",
+        "arguments": {
+          "description_text": "MRPC NLI paraphrase detection entailment contradiction validation"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          [
+            "BASE",
+            "This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using an NLI model. It loads sentence pairs and labels from TableVault, applies the typeform/distilbert-base-uncased-mnli sequence classification model, and treats paraphrase detection as entailment scoring: for each pair, it computes the log-probability difference between entailment and contradiction for both sentence orders (sentence1\u2192sentence2 and sentence2\u2192sentence1), averages the two directional scores, and predicts paraphrase when the averaged score is positive. The notebook stores per-example predictions and directional entailment log-odds in TableVault, computes evaluation metrics including accuracy, F1, and a classification report, inspects sample predictions and errors, and saves both dataset-level summaries and notebook-level metadata/descriptions with OpenAI embeddings for documentation and retrieval.",
+            "entailment_logprob_odds_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook evaluates a directional-margin approach to paraphrase detection on the GLUE MRPC validation set. It loads sentence pairs and labels from TableVault, runs the typeform/distilbert-base-uncased-mnli sequence classification model as an NLI-based paraphrase scorer in both directions (sentence1\u2192sentence2 and sentence2\u2192sentence1), computes the entailment-minus-contradiction logit margin for each direction, and uses the minimum of the two margins as the final paraphrase score; pairs with positive minimum margin are predicted as paraphrases. The workflow then stores per-example predictions and margins in TableVault, computes accuracy, F1, and a classification report against the MRPC labels, inspects sample predictions and errors, and saves a summary record and notebook-level metadata back to TableVault.",
+            "min_direction_margin_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook runs a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using the NLI model typeform/distilbert-base-uncased-mnli. Its purpose is to score sentence pairs as paraphrase vs. not paraphrase without task-specific fine-tuning, using a neutral-penalized entailment margin. For each MRPC pair, the notebook evaluates both sentence orders, computes an entailment score minus the larger of the contradiction or neutral scores, averages the two directional margins, and predicts paraphrase when the averaged margin is positive. It then stores per-example predictions and scores in TableVault, links them back to the source validation records, computes evaluation metrics including accuracy, F1, and a classification report, inspects example predictions and errors, and saves dataset-, prediction-, summary-, and process-level metadata and semantic descriptions using OpenAI embeddings.",
+            "neutral_penalized_margin_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook runs a paraphrase detection experiment on the GLUE MRPC validation set using the typeform/distilbert-base-uncased-mnli sequence classification model in an NLI-style formulation. For each sentence pair, it scores both input orders (sentence1, sentence2) and (sentence2, sentence1), computes the softmax probability gap between entailment and contradiction for each order, averages the two gaps, and predicts paraphrase when the mean gap is greater than zero. The workflow loads the MRPC validation examples from TableVault, performs batched inference with Hugging Face Transformers and PyTorch, and stores per-example predictions and gap scores back into TableVault with lineage to the source records. It then evaluates the method with accuracy, F1, and a classification report, inspects sample predictions and errors, and saves an experiment summary plus descriptive metadata and embeddings for the prediction table, summary table, and overall notebook process.",
+            "softmax_gap_mean_mrpc",
+            "process_list"
+          ]
+        ]
+      },
+      "metrics": {
+        "input_tokens": 8097,
+        "output_tokens": 260,
+        "reasoning_tokens": 228,
+        "conversation_tokens": 6365,
+        "api_latency_s": 6.1245,
+        "exec_latency_s": 0.054
+      },
+      "error": null
+    },
+    {
+      "turn": 10,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_fUMCvj4WWOswKjPpCsLkgMp5",
+            "output": "{\"ok\": true, \"result\": [[\"BASE\", \"This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using an NLI model. It loads sentence pairs and labels from TableVault, applies the typeform/distilbert-base-uncased-mnli sequence classification model, and treats paraphrase detection as entailment scoring: for each pair, it computes the log-probability difference between entailment and contradiction for both sentence orders (sentence1\\u2192sentence2 and sentence2\\u2192sentence1), averages the two directional scores, and predicts paraphrase when the averaged score is positive. The notebook stores per-example predictions and directional entailment log-odds in TableVault, computes evaluation metrics including accuracy, F1, and a classification report, inspects sample predictions and errors, and saves both dataset-level summaries and notebook-level metadata/descriptions with OpenAI embeddings for documentation and retrieval.\", \"entailment_logprob_odds_mrpc\", \"process_list\"], [\"BASE\", \"This notebook evaluates a directional-margin approach to paraphrase detection on the GLUE MRPC validation set. It loads sentence pairs and labels from TableVault, runs the typeform/distilbert-base-uncased-mnli sequence classification model as an NLI-based paraphrase scorer in both directions (sentence1\\u2192sentence2 and sentence2\\u2192sentence1), computes the entailment-minus-contradiction logit margin for each direction, and uses the minimum of the two margins as the final paraphrase score; pairs with positive minimum margin are predicted as paraphrases. The workflow then stores per-example predictions and margins in TableVault, computes accuracy, F1, and a classification report against the MRPC labels, inspects sample predictions and errors, and saves a summary record and notebook-level metadata back to TableVault.\", \"min_direction_margin_mrpc\", \"process_list\"], [\"BASE\", \"This notebook runs a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using the NLI model typeform/distilbert-base-uncased-mnli. Its purpose is to score sentence pairs as paraphrase vs. not paraphrase without task-specific fine-tuning, using a neutral-penalized entailment margin. For each MRPC pair, the notebook evaluates both sentence orders, computes an entailment score minus the larger of the contradiction or neutral scores, averages the two directional margins, and predicts paraphrase when the averaged margin is positive. It then stores per-example predictions and scores in TableVault, links them back to the source validation records, computes evaluation metrics including accuracy, F1, and a classification report, inspects example predictions and errors, and saves dataset-, prediction-, summary-, and process-level metadata and semantic descriptions using OpenAI embeddings.\", \"neutral_penalized_margin_mrpc\", \"process_list\"], [\"BASE\", \"This notebook runs a paraphrase detection experiment on the GLUE MRPC validation set using the typeform/distilbert-base-uncased-mnli sequence classification model in an NLI-style formulation. For each sentence pair, it scores both input orders (sentence1, sentence2) and (sentence2, sentence1), computes the softmax probability gap between entailment and contradiction for each order, averages the two gaps, and predicts paraphrase when the mean gap is greater than zero. The workflow loads the MRPC validation examples from TableVault, performs batched inference with Hugging Face Transformers and PyTorch, and stores per-example predictions and gap scores back into TableVault with lineage to the source records. It then evaluates the method with accuracy, F1, and a classification report, inspects sample predictions and errors, and saves an experiment summary plus descriptive metadata and embeddings for the prediction table, summary table, and overall notebook process.\", \"softmax_gap_mean_mrpc\", \"process_list\"]]}"
+          }
+        ],
+        "previous_response_id": "resp_045b918d8e92e6c60069da5c81f39c8196a451c038a284f6a3"
+      },
+      "model_output": {
+        "response_id": "resp_045b918d8e92e6c60069da5c81f39c8196a451c038a284f6a3",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "code_description_search",
+            "call_id": "call_h7eZgcDkGBUWr58z8Bs42Lmv",
+            "arguments": {
+              "description_text": "MRPC zero-shot prompt swapped order average symmetry"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "code_description_search",
+        "call_id": "call_h7eZgcDkGBUWr58z8Bs42Lmv",
+        "arguments": {
+          "description_text": "MRPC zero-shot prompt swapped order average symmetry"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": []
+      },
+      "metrics": {
+        "input_tokens": 9153,
+        "output_tokens": 72,
+        "reasoning_tokens": 42,
+        "conversation_tokens": 7421,
+        "api_latency_s": 3.222,
+        "exec_latency_s": 0.0459
+      },
+      "error": null
+    },
+    {
+      "turn": 11,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_h7eZgcDkGBUWr58z8Bs42Lmv",
+            "output": "{\"ok\": true, \"result\": []}"
+          }
+        ],
+        "previous_response_id": "resp_045b918d8e92e6c60069da5c853a408196ab0310f586f8a129"
+      },
+      "model_output": {
+        "response_id": "resp_045b918d8e92e6c60069da5c853a408196ab0310f586f8a129",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "code_description_search",
+            "call_id": "call_hSebvFkQqKbjZUPEiOTruO5g",
+            "arguments": {
+              "description_text": "order sensitivity MRPC paraphrase"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "code_description_search",
+        "call_id": "call_hSebvFkQqKbjZUPEiOTruO5g",
+        "arguments": {
+          "description_text": "order sensitivity MRPC paraphrase"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          [
+            "BASE",
+            "This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using google/flan-t5-small. It frames MRPC as a yes/no text-to-text classification task by prompting the model with two sentences and asking whether they are paraphrases. To reduce order sensitivity, each sentence pair is scored twice\u2014once in the original order and once with the sentences swapped\u2014and the first-token logits for yes and no are averaged across both prompts to produce the final prediction. The notebook loads the validation data from TableVault, runs batched inference with Hugging Face Transformers on MPS or CPU, computes accuracy, F1, and a classification report, inspects example predictions and errors, and stores per-example predictions, logits, summary metrics, and metadata back into TableVault with embedding-based descriptions.",
+            "flan_t5_symmetric_prompt_average_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook evaluates a Hugging Face paraphrase detection pipeline on the GLUE MRPC validation set using the textattack/distilbert-base-uncased-MRPC sequence classification model. It loads sentence pairs from TableVault, runs inference in both the original and swapped sentence order, extracts the paraphrase-class probabilities, and averages the two scores to reduce sensitivity to input order before generating final binary predictions. The workflow stores per-example prediction outputs and a summary of accuracy, F1, and the full classification report in TableVault, along with notebook, dataset, and result metadata embeddings for later retrieval and documentation.",
+            "hf_pipeline_mrpc_bidirectional_order_average",
+            "process_list"
+          ]
+        ]
+      },
+      "metrics": {
+        "input_tokens": 9247,
+        "output_tokens": 36,
+        "reasoning_tokens": 9,
+        "conversation_tokens": 7515,
+        "api_latency_s": 1.5914,
+        "exec_latency_s": 0.0441
+      },
+      "error": null
+    },
+    {
+      "turn": 12,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_hSebvFkQqKbjZUPEiOTruO5g",
+            "output": "{\"ok\": true, \"result\": [[\"BASE\", \"This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using google/flan-t5-small. It frames MRPC as a yes/no text-to-text classification task by prompting the model with two sentences and asking whether they are paraphrases. To reduce order sensitivity, each sentence pair is scored twice\\u2014once in the original order and once with the sentences swapped\\u2014and the first-token logits for yes and no are averaged across both prompts to produce the final prediction. The notebook loads the validation data from TableVault, runs batched inference with Hugging Face Transformers on MPS or CPU, computes accuracy, F1, and a classification report, inspects example predictions and errors, and stores per-example predictions, logits, summary metrics, and metadata back into TableVault with embedding-based descriptions.\", \"flan_t5_symmetric_prompt_average_mrpc\", \"process_list\"], [\"BASE\", \"This notebook evaluates a Hugging Face paraphrase detection pipeline on the GLUE MRPC validation set using the textattack/distilbert-base-uncased-MRPC sequence classification model. It loads sentence pairs from TableVault, runs inference in both the original and swapped sentence order, extracts the paraphrase-class probabilities, and averages the two scores to reduce sensitivity to input order before generating final binary predictions. The workflow stores per-example prediction outputs and a summary of accuracy, F1, and the full classification report in TableVault, along with notebook, dataset, and result metadata embeddings for later retrieval and documentation.\", \"hf_pipeline_mrpc_bidirectional_order_average\", \"process_list\"]]}"
+          }
+        ],
+        "previous_response_id": "resp_045b918d8e92e6c60069da5c86dc108196a8d90a1b2b1d4a14"
+      },
+      "model_output": {
+        "response_id": "resp_045b918d8e92e6c60069da5c86dc108196a8d90a1b2b1d4a14",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "code_description_search",
+            "call_id": "call_KS48OzsaqXLZRl0n8EgOzAr3",
+            "arguments": {
+              "description_text": "flan-t5 MRPC swapped prompt"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "code_description_search",
+        "call_id": "call_KS48OzsaqXLZRl0n8EgOzAr3",
+        "arguments": {
+          "description_text": "flan-t5 MRPC swapped prompt"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          [
+            "BASE",
+            "This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using google/flan-t5-small. It frames MRPC as a yes/no text-to-text classification task by prompting the model with two sentences and asking whether they are paraphrases. To reduce order sensitivity, each sentence pair is scored twice\u2014once in the original order and once with the sentences swapped\u2014and the first-token logits for yes and no are averaged across both prompts to produce the final prediction. The notebook loads the validation data from TableVault, runs batched inference with Hugging Face Transformers on MPS or CPU, computes accuracy, F1, and a classification report, inspects example predictions and errors, and stores per-example predictions, logits, summary metrics, and metadata back into TableVault with embedding-based descriptions.",
+            "flan_t5_symmetric_prompt_average_mrpc",
+            "process_list"
+          ]
+        ]
+      },
+      "metrics": {
+        "input_tokens": 9629,
+        "output_tokens": 84,
+        "reasoning_tokens": 55,
+        "conversation_tokens": 7897,
+        "api_latency_s": 2.168,
+        "exec_latency_s": 0.0444
+      },
+      "error": null
+    },
+    {
+      "turn": 13,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_KS48OzsaqXLZRl0n8EgOzAr3",
+            "output": "{\"ok\": true, \"result\": [[\"BASE\", \"This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using google/flan-t5-small. It frames MRPC as a yes/no text-to-text classification task by prompting the model with two sentences and asking whether they are paraphrases. To reduce order sensitivity, each sentence pair is scored twice\\u2014once in the original order and once with the sentences swapped\\u2014and the first-token logits for yes and no are averaged across both prompts to produce the final prediction. The notebook loads the validation data from TableVault, runs batched inference with Hugging Face Transformers on MPS or CPU, computes accuracy, F1, and a classification report, inspects example predictions and errors, and stores per-example predictions, logits, summary metrics, and metadata back into TableVault with embedding-based descriptions.\", \"flan_t5_symmetric_prompt_average_mrpc\", \"process_list\"]]}"
+          }
+        ],
+        "previous_response_id": "resp_045b918d8e92e6c60069da5c891348819692f7514af4018148"
+      },
+      "model_output": {
+        "response_id": "resp_045b918d8e92e6c60069da5c891348819692f7514af4018148",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "code_description_search",
+            "call_id": "call_ezaY1PAddWkEmN7zZdX27yd4",
+            "arguments": {
+              "description_text": "MRPC NLI single direction sentence1 sentence2 paraphrase"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "code_description_search",
+        "call_id": "call_ezaY1PAddWkEmN7zZdX27yd4",
+        "arguments": {
+          "description_text": "MRPC NLI single direction sentence1 sentence2 paraphrase"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": []
+      },
+      "metrics": {
+        "input_tokens": 9921,
+        "output_tokens": 113,
+        "reasoning_tokens": 80,
+        "conversation_tokens": 8189,
+        "api_latency_s": 4.2953,
+        "exec_latency_s": 0.0393
+      },
+      "error": null
+    },
+    {
+      "turn": 14,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_ezaY1PAddWkEmN7zZdX27yd4",
+            "output": "{\"ok\": true, \"result\": []}"
+          }
+        ],
+        "previous_response_id": "resp_045b918d8e92e6c60069da5c8d68e08196bac9142559b7e9ba"
+      },
+      "model_output": {
+        "response_id": "resp_045b918d8e92e6c60069da5c8d68e08196bac9142559b7e9ba",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "code_description_search",
+            "call_id": "call_bjn22YwA1dWMBH5MIxKBNzVU",
+            "arguments": {
+              "description_text": "typeform/distilbert-base-uncased-mnli one direction MRPC"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "code_description_search",
+        "call_id": "call_bjn22YwA1dWMBH5MIxKBNzVU",
+        "arguments": {
+          "description_text": "typeform/distilbert-base-uncased-mnli one direction MRPC"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": []
+      },
+      "metrics": {
+        "input_tokens": 10056,
+        "output_tokens": 102,
+        "reasoning_tokens": 65,
+        "conversation_tokens": 8324,
+        "api_latency_s": 2.4273,
+        "exec_latency_s": 0.0453
+      },
+      "error": null
+    },
+    {
+      "turn": 15,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_bjn22YwA1dWMBH5MIxKBNzVU",
+            "output": "{\"ok\": true, \"result\": []}"
+          }
+        ],
+        "previous_response_id": "resp_045b918d8e92e6c60069da5c8fe0c08196acacd070b4214bfa"
+      },
+      "model_output": {
+        "response_id": "resp_045b918d8e92e6c60069da5c8fe0c08196acacd070b4214bfa",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "code_description_search",
+            "call_id": "call_6Z92PMsq55wJp8epKGbMfAwG",
+            "arguments": {
+              "description_text": "distilbert-base-uncased-mnli MRPC validation set using"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "code_description_search",
+        "call_id": "call_6Z92PMsq55wJp8epKGbMfAwG",
+        "arguments": {
+          "description_text": "distilbert-base-uncased-mnli MRPC validation set using"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          [
+            "BASE",
+            "This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using the typeform/distilbert-base-uncased-mnli natural language inference model. For each sentence pair, it runs inference in both directions (sentence1\u2192sentence2 and sentence2\u2192sentence1), computes an entailment-versus-contradiction margin for each direction, averages the two margins, and predicts paraphrase only when neither direction is classified as contradiction and the average margin is positive. The notebook stores per-example predictions, directional margins, and gate decisions in TableVault, computes accuracy, F1, and a classification report against the MRPC labels, logs error analysis examples, and saves dataset-, prediction-, summary-, and notebook-level metadata and embeddings for later retrieval and documentation.",
+            "consensus_then_avg_margin_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using an NLI model. It loads sentence pairs and labels from TableVault, applies the typeform/distilbert-base-uncased-mnli sequence classification model, and treats paraphrase detection as entailment scoring: for each pair, it computes the log-probability difference between entailment and contradiction for both sentence orders (sentence1\u2192sentence2 and sentence2\u2192sentence1), averages the two directional scores, and predicts paraphrase when the averaged score is positive. The notebook stores per-example predictions and directional entailment log-odds in TableVault, computes evaluation metrics including accuracy, F1, and a classification report, inspects sample predictions and errors, and saves both dataset-level summaries and notebook-level metadata/descriptions with OpenAI embeddings for documentation and retrieval.",
+            "entailment_logprob_odds_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook evaluates a directional-margin approach to paraphrase detection on the GLUE MRPC validation set. It loads sentence pairs and labels from TableVault, runs the typeform/distilbert-base-uncased-mnli sequence classification model as an NLI-based paraphrase scorer in both directions (sentence1\u2192sentence2 and sentence2\u2192sentence1), computes the entailment-minus-contradiction logit margin for each direction, and uses the minimum of the two margins as the final paraphrase score; pairs with positive minimum margin are predicted as paraphrases. The workflow then stores per-example predictions and margins in TableVault, computes accuracy, F1, and a classification report against the MRPC labels, inspects sample predictions and errors, and saves a summary record and notebook-level metadata back to TableVault.",
+            "min_direction_margin_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook runs a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using the NLI model typeform/distilbert-base-uncased-mnli. Its purpose is to score sentence pairs as paraphrase vs. not paraphrase without task-specific fine-tuning, using a neutral-penalized entailment margin. For each MRPC pair, the notebook evaluates both sentence orders, computes an entailment score minus the larger of the contradiction or neutral scores, averages the two directional margins, and predicts paraphrase when the averaged margin is positive. It then stores per-example predictions and scores in TableVault, links them back to the source validation records, computes evaluation metrics including accuracy, F1, and a classification report, inspects example predictions and errors, and saves dataset-, prediction-, summary-, and process-level metadata and semantic descriptions using OpenAI embeddings.",
+            "neutral_penalized_margin_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook runs a paraphrase detection experiment on the GLUE MRPC validation set using the typeform/distilbert-base-uncased-mnli sequence classification model in an NLI-style formulation. For each sentence pair, it scores both input orders (sentence1, sentence2) and (sentence2, sentence1), computes the softmax probability gap between entailment and contradiction for each order, averages the two gaps, and predicts paraphrase when the mean gap is greater than zero. The workflow loads the MRPC validation examples from TableVault, performs batched inference with Hugging Face Transformers and PyTorch, and stores per-example predictions and gap scores back into TableVault with lineage to the source records. It then evaluates the method with accuracy, F1, and a classification report, inspects sample predictions and errors, and saves an experiment summary plus descriptive metadata and embeddings for the prediction table, summary table, and overall notebook process.",
+            "softmax_gap_mean_mrpc",
+            "process_list"
+          ]
+        ]
+      },
+      "metrics": {
+        "input_tokens": 10180,
+        "output_tokens": 67,
+        "reasoning_tokens": 31,
+        "conversation_tokens": 8448,
+        "api_latency_s": 2.201,
+        "exec_latency_s": 0.0413
+      },
+      "error": null
+    },
+    {
+      "turn": 16,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_6Z92PMsq55wJp8epKGbMfAwG",
+            "output": "{\"ok\": true, \"result\": [[\"BASE\", \"This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using the typeform/distilbert-base-uncased-mnli natural language inference model. For each sentence pair, it runs inference in both directions (sentence1\\u2192sentence2 and sentence2\\u2192sentence1), computes an entailment-versus-contradiction margin for each direction, averages the two margins, and predicts paraphrase only when neither direction is classified as contradiction and the average margin is positive. The notebook stores per-example predictions, directional margins, and gate decisions in TableVault, computes accuracy, F1, and a classification report against the MRPC labels, logs error analysis examples, and saves dataset-, prediction-, summary-, and notebook-level metadata and embeddings for later retrieval and documentation.\", \"consensus_then_avg_margin_mrpc\", \"process_list\"], [\"BASE\", \"This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using an NLI model. It loads sentence pairs and labels from TableVault, applies the typeform/distilbert-base-uncased-mnli sequence classification model, and treats paraphrase detection as entailment scoring: for each pair, it computes the log-probability difference between entailment and contradiction for both sentence orders (sentence1\\u2192sentence2 and sentence2\\u2192sentence1), averages the two directional scores, and predicts paraphrase when the averaged score is positive. The notebook stores per-example predictions and directional entailment log-odds in TableVault, computes evaluation metrics including accuracy, F1, and a classification report, inspects sample predictions and errors, and saves both dataset-level summaries and notebook-level metadata/descriptions with OpenAI embeddings for documentation and retrieval.\", \"entailment_logprob_odds_mrpc\", \"process_list\"], [\"BASE\", \"This notebook evaluates a directional-margin approach to paraphrase detection on the GLUE MRPC validation set. It loads sentence pairs and labels from TableVault, runs the typeform/distilbert-base-uncased-mnli sequence classification model as an NLI-based paraphrase scorer in both directions (sentence1\\u2192sentence2 and sentence2\\u2192sentence1), computes the entailment-minus-contradiction logit margin for each direction, and uses the minimum of the two margins as the final paraphrase score; pairs with positive minimum margin are predicted as paraphrases. The workflow then stores per-example predictions and margins in TableVault, computes accuracy, F1, and a classification report against the MRPC labels, inspects sample predictions and errors, and saves a summary record and notebook-level metadata back to TableVault.\", \"min_direction_margin_mrpc\", \"process_list\"], [\"BASE\", \"This notebook runs a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using the NLI model typeform/distilbert-base-uncased-mnli. Its purpose is to score sentence pairs as paraphrase vs. not paraphrase without task-specific fine-tuning, using a neutral-penalized entailment margin. For each MRPC pair, the notebook evaluates both sentence orders, computes an entailment score minus the larger of the contradiction or neutral scores, averages the two directional margins, and predicts paraphrase when the averaged margin is positive. It then stores per-example predictions and scores in TableVault, links them back to the source validation records, computes evaluation metrics including accuracy, F1, and a classification report, inspects example predictions and errors, and saves dataset-, prediction-, summary-, and process-level metadata and semantic descriptions using OpenAI embeddings.\", \"neutral_penalized_margin_mrpc\", \"process_list\"], [\"BASE\", \"This notebook runs a paraphrase detection experiment on the GLUE MRPC validation set using the typeform/distilbert-base-uncased-mnli sequence classification model in an NLI-style formulation. For each sentence pair, it scores both input orders (sentence1, sentence2) and (sentence2, sentence1), computes the softmax probability gap between entailment and contradiction for each order, averages the two gaps, and predicts paraphrase when the mean gap is greater than zero. The workflow loads the MRPC validation examples from TableVault, performs batched inference with Hugging Face Transformers and PyTorch, and stores per-example predictions and gap scores back into TableVault with lineage to the source records. It then evaluates the method with accuracy, F1, and a classification report, inspects sample predictions and errors, and saves an experiment summary plus descriptive metadata and embeddings for the prediction table, summary table, and overall notebook process.\", \"softmax_gap_mean_mrpc\", \"process_list\"]]}"
+          }
+        ],
+        "previous_response_id": "resp_045b918d8e92e6c60069da5c921dd4819696372a040617ed44"
+      },
+      "model_output": {
+        "response_id": "resp_045b918d8e92e6c60069da5c921dd4819696372a040617ed44",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "code_description_search",
+            "call_id": "call_NFGbEY8Z5mTPwqgBgS8nu4U2",
+            "arguments": {
+              "description_text": "flan-t5-small MRPC"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "code_description_search",
+        "call_id": "call_NFGbEY8Z5mTPwqgBgS8nu4U2",
+        "arguments": {
+          "description_text": "flan-t5-small MRPC"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          [
+            "BASE",
+            "This notebook evaluates google/flan-t5-small on the GLUE MRPC validation set for binary paraphrase detection. It loads sentence pairs and labels from TableVault, converts each pair into a natural-language prompt asking whether the two sentences have the same meaning, and runs FLAN-T5 as a seq2seq model on MPS or CPU. Using the decoder prefix Answer:, it compares the next-token logits for yes and no to make a classification without full text generation. The workflow saves per-example predictions and yes/no logits to TableVault, computes accuracy, F1, and a classification report, reviews sample predictions and errors, and stores both dataset-level outputs and experiment summary metadata/descriptions back into TableVault for tracking and retrieval.",
+            "flan_t5_answer_prefix_yes_no_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook runs a zero-shot paraphrase detection experiment on the GLUE MRPC validation set using google/flan-t5-small. It frames each sentence pair as an instruction prompt asking whether the two sentences are paraphrases and scores the first decoder-step logits for the single-token answers yes and no. To reduce prompt bias, it applies contextual calibration by subtracting baseline yes/no logits computed from a null prompt with placeholder inputs (\u201cN/A\u201d, \u201cN/A\u201d), then predicts the label from the higher calibrated logit. The workflow loads MRPC examples from TableVault, generates batch predictions, stores raw and calibrated logits plus final predictions back into TableVault, computes evaluation metrics including accuracy, F1, and a classification report, inspects sample predictions and errors, and saves summary records and semantic descriptions for the prediction outputs, summary table, and overall notebook process.",
+            "flan_t5_contextual_calibrated_yes_no_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook runs a prompt-based paraphrase detection experiment on the GLUE MRPC validation set using google/flan-t5-small. For each sentence pair, it builds an instruction prompt asking whether the two sentences are paraphrases and scores the full decoder log probability of the candidate answers \u201cyes\u201d and \u201cno\u201d (including EOS). The predicted label is chosen by comparing these two sequence log probabilities.\n\nThe workflow loads MRPC validation data from TableVault, tokenizes prompts, performs batched inference with FLAN-T5, records per-example predictions and yes/no scores, and evaluates performance with accuracy, F1, and a classification report. It also prints sample predictions and error cases for qualitative inspection.\n\nResults are written back to TableVault as a scored prediction record list and a summary record list, with dataset lineage links and embedding-based descriptions/metadata for both the outputs and the overall notebook process.",
+            "flan_t5_full_answer_logprob_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using google/flan-t5-small. It frames MRPC as a yes/no text-to-text classification task by prompting the model with two sentences and asking whether they are paraphrases. To reduce order sensitivity, each sentence pair is scored twice\u2014once in the original order and once with the sentences swapped\u2014and the first-token logits for yes and no are averaged across both prompts to produce the final prediction. The notebook loads the validation data from TableVault, runs batched inference with Hugging Face Transformers on MPS or CPU, computes accuracy, F1, and a classification report, inspects example predictions and errors, and stores per-example predictions, logits, summary metrics, and metadata back into TableVault with embedding-based descriptions.",
+            "flan_t5_symmetric_prompt_average_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook evaluates google/flan-t5-small on the GLUE MRPC validation set for binary paraphrase detection using a prompt-based true/false formulation. It loads sentence pairs and labels from the glue_mrpc_validation dataset stored in TableVault, prompts the model with an instruction asking whether the two sentences are paraphrases, and uses the first decoder-step logits for the single-token verbalizers true and false to make predictions. The workflow records per-example predictions and logits in TableVault, computes summary metrics including accuracy, F1, and a classification report, inspects a few examples and errors, and stores dataset, result, and notebook-level descriptions with OpenAI text embeddings for metadata and retrieval.",
+            "flan_t5_true_false_first_step_mrpc",
+            "process_list"
+          ]
+        ]
+      },
+      "metrics": {
+        "input_tokens": 11222,
+        "output_tokens": 271,
+        "reasoning_tokens": 243,
+        "conversation_tokens": 9490,
+        "api_latency_s": 4.6669,
+        "exec_latency_s": 0.0473
+      },
+      "error": null
+    },
+    {
+      "turn": 17,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_NFGbEY8Z5mTPwqgBgS8nu4U2",
+            "output": "{\"ok\": true, \"result\": [[\"BASE\", \"This notebook evaluates google/flan-t5-small on the GLUE MRPC validation set for binary paraphrase detection. It loads sentence pairs and labels from TableVault, converts each pair into a natural-language prompt asking whether the two sentences have the same meaning, and runs FLAN-T5 as a seq2seq model on MPS or CPU. Using the decoder prefix Answer:, it compares the next-token logits for yes and no to make a classification without full text generation. The workflow saves per-example predictions and yes/no logits to TableVault, computes accuracy, F1, and a classification report, reviews sample predictions and errors, and stores both dataset-level outputs and experiment summary metadata/descriptions back into TableVault for tracking and retrieval.\", \"flan_t5_answer_prefix_yes_no_mrpc\", \"process_list\"], [\"BASE\", \"This notebook runs a zero-shot paraphrase detection experiment on the GLUE MRPC validation set using google/flan-t5-small. It frames each sentence pair as an instruction prompt asking whether the two sentences are paraphrases and scores the first decoder-step logits for the single-token answers yes and no. To reduce prompt bias, it applies contextual calibration by subtracting baseline yes/no logits computed from a null prompt with placeholder inputs (\\u201cN/A\\u201d, \\u201cN/A\\u201d), then predicts the label from the higher calibrated logit. The workflow loads MRPC examples from TableVault, generates batch predictions, stores raw and calibrated logits plus final predictions back into TableVault, computes evaluation metrics including accuracy, F1, and a classification report, inspects sample predictions and errors, and saves summary records and semantic descriptions for the prediction outputs, summary table, and overall notebook process.\", \"flan_t5_contextual_calibrated_yes_no_mrpc\", \"process_list\"], [\"BASE\", \"This notebook runs a prompt-based paraphrase detection experiment on the GLUE MRPC validation set using google/flan-t5-small. For each sentence pair, it builds an instruction prompt asking whether the two sentences are paraphrases and scores the full decoder log probability of the candidate answers \\u201cyes\\u201d and \\u201cno\\u201d (including EOS). The predicted label is chosen by comparing these two sequence log probabilities.\\n\\nThe workflow loads MRPC validation data from TableVault, tokenizes prompts, performs batched inference with FLAN-T5, records per-example predictions and yes/no scores, and evaluates performance with accuracy, F1, and a classification report. It also prints sample predictions and error cases for qualitative inspection.\\n\\nResults are written back to TableVault as a scored prediction record list and a summary record list, with dataset lineage links and embedding-based descriptions/metadata for both the outputs and the overall notebook process.\", \"flan_t5_full_answer_logprob_mrpc\", \"process_list\"], [\"BASE\", \"This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using google/flan-t5-small. It frames MRPC as a yes/no text-to-text classification task by prompting the model with two sentences and asking whether they are paraphrases. To reduce order sensitivity, each sentence pair is scored twice\\u2014once in the original order and once with the sentences swapped\\u2014and the first-token logits for yes and no are averaged across both prompts to produce the final prediction. The notebook loads the validation data from TableVault, runs batched inference with Hugging Face Transformers on MPS or CPU, computes accuracy, F1, and a classification report, inspects example predictions and errors, and stores per-example predictions, logits, summary metrics, and metadata back into TableVault with embedding-based descriptions.\", \"flan_t5_symmetric_prompt_average_mrpc\", \"process_list\"], [\"BASE\", \"This notebook evaluates google/flan-t5-small on the GLUE MRPC validation set for binary paraphrase detection using a prompt-based true/false formulation. It loads sentence pairs and labels from the glue_mrpc_validation dataset stored in TableVault, prompts the model with an instruction asking whether the two sentences are paraphrases, and uses the first decoder-step logits for the single-token verbalizers true and false to make predictions. The workflow records per-example predictions and logits in TableVault, computes summary metrics including accuracy, F1, and a classification report, inspects a few examples and errors, and stores dataset, result, and notebook-level descriptions with OpenAI text embeddings for metadata and retrieval.\", \"flan_t5_true_false_first_step_mrpc\", \"process_list\"]]}"
+          }
+        ],
+        "previous_response_id": "resp_045b918d8e92e6c60069da5c96d84481969ec1e15ec4ed4cf7"
+      },
+      "model_output": {
+        "response_id": "resp_045b918d8e92e6c60069da5c96d84481969ec1e15ec4ed4cf7",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_code",
+            "call_id": "call_3Z90ep24zQ13RCatsJtLzSvO",
+            "arguments": {
+              "name": "flan_t5_answer_prefix_yes_no_mrpc"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_code",
+        "call_id": "call_3Z90ep24zQ13RCatsJtLzSvO",
+        "arguments": {
+          "name": "flan_t5_answer_prefix_yes_no_mrpc"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          "model_name = \"google/flan-t5-small\"\n\ntokenizer = AutoTokenizer.from_pretrained(model_name)\nmodel = AutoModelForSeq2SeqLM.from_pretrained(model_name).to(device)\nmodel.eval()\n\ndef get_single_token_id(text):\n    ids = tokenizer(text, add_special_tokens=False).input_ids\n    if len(ids) != 1:\n        raise ValueError(f\"{text!r} is not a single token: {ids} -> {tokenizer.convert_ids_to_tokens(ids)}\")\n    return ids[0]\n\nyes_token_id = get_single_token_id(\"yes\")\nno_token_id = get_single_token_id(\"no\")\n\nanswer_prefix = \"Answer:\"\nanswer_prefix_ids = tokenizer(answer_prefix, add_special_tokens=False).input_ids\ndecoder_start_token_id = model.config.decoder_start_token_id\n\nprint(\"model:\", model_name)\nprint(\"decoder_start_token_id:\", decoder_start_token_id)\nprint(\"yes_token_id:\", yes_token_id, \"token:\", tokenizer.convert_ids_to_tokens([yes_token_id]))\nprint(\"no_token_id:\", no_token_id, \"token:\", tokenizer.convert_ids_to_tokens([no_token_id]))\nprint(\"answer_prefix_ids:\", answer_prefix_ids, \"tokens:\", tokenizer.convert_ids_to_tokens(answer_prefix_ids))\n",
+          "ds = vault.query_item_content(\"glue_mrpc_validation\")\nds = Dataset.from_list(ds)\nprint(ds)\nprint(ds[0])\n\nsent1 = ds[\"sentence1\"]\nsent2 = ds[\"sentence2\"]\ny_true = np.array(ds[\"label\"])\n\nprompts = [\n    f\"Do these two sentences have the same meaning? Sentence 1: {s1} Sentence 2: {s2}\"\n    for s1, s2 in zip(sent1, sent2)\n]\n\nprint(\"num_examples:\", len(ds))\nprint(\"positive_rate:\", float(y_true.mean()))\nprint(\"sample_prompt:\", prompts[0])\n",
+          "batch_size = 16\npreds = []\nyes_logits_all = []\nno_logits_all = []\n\ndecoder_prefix_ids = [decoder_start_token_id] + answer_prefix_ids\ndecoder_prefix = torch.tensor(decoder_prefix_ids, dtype=torch.long, device=device)\n\nwith torch.no_grad():\n    for i in tqdm(range(0, len(prompts), batch_size)):\n        batch_prompts = prompts[i:i + batch_size]\n\n        enc = tokenizer(\n            batch_prompts,\n            padding=True,\n            truncation=True,\n            max_length=256,\n            return_tensors=\"pt\",\n        )\n        enc = {k: v.to(device) for k, v in enc.items()}\n\n        batch_decoder_input_ids = decoder_prefix.unsqueeze(0).repeat(len(batch_prompts), 1)\n\n        logits = model(**enc, decoder_input_ids=batch_decoder_input_ids).logits\n        step_logits = logits[:, -1, :]\n\n        batch_yes_logits = step_logits[:, yes_token_id]\n        batch_no_logits = step_logits[:, no_token_id]\n        batch_preds = (batch_yes_logits > batch_no_logits).long().cpu().numpy()\n\n        preds.extend(batch_preds.tolist())\n        yes_logits_all.extend(batch_yes_logits.detach().cpu().numpy().tolist())\n        no_logits_all.extend(batch_no_logits.detach().cpu().numpy().tolist())\n\ny_pred = np.array(preds)\nyes_logits_all = np.array(yes_logits_all)\nno_logits_all = np.array(no_logits_all)\n\nprint(\"done\")\nprint(\"num_predicted_positive:\", int(y_pred.sum()))\n",
+          "\nvault.create_record_list(\"flan_prediction_and_logit_prefix\", column_names=[\"prediction\",\"yes_logits\", \"no_logits\"])\n\nfor i in range(len(y_pred)):\n    vault.append_record(\"flan_prediction_and_logit_prefix\", \n                        {\n                            \"prediction\": int(y_pred[i]),\n                            \"yes_logits\": float(yes_logits_all[i]),\n                            \"no_logits\": float(no_logits_all[i]),\n                        },\n                       input_items = {\n                           \"glue_mrpc_validation\": [i, i + 1],\n                       }\n                       )\n\ndescription = \"This dataset stores per-example inference outputs from google/flan-t5-small on the GLUE MRPC validation set using a prompted yes/no paraphrase detection setup. Each record corresponds to one input pair from glue_mrpc_validation and contains three fields: prediction (binary label, where 1 indicates the model preferred \\u201cyes\\u201d and 0 indicates it preferred \\u201cno\\u201d), yes_logits (the decoder logit for the token \\u201cyes\\u201d at the answer position), and no_logits (the decoder logit for the token \\u201cno\\u201d at the answer position). Predictions are produced by prompting the model with the two sentences, forcing the decoder prefix \\u201cAnswer:\\u201d, and selecting the higher of the yes/no logits. In this workflow, the dataset serves as the main model output table for downstream evaluation, error analysis, and summary metric generation, while preserving a row-level link back to the original MRPC validation examples.\"\nembedding = get_embeddings(description)\nvault.create_description(\"flan_prediction_and_logit_prefix\", description, embedding)\n\nproperties = {\"task\": \"paraphrase detection\", \"dataset_type\": \"model predictions and logits\", \"source\": \"glue/mrpc\", \"split\": \"validation\", \"size\": \"408\", \"model\": \"google/flan-t5-small\", \"prompt_type\": \"yes/no question answering\", \"decoder_prefix\": \"Answer:\", \"label_space\": \"binary\", \"output_columns\": \"prediction, yes_logits, no_logits\", \"input_fields\": \"sentence1, sentence2\", \"prediction_target\": \"paraphrase label\"} #e.g. task: paraphrase detection\n\nfor prop, cat in properties.items():\n    embedding = get_embeddings(prop)\n    vault.create_description(\"flan_prediction_and_logit_prefix\", cat, embedding, prop)",
+          "acc = accuracy_score(y_true, y_pred)\nf1 = f1_score(y_true, y_pred)\nreport = classification_report(y_true, y_pred, target_names=[\"not_paraphrase\", \"paraphrase\"], zero_division=0)\nprint({\"accuracy\": acc, \"f1\": f1})\nprint(classification_report(y_true, y_pred, target_names=[\"not_paraphrase\", \"paraphrase\"], zero_division=0))\n",
+          "for i in range(5):\n    print(\"=\" * 100)\n    print(\"idx:\", i)\n    print(\"prompt:\", prompts[i])\n    print(\"true:\", int(y_true[i]), \"pred:\", int(y_pred[i]))\n    print(\"yes_logit:\", float(yes_logits_all[i]), \"no_logit:\", float(no_logits_all[i]))\n\nmistakes = np.where(y_true != y_pred)[0][:10]\nprint(\"num_errors:\", int((y_true != y_pred).sum()))\n\nfor i in mistakes:\n    print(\"=\" * 100)\n    print(\"idx:\", int(i))\n    print(\"prompt:\", prompts[i])\n    print(\"true:\", int(y_true[i]), \"pred:\", int(y_pred[i]))\n    print(\"yes_logit:\", float(yes_logits_all[i]), \"no_logit:\", float(no_logits_all[i]))\n",
+          "vault.create_record_list(\"flan_t5_answer_prefix_yes_no_mrpcc_summary\", column_names=[\"accuracy\", \"f1\", \"classification_report\"])\n\n\nsummary = {\n    \"accuracy\": float(acc),\n    \"f1\": float(f1),\n    \"classification_report\": str(report)\n}\n\nvault.append_record(\"flan_t5_answer_prefix_yes_no_mrpcc_summary\", summary,\n                    input_items = {\n                        \"glue_mrpc_validation\": [0, len(ds)],\n                        \"flan_prediction_and_logit_prefix\": [0, len(ds)]\n                    })\n\nsummary\n\ndescription = \"Summary dataset for the FLAN-T5-small MRPC validation run using answer-prefix yes/no scoring. It contains aggregate evaluation results computed from predictions on the glue_mrpc_validation dataset, based on comparing the model\\u2019s logits for the tokens \\u201cyes\\u201d and \\u201cno\\u201d after the decoder prefix \\u201cAnswer:\\u201d. The dataset structure has three fields: accuracy (float), f1 (float), and classification_report (string with per-class precision/recall/F1/support). In this workflow, it serves as the experiment-level summary record for the notebook, linking the full validation input set and the per-example prediction/logit dataset flan_prediction_and_logit_prefix into a single compact performance summary.\"\nembedding = get_embeddings(description)\nvault.create_description(\"flan_t5_answer_prefix_yes_no_mrpcc_summary\", description, embedding)\n\nproperties = {\"task\": \"paraphrase detection\", \"benchmark\": \"GLUE\", \"source\": \"glue/mrpc\", \"split\": \"validation\", \"size\": \"408\", \"model\": \"google/flan-t5-small\", \"model_family\": \"flan-t5\", \"input_type\": \"sentence pair\", \"prompt_type\": \"yes/no question with answer prefix\", \"evaluation_method\": \"decoder next-token yes/no logits\", \"output_type\": \"evaluation summary metrics\", \"metrics\": \"accuracy,f1,classification_report\", \"label_space\": \"not_paraphrase,paraphrase\", \"prediction_source\": \"flan_prediction_and_logit_prefix\"} #e.g. task: paraphrase detection\n\nfor prop, cat in properties.items():\n    embedding = get_embeddings(prop)\n    vault.create_description(\"flan_t5_answer_prefix_yes_no_mrpcc_summary\", cat, embedding, prop)\n\n\n",
+          "description = \"This notebook evaluates google/flan-t5-small on the GLUE MRPC validation set for binary paraphrase detection. It loads sentence pairs and labels from TableVault, converts each pair into a natural-language prompt asking whether the two sentences have the same meaning, and runs FLAN-T5 as a seq2seq model on MPS or CPU. Using the decoder prefix Answer:, it compares the next-token logits for yes and no to make a classification without full text generation. The workflow saves per-example predictions and yes/no logits to TableVault, computes accuracy, F1, and a classification report, reviews sample predictions and errors, and stores both dataset-level outputs and experiment summary metadata/descriptions back into TableVault for tracking and retrieval.\" # description of whole notebook\nembedding = get_embeddings(description)\nvault.create_description(\"flan_t5_answer_prefix_yes_no_mrpc\", description, embedding)\n\nproperties = {\"task\": \"paraphrase detection\", \"problem_type\": \"binary text classification\", \"dataset\": \"glue/mrpc\", \"dataset_split\": \"validation\", \"model\": \"google/flan-t5-small\", \"model_family\": \"FLAN-T5\", \"framework\": \"transformers, pytorch\", \"inference_method\": \"generative seq2seq yes/no logit comparison\", \"prompt_format\": \"instruction prompt with answer prefix 'Answer:'\", \"label_space\": \"yes/no\", \"evaluation\": \"accuracy, f1-score, classification_report\", \"artifacts\": \"predictions, yes_logits, no_logits, summary metrics\", \"storage\": \"TableVault\", \"device\": \"mps_or_cpu\"} #e.g. model: distilbert-base-uncased-MRPC\n\nfor prop, cat in properties.items():\n    embedding = get_embeddings(prop)\n    vault.create_description(\"flan_t5_answer_prefix_yes_no_mrpc\", cat, embedding, prop)"
+        ]
+      },
+      "metrics": {
+        "input_tokens": 12442,
+        "output_tokens": 74,
+        "reasoning_tokens": 45,
+        "conversation_tokens": 10710,
+        "api_latency_s": 2.1449,
+        "exec_latency_s": 0.008
+      },
+      "error": null
+    },
+    {
+      "turn": 18,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_3Z90ep24zQ13RCatsJtLzSvO",
+            "output": "{\"ok\": true, \"result\": [\"model_name = \\\"google/flan-t5-small\\\"\\n\\ntokenizer = AutoTokenizer.from_pretrained(model_name)\\nmodel = AutoModelForSeq2SeqLM.from_pretrained(model_name).to(device)\\nmodel.eval()\\n\\ndef get_single_token_id(text):\\n    ids = tokenizer(text, add_special_tokens=False).input_ids\\n    if len(ids) != 1:\\n        raise ValueError(f\\\"{text!r} is not a single token: {ids} -> {tokenizer.convert_ids_to_tokens(ids)}\\\")\\n    return ids[0]\\n\\nyes_token_id = get_single_token_id(\\\"yes\\\")\\nno_token_id = get_single_token_id(\\\"no\\\")\\n\\nanswer_prefix = \\\"Answer:\\\"\\nanswer_prefix_ids = tokenizer(answer_prefix, add_special_tokens=False).input_ids\\ndecoder_start_token_id = model.config.decoder_start_token_id\\n\\nprint(\\\"model:\\\", model_name)\\nprint(\\\"decoder_start_token_id:\\\", decoder_start_token_id)\\nprint(\\\"yes_token_id:\\\", yes_token_id, \\\"token:\\\", tokenizer.convert_ids_to_tokens([yes_token_id]))\\nprint(\\\"no_token_id:\\\", no_token_id, \\\"token:\\\", tokenizer.convert_ids_to_tokens([no_token_id]))\\nprint(\\\"answer_prefix_ids:\\\", answer_prefix_ids, \\\"tokens:\\\", tokenizer.convert_ids_to_tokens(answer_prefix_ids))\\n\", \"ds = vault.query_item_content(\\\"glue_mrpc_validation\\\")\\nds = Dataset.from_list(ds)\\nprint(ds)\\nprint(ds[0])\\n\\nsent1 = ds[\\\"sentence1\\\"]\\nsent2 = ds[\\\"sentence2\\\"]\\ny_true = np.array(ds[\\\"label\\\"])\\n\\nprompts = [\\n    f\\\"Do these two sentences have the same meaning? Sentence 1: {s1} Sentence 2: {s2}\\\"\\n    for s1, s2 in zip(sent1, sent2)\\n]\\n\\nprint(\\\"num_examples:\\\", len(ds))\\nprint(\\\"positive_rate:\\\", float(y_true.mean()))\\nprint(\\\"sample_prompt:\\\", prompts[0])\\n\", \"batch_size = 16\\npreds = []\\nyes_logits_all = []\\nno_logits_all = []\\n\\ndecoder_prefix_ids = [decoder_start_token_id] + answer_prefix_ids\\ndecoder_prefix = torch.tensor(decoder_prefix_ids, dtype=torch.long, device=device)\\n\\nwith torch.no_grad():\\n    for i in tqdm(range(0, len(prompts), batch_size)):\\n        batch_prompts = prompts[i:i + batch_size]\\n\\n        enc = tokenizer(\\n            batch_prompts,\\n            padding=True,\\n            truncation=True,\\n            max_length=256,\\n            return_tensors=\\\"pt\\\",\\n        )\\n        enc = {k: v.to(device) for k, v in enc.items()}\\n\\n        batch_decoder_input_ids = decoder_prefix.unsqueeze(0).repeat(len(batch_prompts), 1)\\n\\n        logits = model(**enc, decoder_input_ids=batch_decoder_input_ids).logits\\n        step_logits = logits[:, -1, :]\\n\\n        batch_yes_logits = step_logits[:, yes_token_id]\\n        batch_no_logits = step_logits[:, no_token_id]\\n        batch_preds = (batch_yes_logits > batch_no_logits).long().cpu().numpy()\\n\\n        preds.extend(batch_preds.tolist())\\n        yes_logits_all.extend(batch_yes_logits.detach().cpu().numpy().tolist())\\n        no_logits_all.extend(batch_no_logits.detach().cpu().numpy().tolist())\\n\\ny_pred = np.array(preds)\\nyes_logits_all = np.array(yes_logits_all)\\nno_logits_all = np.array(no_logits_all)\\n\\nprint(\\\"done\\\")\\nprint(\\\"num_predicted_positive:\\\", int(y_pred.sum()))\\n\", \"\\nvault.create_record_list(\\\"flan_prediction_and_logit_prefix\\\", column_names=[\\\"prediction\\\",\\\"yes_logits\\\", \\\"no_logits\\\"])\\n\\nfor i in range(len(y_pred)):\\n    vault.append_record(\\\"flan_prediction_and_logit_prefix\\\", \\n                        {\\n                            \\\"prediction\\\": int(y_pred[i]),\\n                            \\\"yes_logits\\\": float(yes_logits_all[i]),\\n                            \\\"no_logits\\\": float(no_logits_all[i]),\\n                        },\\n                       input_items = {\\n                           \\\"glue_mrpc_validation\\\": [i, i + 1],\\n                       }\\n                       )\\n\\ndescription = \\\"This dataset stores per-example inference outputs from google/flan-t5-small on the GLUE MRPC validation set using a prompted yes/no paraphrase detection setup. Each record corresponds to one input pair from glue_mrpc_validation and contains three fields: prediction (binary label, where 1 indicates the model preferred \\\\u201cyes\\\\u201d and 0 indicates it preferred \\\\u201cno\\\\u201d), yes_logits (the decoder logit for the token \\\\u201cyes\\\\u201d at the answer position), and no_logits (the decoder logit for the token \\\\u201cno\\\\u201d at the answer position). Predictions are produced by prompting the model with the two sentences, forcing the decoder prefix \\\\u201cAnswer:\\\\u201d, and selecting the higher of the yes/no logits. In this workflow, the dataset serves as the main model output table for downstream evaluation, error analysis, and summary metric generation, while preserving a row-level link back to the original MRPC validation examples.\\\"\\nembedding = get_embeddings(description)\\nvault.create_description(\\\"flan_prediction_and_logit_prefix\\\", description, embedding)\\n\\nproperties = {\\\"task\\\": \\\"paraphrase detection\\\", \\\"dataset_type\\\": \\\"model predictions and logits\\\", \\\"source\\\": \\\"glue/mrpc\\\", \\\"split\\\": \\\"validation\\\", \\\"size\\\": \\\"408\\\", \\\"model\\\": \\\"google/flan-t5-small\\\", \\\"prompt_type\\\": \\\"yes/no question answering\\\", \\\"decoder_prefix\\\": \\\"Answer:\\\", \\\"label_space\\\": \\\"binary\\\", \\\"output_columns\\\": \\\"prediction, yes_logits, no_logits\\\", \\\"input_fields\\\": \\\"sentence1, sentence2\\\", \\\"prediction_target\\\": \\\"paraphrase label\\\"} #e.g. task: paraphrase detection\\n\\nfor prop, cat in properties.items():\\n    embedding = get_embeddings(prop)\\n    vault.create_description(\\\"flan_prediction_and_logit_prefix\\\", cat, embedding, prop)\", \"acc = accuracy_score(y_true, y_pred)\\nf1 = f1_score(y_true, y_pred)\\nreport = classification_report(y_true, y_pred, target_names=[\\\"not_paraphrase\\\", \\\"paraphrase\\\"], zero_division=0)\\nprint({\\\"accuracy\\\": acc, \\\"f1\\\": f1})\\nprint(classification_report(y_true, y_pred, target_names=[\\\"not_paraphrase\\\", \\\"paraphrase\\\"], zero_division=0))\\n\", \"for i in range(5):\\n    print(\\\"=\\\" * 100)\\n    print(\\\"idx:\\\", i)\\n    print(\\\"prompt:\\\", prompts[i])\\n    print(\\\"true:\\\", int(y_true[i]), \\\"pred:\\\", int(y_pred[i]))\\n    print(\\\"yes_logit:\\\", float(yes_logits_all[i]), \\\"no_logit:\\\", float(no_logits_all[i]))\\n\\nmistakes = np.where(y_true != y_pred)[0][:10]\\nprint(\\\"num_errors:\\\", int((y_true != y_pred).sum()))\\n\\nfor i in mistakes:\\n    print(\\\"=\\\" * 100)\\n    print(\\\"idx:\\\", int(i))\\n    print(\\\"prompt:\\\", prompts[i])\\n    print(\\\"true:\\\", int(y_true[i]), \\\"pred:\\\", int(y_pred[i]))\\n    print(\\\"yes_logit:\\\", float(yes_logits_all[i]), \\\"no_logit:\\\", float(no_logits_all[i]))\\n\", \"vault.create_record_list(\\\"flan_t5_answer_prefix_yes_no_mrpcc_summary\\\", column_names=[\\\"accuracy\\\", \\\"f1\\\", \\\"classification_report\\\"])\\n\\n\\nsummary = {\\n    \\\"accuracy\\\": float(acc),\\n    \\\"f1\\\": float(f1),\\n    \\\"classification_report\\\": str(report)\\n}\\n\\nvault.append_record(\\\"flan_t5_answer_prefix_yes_no_mrpcc_summary\\\", summary,\\n                    input_items = {\\n                        \\\"glue_mrpc_validation\\\": [0, len(ds)],\\n                        \\\"flan_prediction_and_logit_prefix\\\": [0, len(ds)]\\n                    })\\n\\nsummary\\n\\ndescription = \\\"Summary dataset for the FLAN-T5-small MRPC validation run using answer-prefix yes/no scoring. It contains aggregate evaluation results computed from predictions on the glue_mrpc_validation dataset, based on comparing the model\\\\u2019s logits for the tokens \\\\u201cyes\\\\u201d and \\\\u201cno\\\\u201d after the decoder prefix \\\\u201cAnswer:\\\\u201d. The dataset structure has three fields: accuracy (float), f1 (float), and classification_report (string with per-class precision/recall/F1/support). In this workflow, it serves as the experiment-level summary record for the notebook, linking the full validation input set and the per-example prediction/logit dataset flan_prediction_and_logit_prefix into a single compact performance summary.\\\"\\nembedding = get_embeddings(description)\\nvault.create_description(\\\"flan_t5_answer_prefix_yes_no_mrpcc_summary\\\", description, embedding)\\n\\nproperties = {\\\"task\\\": \\\"paraphrase detection\\\", \\\"benchmark\\\": \\\"GLUE\\\", \\\"source\\\": \\\"glue/mrpc\\\", \\\"split\\\": \\\"validation\\\", \\\"size\\\": \\\"408\\\", \\\"model\\\": \\\"google/flan-t5-small\\\", \\\"model_family\\\": \\\"flan-t5\\\", \\\"input_type\\\": \\\"sentence pair\\\", \\\"prompt_type\\\": \\\"yes/no question with answer prefix\\\", \\\"evaluation_method\\\": \\\"decoder next-token yes/no logits\\\", \\\"output_type\\\": \\\"evaluation summary metrics\\\", \\\"metrics\\\": \\\"accuracy,f1,classification_report\\\", \\\"label_space\\\": \\\"not_paraphrase,paraphrase\\\", \\\"prediction_source\\\": \\\"flan_prediction_and_logit_prefix\\\"} #e.g. task: paraphrase detection\\n\\nfor prop, cat in properties.items():\\n    embedding = get_embeddings(prop)\\n    vault.create_description(\\\"flan_t5_answer_prefix_yes_no_mrpcc_summary\\\", cat, embedding, prop)\\n\\n\\n\", \"description = \\\"This notebook evaluates google/flan-t5-small on the GLUE MRPC validation set for binary paraphrase detection. It loads sentence pairs and labels from TableVault, converts each pair into a natural-language prompt asking whether the two sentences have the same meaning, and runs FLAN-T5 as a seq2seq model on MPS or CPU. Using the decoder prefix Answer:, it compares the next-token logits for yes and no to make a classification without full text generation. The workflow saves per-example predictions and yes/no logits to TableVault, computes accuracy, F1, and a classification report, reviews sample predictions and errors, and stores both dataset-level outputs and experiment summary metadata/descriptions back into TableVault for tracking and retrieval.\\\" # description of whole notebook\\nembedding = get_embeddings(description)\\nvault.create_description(\\\"flan_t5_answer_prefix_yes_no_mrpc\\\", description, embedding)\\n\\nproperties = {\\\"task\\\": \\\"paraphrase detection\\\", \\\"problem_type\\\": \\\"binary text classification\\\", \\\"dataset\\\": \\\"glue/mrpc\\\", \\\"dataset_split\\\": \\\"validation\\\", \\\"model\\\": \\\"google/flan-t5-small\\\", \\\"model_family\\\": \\\"FLAN-T5\\\", \\\"framework\\\": \\\"transformers, pytorch\\\", \\\"inference_method\\\": \\\"generative seq2seq yes/no logit comparison\\\", \\\"prompt_format\\\": \\\"instruction prompt with answer prefix 'Answer:'\\\", \\\"label_space\\\": \\\"yes/no\\\", \\\"evaluation\\\": \\\"accuracy, f1-score, classification_report\\\", \\\"artifacts\\\": \\\"predictions, yes_logits, no_logits, summary metrics\\\", \\\"storage\\\": \\\"TableVault\\\", \\\"device\\\": \\\"mps_or_cpu\\\"} #e.g. model: distilbert-base-uncased-MRPC\\n\\nfor prop, cat in properties.items():\\n    embedding = get_embeddings(prop)\\n    vault.create_description(\\\"flan_t5_answer_prefix_yes_no_mrpc\\\", cat, embedding, prop)\"]}"
+          }
+        ],
+        "previous_response_id": "resp_045b918d8e92e6c60069da5c98fbe08196afb4c930ca0f0f77"
+      },
+      "model_output": {
+        "response_id": "resp_045b918d8e92e6c60069da5c98fbe08196afb4c930ca0f0f77",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_code",
+            "call_id": "call_jHrk6hWu7h6TUgc0s9sOuZWi",
+            "arguments": {
+              "name": "flan_t5_symmetric_prompt_average_mrpc"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_code",
+        "call_id": "call_jHrk6hWu7h6TUgc0s9sOuZWi",
+        "arguments": {
+          "name": "flan_t5_symmetric_prompt_average_mrpc"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          "def get_embeddings(text):\n    return client.embeddings.create(\n            input=text,\n            model=\"text-embedding-3-large\"\n        ).data[0].embedding",
+          "import torch\nimport numpy as np\nfrom datasets import Dataset\nfrom transformers import AutoTokenizer, AutoModelForSeq2SeqLM\nfrom sklearn.metrics import accuracy_score, f1_score, classification_report\nfrom tqdm.auto import tqdm\n\ndevice = torch.device(\"mps\" if torch.backends.mps.is_available() else \"cpu\")\nprint(\"device:\", device)\n",
+          "model_name = \"google/flan-t5-small\"\n\ntokenizer = AutoTokenizer.from_pretrained(model_name)\nmodel = AutoModelForSeq2SeqLM.from_pretrained(model_name).to(device)\nmodel.eval()\n\nlabel_names = {0: \"not_paraphrase\", 1: \"paraphrase\"}\nprint(model_name)\nprint(\"vocab_size:\", model.config.vocab_size)\n",
+          "def get_single_token_id(text):\n    candidates = [text, text.lower(), f\" {text}\", f\" {text.lower()}\"]\n    for cand in candidates:\n        ids = tokenizer.encode(cand, add_special_tokens=False)\n        if len(ids) == 1:\n            token = tokenizer.convert_ids_to_tokens(ids)[0]\n            print({\"requested\": text, \"matched_text\": cand, \"token_id\": ids[0], \"token\": token})\n            return ids[0]\n    raise ValueError(f\"Could not find a single-token form for {text!r}\")\n\nyes_token_id = get_single_token_id(\"yes\")\nno_token_id = get_single_token_id(\"no\")\n\ndecoder_start_token_id = model.config.decoder_start_token_id\nif decoder_start_token_id is None:\n    decoder_start_token_id = tokenizer.pad_token_id\n\nprint(\"decoder_start_token_id:\", decoder_start_token_id)\nprint(\"pad_token_id:\", tokenizer.pad_token_id)\n",
+          "ds = vault.query_item_content(\"glue_mrpc_validation\")\nds = Dataset.from_list(ds)\nprint(ds)\nprint(ds[0])\n\nsent1 = ds[\"sentence1\"]\nsent2 = ds[\"sentence2\"]\ny_true = np.array(ds[\"label\"])\n\nprint(\"num_examples:\", len(y_true))\nprint(\"positive_rate:\", y_true.mean())\n",
+          "def build_prompt(sentence_a, sentence_b):\n    return (\n        \"Are the following two sentences paraphrases? Answer yes or no.\\n\"\n        f\"Sentence 1: {sentence_a}\\n\"\n        f\"Sentence 2: {sentence_b}\"\n    )\n\nbatch_size = 32\npreds = []\nforward_yes_logits = []\nforward_no_logits = []\nswapped_yes_logits = []\nswapped_no_logits = []\n\nwith torch.no_grad():\n    for i in tqdm(range(0, len(ds), batch_size)):\n        batch_s1 = sent1[i:i + batch_size]\n        batch_s2 = sent2[i:i + batch_size]\n\n        prompts_forward = [build_prompt(a, b) for a, b in zip(batch_s1, batch_s2)]\n        prompts_swapped = [build_prompt(b, a) for a, b in zip(batch_s1, batch_s2)]\n\n        enc_forward = tokenizer(\n            prompts_forward,\n            padding=True,\n            truncation=True,\n            max_length=256,\n            return_tensors=\"pt\",\n        )\n        enc_swapped = tokenizer(\n            prompts_swapped,\n            padding=True,\n            truncation=True,\n            max_length=256,\n            return_tensors=\"pt\",\n        )\n\n        enc_forward = {k: v.to(device) for k, v in enc_forward.items()}\n        enc_swapped = {k: v.to(device) for k, v in enc_swapped.items()}\n\n        decoder_input_ids = torch.full(\n            (len(batch_s1), 1),\n            decoder_start_token_id,\n            dtype=torch.long,\n            device=device,\n        )\n\n        logits_forward = model(**enc_forward, decoder_input_ids=decoder_input_ids).logits[:, 0, :]\n        logits_swapped = model(**enc_swapped, decoder_input_ids=decoder_input_ids).logits[:, 0, :]\n\n        yes_forward = logits_forward[:, yes_token_id]\n        no_forward = logits_forward[:, no_token_id]\n        yes_swapped = logits_swapped[:, yes_token_id]\n        no_swapped = logits_swapped[:, no_token_id]\n\n        avg_yes_batch = (yes_forward + yes_swapped) / 2.0\n        avg_no_batch = (no_forward + no_swapped) / 2.0\n        batch_preds = (avg_yes_batch > avg_no_batch).long().cpu().numpy()\n\n        preds.extend(batch_preds.tolist())\n        forward_yes_logits.extend(yes_forward.cpu().numpy().tolist())\n        forward_no_logits.extend(no_forward.cpu().numpy().tolist())\n        swapped_yes_logits.extend(yes_swapped.cpu().numpy().tolist())\n        swapped_no_logits.extend(no_swapped.cpu().numpy().tolist())\n\ny_pred = np.array(preds)\nforward_yes_logits = np.array(forward_yes_logits)\nforward_no_logits = np.array(forward_no_logits)\nswapped_yes_logits = np.array(swapped_yes_logits)\nswapped_no_logits = np.array(swapped_no_logits)\navg_yes_logits = (forward_yes_logits + swapped_yes_logits) / 2.0\navg_no_logits = (forward_no_logits + swapped_no_logits) / 2.0\n\nprint(\"done\")\n",
+          "\nvault.create_record_list(\"google_flan_prediction_swapped\", column_names=[\"prediction\", \"yes_logits\", \"no_logits\", \"swapped_yes_logits\", \"swapped_no_logits\"])\n\nfor i in range(len(y_pred)):\n    vault.append_record(\"google_flan_prediction_swapped\", \n                        {\n                            \"prediction\": int(y_pred[i]),\n                            \"yes_logits\": float(forward_yes_logits[i]),\n                            \"no_logits\": float(forward_no_logits[i]),\n                            \"swapped_yes_logits\": float(swapped_yes_logits[i]),\n                            \"swapped_no_logits\": float(swapped_no_logits[i]),\n                        },\n                       input_items = {\n                           \"glue_mrpc_validation\": [i, i + 1],\n                       }\n                       )\n\ndescription = \"Per-example prediction outputs from google/flan-t5-small on the GLUE MRPC validation set using a yes/no paraphrase prompt evaluated in both original and swapped sentence order. Each record is aligned to one input example from glue_mrpc_validation and contains: prediction (binary paraphrase decision after averaging forward and swapped logits), yes_logits (forward-order logit for \\u201cyes\\u201d), no_logits (forward-order logit for \\u201cno\\u201d), swapped_yes_logits (swapped-order logit for \\u201cyes\\u201d), and swapped_no_logits (swapped-order logit for \\u201cno\\u201d). This dataset is used as the intermediate model-output table in the workflow, supporting order-symmetric paraphrase prediction, error analysis, and computation of final evaluation metrics in the summary dataset.\"\nembedding = get_embeddings(description)\nvault.create_description(\"google_flan_prediction_swapped\", description, embedding)\n\nproperties = {\"task\": \"paraphrase detection\", \"dataset_role\": \"model predictions\", \"source\": \"glue/mrpc\", \"split\": \"validation\", \"size\": \"408\", \"model\": \"google/flan-t5-small\", \"prompting\": \"yes/no question\", \"inference_method\": \"symmetric swapped-prompt average\", \"prediction_type\": \"binary classification\", \"output_columns\": \"prediction, yes_logits, no_logits, swapped_yes_logits, swapped_no_logits\"} #e.g. task: paraphrase detection\n\nfor prop, cat in properties.items():\n    embedding = get_embeddings(prop)\n    vault.create_description(\"google_flan_prediction_swapped\", cat, embedding, prop)",
+          "acc = accuracy_score(y_true, y_pred)\nf1 = f1_score(y_true, y_pred)\nreport = classification_report(y_true, y_pred, target_names=[\"not_paraphrase\", \"paraphrase\"], zero_division=0)\nprint({\"accuracy\": acc, \"f1\": f1})\nprint(classification_report(y_true, y_pred, target_names=[\"not_paraphrase\", \"paraphrase\"], zero_division=0))\n",
+          "for i in range(5):\n    print(\"=\" * 80)\n    print(\"sentence1:\", sent1[i])\n    print(\"sentence2:\", sent2[i])\n    print(\"true:\", int(y_true[i]), \"pred:\", int(y_pred[i]), \"label:\", label_names[int(y_pred[i])])\n    print(\n        {\n            \"forward_yes_logit\": float(forward_yes_logits[i]),\n            \"forward_no_logit\": float(forward_no_logits[i]),\n            \"swapped_yes_logit\": float(swapped_yes_logits[i]),\n            \"swapped_no_logit\": float(swapped_no_logits[i]),\n            \"avg_yes_logit\": float(avg_yes_logits[i]),\n            \"avg_no_logit\": float(avg_no_logits[i]),\n        }\n    )\n",
+          "mistakes = np.where(y_true != y_pred)[0][:10]\nprint(\"num_errors:\", int((y_true != y_pred).sum()))\n\nfor i in mistakes:\n    print(\"=\" * 80)\n    print(\"idx:\", int(i))\n    print(\"sentence1:\", sent1[i])\n    print(\"sentence2:\", sent2[i])\n    print(\"true:\", int(y_true[i]), \"pred:\", int(y_pred[i]))\n    print(\n        {\n            \"forward_yes_logit\": float(forward_yes_logits[i]),\n            \"forward_no_logit\": float(forward_no_logits[i]),\n            \"swapped_yes_logit\": float(swapped_yes_logits[i]),\n            \"swapped_no_logit\": float(swapped_no_logits[i]),\n            \"avg_yes_logit\": float(avg_yes_logits[i]),\n            \"avg_no_logit\": float(avg_no_logits[i]),\n        }\n    )\n",
+          "\nvault.create_record_list(\"flan_t5_symmetric_prompt_average_mrpc_summary\", column_names=[\"accuracy\", \"f1\", \"classification_report\"])\n\n\nsummary = {\n    \"accuracy\": float(acc),\n    \"f1\": float(f1),\n    \"classification_report\": str(report)\n}\n\nvault.append_record(\"flan_t5_symmetric_prompt_average_mrpc_summary\", summary,\n                    input_items = {\n                        \"glue_mrpc_validation\": [0, len(ds)],\n                        \"google_flan_prediction_swapped\": [0, len(ds)]\n                    })\n\nsummary\n\ndescription = \"Summary dataset for the FLAN-T5 symmetric-prompt MRPC evaluation run. It contains a single aggregate record describing model performance on the full glue_mrpc_validation split, computed from predictions stored in google_flan_prediction_swapped. The fields are: accuracy (float, overall classification accuracy), f1 (float, binary F1 score for paraphrase detection), and classification_report (string, the full scikit-learn classification report with precision, recall, F1, and support for both not_paraphrase and paraphrase classes). Its role in this workflow is to provide a compact experiment-level evaluation artifact that links the source validation examples and prediction outputs to final metrics for the notebook/process flan_t5_symmetric_prompt_average_mrpc.\"\nembedding = get_embeddings(description)\nvault.create_description(\"flan_t5_symmetric_prompt_average_mrpc_summary\", description, embedding)\n\nproperties = {\"task\": \"paraphrase detection\", \"dataset_type\": \"evaluation summary\", \"source\": \"glue/mrpc\", \"split\": \"validation\", \"size\": \"408\", \"model\": \"google/flan-t5-small\", \"prompting_method\": \"symmetric prompt averaging\", \"prediction_target\": \"binary yes/no\", \"metrics\": \"accuracy,f1,classification_report\", \"input_items\": \"glue_mrpc_validation,google_flan_prediction_swapped\"} #e.g. task: paraphrase detection\n\nfor prop, cat in properties.items():\n    embedding = get_embeddings(prop)\n    vault.create_description(\"flan_t5_symmetric_prompt_average_mrpc_summary\", cat, embedding, prop)\n\n",
+          "description = \"This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using google/flan-t5-small. It frames MRPC as a yes/no text-to-text classification task by prompting the model with two sentences and asking whether they are paraphrases. To reduce order sensitivity, each sentence pair is scored twice\\u2014once in the original order and once with the sentences swapped\\u2014and the first-token logits for yes and no are averaged across both prompts to produce the final prediction. The notebook loads the validation data from TableVault, runs batched inference with Hugging Face Transformers on MPS or CPU, computes accuracy, F1, and a classification report, inspects example predictions and errors, and stores per-example predictions, logits, summary metrics, and metadata back into TableVault with embedding-based descriptions.\" # description of whole notebook\nembedding = get_embeddings(description)\nvault.create_description(\"flan_t5_symmetric_prompt_average_mrpc\", description, embedding)\n\nproperties = {\"task\": \"paraphrase detection\", \"dataset\": \"glue/mrpc\", \"dataset_split\": \"validation\", \"model\": \"google/flan-t5-small\", \"model_family\": \"flan-t5\", \"inference_method\": \"zero-shot seq2seq first-token logit comparison\", \"prompt_strategy\": \"symmetric prompt averaging with sentence order swap\", \"labels\": \"yes/no mapped to paraphrase/not_paraphrase\", \"evaluation\": \"accuracy, f1-score, classification_report\", \"frameworks\": \"transformers, pytorch, datasets, sklearn\", \"storage\": \"tablevault\", \"database\": \"arangodb\", \"embedding_model\": \"text-embedding-3-large\", \"process_name\": \"flan_t5_symmetric_prompt_average_mrpc\"} #e.g. model: distilbert-base-uncased-MRPC\n\nfor prop, cat in properties.items():\n    embedding = get_embeddings(prop)\n    vault.create_description(\"flan_t5_symmetric_prompt_average_mrpc\", cat, embedding, prop)"
+        ]
+      },
+      "metrics": {
+        "input_tokens": 15151,
+        "output_tokens": 56,
+        "reasoning_tokens": 27,
+        "conversation_tokens": 13419,
+        "api_latency_s": 1.7932,
+        "exec_latency_s": 0.0226
+      },
+      "error": null
+    },
+    {
+      "turn": 19,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_jHrk6hWu7h6TUgc0s9sOuZWi",
+            "output": "{\"ok\": true, \"result\": [\"def get_embeddings(text):\\n    return client.embeddings.create(\\n            input=text,\\n            model=\\\"text-embedding-3-large\\\"\\n        ).data[0].embedding\", \"import torch\\nimport numpy as np\\nfrom datasets import Dataset\\nfrom transformers import AutoTokenizer, AutoModelForSeq2SeqLM\\nfrom sklearn.metrics import accuracy_score, f1_score, classification_report\\nfrom tqdm.auto import tqdm\\n\\ndevice = torch.device(\\\"mps\\\" if torch.backends.mps.is_available() else \\\"cpu\\\")\\nprint(\\\"device:\\\", device)\\n\", \"model_name = \\\"google/flan-t5-small\\\"\\n\\ntokenizer = AutoTokenizer.from_pretrained(model_name)\\nmodel = AutoModelForSeq2SeqLM.from_pretrained(model_name).to(device)\\nmodel.eval()\\n\\nlabel_names = {0: \\\"not_paraphrase\\\", 1: \\\"paraphrase\\\"}\\nprint(model_name)\\nprint(\\\"vocab_size:\\\", model.config.vocab_size)\\n\", \"def get_single_token_id(text):\\n    candidates = [text, text.lower(), f\\\" {text}\\\", f\\\" {text.lower()}\\\"]\\n    for cand in candidates:\\n        ids = tokenizer.encode(cand, add_special_tokens=False)\\n        if len(ids) == 1:\\n            token = tokenizer.convert_ids_to_tokens(ids)[0]\\n            print({\\\"requested\\\": text, \\\"matched_text\\\": cand, \\\"token_id\\\": ids[0], \\\"token\\\": token})\\n            return ids[0]\\n    raise ValueError(f\\\"Could not find a single-token form for {text!r}\\\")\\n\\nyes_token_id = get_single_token_id(\\\"yes\\\")\\nno_token_id = get_single_token_id(\\\"no\\\")\\n\\ndecoder_start_token_id = model.config.decoder_start_token_id\\nif decoder_start_token_id is None:\\n    decoder_start_token_id = tokenizer.pad_token_id\\n\\nprint(\\\"decoder_start_token_id:\\\", decoder_start_token_id)\\nprint(\\\"pad_token_id:\\\", tokenizer.pad_token_id)\\n\", \"ds = vault.query_item_content(\\\"glue_mrpc_validation\\\")\\nds = Dataset.from_list(ds)\\nprint(ds)\\nprint(ds[0])\\n\\nsent1 = ds[\\\"sentence1\\\"]\\nsent2 = ds[\\\"sentence2\\\"]\\ny_true = np.array(ds[\\\"label\\\"])\\n\\nprint(\\\"num_examples:\\\", len(y_true))\\nprint(\\\"positive_rate:\\\", y_true.mean())\\n\", \"def build_prompt(sentence_a, sentence_b):\\n    return (\\n        \\\"Are the following two sentences paraphrases? Answer yes or no.\\\\n\\\"\\n        f\\\"Sentence 1: {sentence_a}\\\\n\\\"\\n        f\\\"Sentence 2: {sentence_b}\\\"\\n    )\\n\\nbatch_size = 32\\npreds = []\\nforward_yes_logits = []\\nforward_no_logits = []\\nswapped_yes_logits = []\\nswapped_no_logits = []\\n\\nwith torch.no_grad():\\n    for i in tqdm(range(0, len(ds), batch_size)):\\n        batch_s1 = sent1[i:i + batch_size]\\n        batch_s2 = sent2[i:i + batch_size]\\n\\n        prompts_forward = [build_prompt(a, b) for a, b in zip(batch_s1, batch_s2)]\\n        prompts_swapped = [build_prompt(b, a) for a, b in zip(batch_s1, batch_s2)]\\n\\n        enc_forward = tokenizer(\\n            prompts_forward,\\n            padding=True,\\n            truncation=True,\\n            max_length=256,\\n            return_tensors=\\\"pt\\\",\\n        )\\n        enc_swapped = tokenizer(\\n            prompts_swapped,\\n            padding=True,\\n            truncation=True,\\n            max_length=256,\\n            return_tensors=\\\"pt\\\",\\n        )\\n\\n        enc_forward = {k: v.to(device) for k, v in enc_forward.items()}\\n        enc_swapped = {k: v.to(device) for k, v in enc_swapped.items()}\\n\\n        decoder_input_ids = torch.full(\\n            (len(batch_s1), 1),\\n            decoder_start_token_id,\\n            dtype=torch.long,\\n            device=device,\\n        )\\n\\n        logits_forward = model(**enc_forward, decoder_input_ids=decoder_input_ids).logits[:, 0, :]\\n        logits_swapped = model(**enc_swapped, decoder_input_ids=decoder_input_ids).logits[:, 0, :]\\n\\n        yes_forward = logits_forward[:, yes_token_id]\\n        no_forward = logits_forward[:, no_token_id]\\n        yes_swapped = logits_swapped[:, yes_token_id]\\n        no_swapped = logits_swapped[:, no_token_id]\\n\\n        avg_yes_batch = (yes_forward + yes_swapped) / 2.0\\n        avg_no_batch = (no_forward + no_swapped) / 2.0\\n        batch_preds = (avg_yes_batch > avg_no_batch).long().cpu().numpy()\\n\\n        preds.extend(batch_preds.tolist())\\n        forward_yes_logits.extend(yes_forward.cpu().numpy().tolist())\\n        forward_no_logits.extend(no_forward.cpu().numpy().tolist())\\n        swapped_yes_logits.extend(yes_swapped.cpu().numpy().tolist())\\n        swapped_no_logits.extend(no_swapped.cpu().numpy().tolist())\\n\\ny_pred = np.array(preds)\\nforward_yes_logits = np.array(forward_yes_logits)\\nforward_no_logits = np.array(forward_no_logits)\\nswapped_yes_logits = np.array(swapped_yes_logits)\\nswapped_no_logits = np.array(swapped_no_logits)\\navg_yes_logits = (forward_yes_logits + swapped_yes_logits) / 2.0\\navg_no_logits = (forward_no_logits + swapped_no_logits) / 2.0\\n\\nprint(\\\"done\\\")\\n\", \"\\nvault.create_record_list(\\\"google_flan_prediction_swapped\\\", column_names=[\\\"prediction\\\", \\\"yes_logits\\\", \\\"no_logits\\\", \\\"swapped_yes_logits\\\", \\\"swapped_no_logits\\\"])\\n\\nfor i in range(len(y_pred)):\\n    vault.append_record(\\\"google_flan_prediction_swapped\\\", \\n                        {\\n                            \\\"prediction\\\": int(y_pred[i]),\\n                            \\\"yes_logits\\\": float(forward_yes_logits[i]),\\n                            \\\"no_logits\\\": float(forward_no_logits[i]),\\n                            \\\"swapped_yes_logits\\\": float(swapped_yes_logits[i]),\\n                            \\\"swapped_no_logits\\\": float(swapped_no_logits[i]),\\n                        },\\n                       input_items = {\\n                           \\\"glue_mrpc_validation\\\": [i, i + 1],\\n                       }\\n                       )\\n\\ndescription = \\\"Per-example prediction outputs from google/flan-t5-small on the GLUE MRPC validation set using a yes/no paraphrase prompt evaluated in both original and swapped sentence order. Each record is aligned to one input example from glue_mrpc_validation and contains: prediction (binary paraphrase decision after averaging forward and swapped logits), yes_logits (forward-order logit for \\\\u201cyes\\\\u201d), no_logits (forward-order logit for \\\\u201cno\\\\u201d), swapped_yes_logits (swapped-order logit for \\\\u201cyes\\\\u201d), and swapped_no_logits (swapped-order logit for \\\\u201cno\\\\u201d). This dataset is used as the intermediate model-output table in the workflow, supporting order-symmetric paraphrase prediction, error analysis, and computation of final evaluation metrics in the summary dataset.\\\"\\nembedding = get_embeddings(description)\\nvault.create_description(\\\"google_flan_prediction_swapped\\\", description, embedding)\\n\\nproperties = {\\\"task\\\": \\\"paraphrase detection\\\", \\\"dataset_role\\\": \\\"model predictions\\\", \\\"source\\\": \\\"glue/mrpc\\\", \\\"split\\\": \\\"validation\\\", \\\"size\\\": \\\"408\\\", \\\"model\\\": \\\"google/flan-t5-small\\\", \\\"prompting\\\": \\\"yes/no question\\\", \\\"inference_method\\\": \\\"symmetric swapped-prompt average\\\", \\\"prediction_type\\\": \\\"binary classification\\\", \\\"output_columns\\\": \\\"prediction, yes_logits, no_logits, swapped_yes_logits, swapped_no_logits\\\"} #e.g. task: paraphrase detection\\n\\nfor prop, cat in properties.items():\\n    embedding = get_embeddings(prop)\\n    vault.create_description(\\\"google_flan_prediction_swapped\\\", cat, embedding, prop)\", \"acc = accuracy_score(y_true, y_pred)\\nf1 = f1_score(y_true, y_pred)\\nreport = classification_report(y_true, y_pred, target_names=[\\\"not_paraphrase\\\", \\\"paraphrase\\\"], zero_division=0)\\nprint({\\\"accuracy\\\": acc, \\\"f1\\\": f1})\\nprint(classification_report(y_true, y_pred, target_names=[\\\"not_paraphrase\\\", \\\"paraphrase\\\"], zero_division=0))\\n\", \"for i in range(5):\\n    print(\\\"=\\\" * 80)\\n    print(\\\"sentence1:\\\", sent1[i])\\n    print(\\\"sentence2:\\\", sent2[i])\\n    print(\\\"true:\\\", int(y_true[i]), \\\"pred:\\\", int(y_pred[i]), \\\"label:\\\", label_names[int(y_pred[i])])\\n    print(\\n        {\\n            \\\"forward_yes_logit\\\": float(forward_yes_logits[i]),\\n            \\\"forward_no_logit\\\": float(forward_no_logits[i]),\\n            \\\"swapped_yes_logit\\\": float(swapped_yes_logits[i]),\\n            \\\"swapped_no_logit\\\": float(swapped_no_logits[i]),\\n            \\\"avg_yes_logit\\\": float(avg_yes_logits[i]),\\n            \\\"avg_no_logit\\\": float(avg_no_logits[i]),\\n        }\\n    )\\n\", \"mistakes = np.where(y_true != y_pred)[0][:10]\\nprint(\\\"num_errors:\\\", int((y_true != y_pred).sum()))\\n\\nfor i in mistakes:\\n    print(\\\"=\\\" * 80)\\n    print(\\\"idx:\\\", int(i))\\n    print(\\\"sentence1:\\\", sent1[i])\\n    print(\\\"sentence2:\\\", sent2[i])\\n    print(\\\"true:\\\", int(y_true[i]), \\\"pred:\\\", int(y_pred[i]))\\n    print(\\n        {\\n            \\\"forward_yes_logit\\\": float(forward_yes_logits[i]),\\n            \\\"forward_no_logit\\\": float(forward_no_logits[i]),\\n            \\\"swapped_yes_logit\\\": float(swapped_yes_logits[i]),\\n            \\\"swapped_no_logit\\\": float(swapped_no_logits[i]),\\n            \\\"avg_yes_logit\\\": float(avg_yes_logits[i]),\\n            \\\"avg_no_logit\\\": float(avg_no_logits[i]),\\n        }\\n    )\\n\", \"\\nvault.create_record_list(\\\"flan_t5_symmetric_prompt_average_mrpc_summary\\\", column_names=[\\\"accuracy\\\", \\\"f1\\\", \\\"classification_report\\\"])\\n\\n\\nsummary = {\\n    \\\"accuracy\\\": float(acc),\\n    \\\"f1\\\": float(f1),\\n    \\\"classification_report\\\": str(report)\\n}\\n\\nvault.append_record(\\\"flan_t5_symmetric_prompt_average_mrpc_summary\\\", summary,\\n                    input_items = {\\n                        \\\"glue_mrpc_validation\\\": [0, len(ds)],\\n                        \\\"google_flan_prediction_swapped\\\": [0, len(ds)]\\n                    })\\n\\nsummary\\n\\ndescription = \\\"Summary dataset for the FLAN-T5 symmetric-prompt MRPC evaluation run. It contains a single aggregate record describing model performance on the full glue_mrpc_validation split, computed from predictions stored in google_flan_prediction_swapped. The fields are: accuracy (float, overall classification accuracy), f1 (float, binary F1 score for paraphrase detection), and classification_report (string, the full scikit-learn classification report with precision, recall, F1, and support for both not_paraphrase and paraphrase classes). Its role in this workflow is to provide a compact experiment-level evaluation artifact that links the source validation examples and prediction outputs to final metrics for the notebook/process flan_t5_symmetric_prompt_average_mrpc.\\\"\\nembedding = get_embeddings(description)\\nvault.create_description(\\\"flan_t5_symmetric_prompt_average_mrpc_summary\\\", description, embedding)\\n\\nproperties = {\\\"task\\\": \\\"paraphrase detection\\\", \\\"dataset_type\\\": \\\"evaluation summary\\\", \\\"source\\\": \\\"glue/mrpc\\\", \\\"split\\\": \\\"validation\\\", \\\"size\\\": \\\"408\\\", \\\"model\\\": \\\"google/flan-t5-small\\\", \\\"prompting_method\\\": \\\"symmetric prompt averaging\\\", \\\"prediction_target\\\": \\\"binary yes/no\\\", \\\"metrics\\\": \\\"accuracy,f1,classification_report\\\", \\\"input_items\\\": \\\"glue_mrpc_validation,google_flan_prediction_swapped\\\"} #e.g. task: paraphrase detection\\n\\nfor prop, cat in properties.items():\\n    embedding = get_embeddings(prop)\\n    vault.create_description(\\\"flan_t5_symmetric_prompt_average_mrpc_summary\\\", cat, embedding, prop)\\n\\n\", \"description = \\\"This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using google/flan-t5-small. It frames MRPC as a yes/no text-to-text classification task by prompting the model with two sentences and asking whether they are paraphrases. To reduce order sensitivity, each sentence pair is scored twice\\\\u2014once in the original order and once with the sentences swapped\\\\u2014and the first-token logits for yes and no are averaged across both prompts to produce the final prediction. The notebook loads the validation data from TableVault, runs batched inference with Hugging Face Transformers on MPS or CPU, computes accuracy, F1, and a classification report, inspects example predictions and errors, and stores per-example predictions, logits, summary metrics, and metadata back into TableVault with embedding-based descriptions.\\\" # description of whole notebook\\nembedding = get_embeddings(description)\\nvault.create_description(\\\"flan_t5_symmetric_prompt_average_mrpc\\\", description, embedding)\\n\\nproperties = {\\\"task\\\": \\\"paraphrase detection\\\", \\\"dataset\\\": \\\"glue/mrpc\\\", \\\"dataset_split\\\": \\\"validation\\\", \\\"model\\\": \\\"google/flan-t5-small\\\", \\\"model_family\\\": \\\"flan-t5\\\", \\\"inference_method\\\": \\\"zero-shot seq2seq first-token logit comparison\\\", \\\"prompt_strategy\\\": \\\"symmetric prompt averaging with sentence order swap\\\", \\\"labels\\\": \\\"yes/no mapped to paraphrase/not_paraphrase\\\", \\\"evaluation\\\": \\\"accuracy, f1-score, classification_report\\\", \\\"frameworks\\\": \\\"transformers, pytorch, datasets, sklearn\\\", \\\"storage\\\": \\\"tablevault\\\", \\\"database\\\": \\\"arangodb\\\", \\\"embedding_model\\\": \\\"text-embedding-3-large\\\", \\\"process_name\\\": \\\"flan_t5_symmetric_prompt_average_mrpc\\\"} #e.g. model: distilbert-base-uncased-MRPC\\n\\nfor prop, cat in properties.items():\\n    embedding = get_embeddings(prop)\\n    vault.create_description(\\\"flan_t5_symmetric_prompt_average_mrpc\\\", cat, embedding, prop)\"]}"
+          }
+        ],
+        "previous_response_id": "resp_045b918d8e92e6c60069da5c9ad0708196960601ab56ac73c6"
+      },
+      "model_output": {
+        "response_id": "resp_045b918d8e92e6c60069da5c9ad0708196960601ab56ac73c6",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_iJeStzsLVRK96Z8iqvXoeIXR",
+            "arguments": {
+              "item_name": "entailment_logprob_odds_mrpc_summary",
+              "start_position": 0,
+              "end_position": 5
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_iJeStzsLVRK96Z8iqvXoeIXR",
+        "arguments": {
+          "item_name": "entailment_logprob_odds_mrpc_summary",
+          "start_position": 0,
+          "end_position": 5
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.7034313725490197,
+            "f1": 0.7729831144465291,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.53      0.63      0.57       129\n    paraphrase       0.81      0.74      0.77       279\n\n      accuracy                           0.70       408\n     macro avg       0.67      0.68      0.67       408\n  weighted avg       0.72      0.70      0.71       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 18469,
+        "output_tokens": 307,
+        "reasoning_tokens": 267,
+        "conversation_tokens": 16737,
+        "api_latency_s": 5.2012,
+        "exec_latency_s": 0.0222
+      },
+      "error": null
+    },
+    {
+      "turn": 20,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_iJeStzsLVRK96Z8iqvXoeIXR",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.7034313725490197, \"f1\": 0.7729831144465291, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.53      0.63      0.57       129\\n    paraphrase       0.81      0.74      0.77       279\\n\\n      accuracy                           0.70       408\\n     macro avg       0.67      0.68      0.67       408\\n  weighted avg       0.72      0.70      0.71       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_045b918d8e92e6c60069da5ca006b481969774406cdcd62806"
+      },
+      "model_output": {
+        "response_id": "resp_045b918d8e92e6c60069da5ca006b481969774406cdcd62806",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_nlONj7LDBzqjntCpQt478ioz",
+            "arguments": {
+              "item_name": "neutral_penalized_margin_mrpc_summary",
+              "start_position": 0,
+              "end_position": 5
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_nlONj7LDBzqjntCpQt478ioz",
+        "arguments": {
+          "item_name": "neutral_penalized_margin_mrpc_summary",
+          "start_position": 0,
+          "end_position": 5
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.5563725490196079,
+            "f1": 0.5322997416020672,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.41      0.96      0.58       129\n    paraphrase       0.95      0.37      0.53       279\n\n      accuracy                           0.56       408\n     macro avg       0.68      0.67      0.56       408\n  weighted avg       0.78      0.56      0.55       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 18942,
+        "output_tokens": 36,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 17210,
+        "api_latency_s": 1.5107,
+        "exec_latency_s": 0.0101
+      },
+      "error": null
+    },
+    {
+      "turn": 21,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_nlONj7LDBzqjntCpQt478ioz",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.5563725490196079, \"f1\": 0.5322997416020672, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.41      0.96      0.58       129\\n    paraphrase       0.95      0.37      0.53       279\\n\\n      accuracy                           0.56       408\\n     macro avg       0.68      0.67      0.56       408\\n  weighted avg       0.78      0.56      0.55       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_045b918d8e92e6c60069da5ca192f88196a0f8f3c53ba7f540"
+      },
+      "model_output": {
+        "response_id": "resp_045b918d8e92e6c60069da5ca192f88196a0f8f3c53ba7f540",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_DVbWdg9lD3nSQkUFqZ4HTJVt",
+            "arguments": {
+              "item_name": "min_direction_margin_mrpc_summary",
+              "start_position": 0,
+              "end_position": 5
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_DVbWdg9lD3nSQkUFqZ4HTJVt",
+        "arguments": {
+          "item_name": "min_direction_margin_mrpc_summary",
+          "start_position": 0,
+          "end_position": 5
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.5857843137254902,
+            "f1": 0.5888077858880778,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.43      0.91      0.58       129\n    paraphrase       0.92      0.43      0.59       279\n\n      accuracy                           0.59       408\n     macro avg       0.67      0.67      0.59       408\n  weighted avg       0.76      0.59      0.59       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 19144,
+        "output_tokens": 34,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 17412,
+        "api_latency_s": 1.6263,
+        "exec_latency_s": 0.0125
+      },
+      "error": null
+    },
+    {
+      "turn": 22,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_DVbWdg9lD3nSQkUFqZ4HTJVt",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.5857843137254902, \"f1\": 0.5888077858880778, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.43      0.91      0.58       129\\n    paraphrase       0.92      0.43      0.59       279\\n\\n      accuracy                           0.59       408\\n     macro avg       0.67      0.67      0.59       408\\n  weighted avg       0.76      0.59      0.59       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_045b918d8e92e6c60069da5ca32eac8196afd6a630ca93b049"
+      },
+      "model_output": {
+        "response_id": "resp_045b918d8e92e6c60069da5ca32eac8196afd6a630ca93b049",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_0xzvBWBZmEeWHLqFMekhEimO",
+            "arguments": {
+              "item_name": "softmax_gap_mean_mrpc_summary",
+              "start_position": 0,
+              "end_position": 5
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_0xzvBWBZmEeWHLqFMekhEimO",
+        "arguments": {
+          "item_name": "softmax_gap_mean_mrpc_summary",
+          "start_position": 0,
+          "end_position": 5
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.7181372549019608,
+            "f1": 0.7905282331511839,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.55      0.59      0.57       129\n    paraphrase       0.80      0.78      0.79       279\n\n      accuracy                           0.72       408\n     macro avg       0.68      0.68      0.68       408\n  weighted avg       0.72      0.72      0.72       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 19344,
+        "output_tokens": 35,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 17612,
+        "api_latency_s": 1.5249,
+        "exec_latency_s": 0.0097
+      },
+      "error": null
+    },
+    {
+      "turn": 23,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_0xzvBWBZmEeWHLqFMekhEimO",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.7181372549019608, \"f1\": 0.7905282331511839, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.55      0.59      0.57       129\\n    paraphrase       0.80      0.78      0.79       279\\n\\n      accuracy                           0.72       408\\n     macro avg       0.68      0.68      0.68       408\\n  weighted avg       0.72      0.72      0.72       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_045b918d8e92e6c60069da5ca4b8c08196a5d2478dbe07b1fb"
+      },
+      "model_output": {
+        "response_id": "resp_045b918d8e92e6c60069da5ca4b8c08196a5d2478dbe07b1fb",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_PbhzpnllnfAKoY4v8uNDlcmd",
+            "arguments": {
+              "item_name": "flan_t5_answer_prefix_yes_no_mrpcc_summary",
+              "start_position": 0,
+              "end_position": 5
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_PbhzpnllnfAKoY4v8uNDlcmd",
+        "arguments": {
+          "item_name": "flan_t5_answer_prefix_yes_no_mrpcc_summary",
+          "start_position": 0,
+          "end_position": 5
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.6372549019607843,
+            "f1": 0.6877637130801688,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.46      0.75      0.57       129\n    paraphrase       0.84      0.58      0.69       279\n\n      accuracy                           0.64       408\n     macro avg       0.65      0.67      0.63       408\n  weighted avg       0.72      0.64      0.65       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 19545,
+        "output_tokens": 121,
+        "reasoning_tokens": 79,
+        "conversation_tokens": 17813,
+        "api_latency_s": 3.4719,
+        "exec_latency_s": 0.0214
+      },
+      "error": null
+    },
+    {
+      "turn": 24,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_PbhzpnllnfAKoY4v8uNDlcmd",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.6372549019607843, \"f1\": 0.6877637130801688, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.46      0.75      0.57       129\\n    paraphrase       0.84      0.58      0.69       279\\n\\n      accuracy                           0.64       408\\n     macro avg       0.65      0.67      0.63       408\\n  weighted avg       0.72      0.64      0.65       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_045b918d8e92e6c60069da5ca837d48196a5b8485f8875cef6"
+      },
+      "model_output": {
+        "response_id": "resp_045b918d8e92e6c60069da5ca837d48196a5b8485f8875cef6",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_4QRxzbjNJe0zAm1TdwnBLMKX",
+            "arguments": {
+              "item_name": "flan_t5_symmetric_prompt_average_mrpc_summary",
+              "start_position": 0,
+              "end_position": 5
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_4QRxzbjNJe0zAm1TdwnBLMKX",
+        "arguments": {
+          "item_name": "flan_t5_symmetric_prompt_average_mrpc_summary",
+          "start_position": 0,
+          "end_position": 5
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.7377450980392157,
+            "f1": 0.8065099457504521,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.58      0.60      0.59       129\n    paraphrase       0.81      0.80      0.81       279\n\n      accuracy                           0.74       408\n     macro avg       0.70      0.70      0.70       408\n  weighted avg       0.74      0.74      0.74       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 19832,
+        "output_tokens": 39,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 18100,
+        "api_latency_s": 1.8223,
+        "exec_latency_s": 0.0206
+      },
+      "error": null
+    },
+    {
+      "turn": 25,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_4QRxzbjNJe0zAm1TdwnBLMKX",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.7377450980392157, \"f1\": 0.8065099457504521, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.58      0.60      0.59       129\\n    paraphrase       0.81      0.80      0.81       279\\n\\n      accuracy                           0.74       408\\n     macro avg       0.70      0.70      0.70       408\\n  weighted avg       0.74      0.74      0.74       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_045b918d8e92e6c60069da5caa106081968645833177c692b5"
+      },
+      "model_output": {
+        "response_id": "resp_045b918d8e92e6c60069da5caa106081968645833177c692b5",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_FzGiDImFZ01VL5vvcCMQQyDW",
+            "arguments": {
+              "item_name": "flan_t5_full_answer_logprob_mrpc_summary",
+              "start_position": 0,
+              "end_position": 5
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_FzGiDImFZ01VL5vvcCMQQyDW",
+        "arguments": {
+          "item_name": "flan_t5_full_answer_logprob_mrpc_summary",
+          "start_position": 0,
+          "end_position": 5
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.6495098039215687,
+            "f1": 0.6911447084233261,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.47      0.81      0.59       129\n    paraphrase       0.87      0.57      0.69       279\n\n      accuracy                           0.65       408\n     macro avg       0.67      0.69      0.64       408\n  weighted avg       0.74      0.65      0.66       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 20037,
+        "output_tokens": 116,
+        "reasoning_tokens": 75,
+        "conversation_tokens": 18305,
+        "api_latency_s": 4.1777,
+        "exec_latency_s": 0.0127
+      },
+      "error": null
+    },
+    {
+      "turn": 26,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_FzGiDImFZ01VL5vvcCMQQyDW",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.6495098039215687, \"f1\": 0.6911447084233261, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.47      0.81      0.59       129\\n    paraphrase       0.87      0.57      0.69       279\\n\\n      accuracy                           0.65       408\\n     macro avg       0.67      0.69      0.64       408\\n  weighted avg       0.74      0.65      0.66       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_045b918d8e92e6c60069da5cae3c8c8196ad0aa9e0d83254d7"
+      },
+      "model_output": {
+        "response_id": "resp_045b918d8e92e6c60069da5cae3c8c8196ad0aa9e0d83254d7",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_69KFWOdAa6E1xjIRn5pY12rN",
+            "arguments": {
+              "item_name": "flan_t5_contextual_calibrated_yes_no_mrpc_summary",
+              "start_position": 0,
+              "end_position": 5
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_69KFWOdAa6E1xjIRn5pY12rN",
+        "arguments": {
+          "item_name": "flan_t5_contextual_calibrated_yes_no_mrpc_summary",
+          "start_position": 0,
+          "end_position": 5
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.40441176470588236,
+            "f1": 0.24299065420560748,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.34      0.98      0.51       129\n    paraphrase       0.93      0.14      0.24       279\n\n      accuracy                           0.40       408\n     macro avg       0.64      0.56      0.38       408\n  weighted avg       0.74      0.40      0.33       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 20319,
+        "output_tokens": 42,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 18587,
+        "api_latency_s": 3.878,
+        "exec_latency_s": 0.0209
+      },
+      "error": null
+    },
+    {
+      "turn": 27,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_69KFWOdAa6E1xjIRn5pY12rN",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.40441176470588236, \"f1\": 0.24299065420560748, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.34      0.98      0.51       129\\n    paraphrase       0.93      0.14      0.24       279\\n\\n      accuracy                           0.40       408\\n     macro avg       0.64      0.56      0.38       408\\n  weighted avg       0.74      0.40      0.33       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_045b918d8e92e6c60069da5cb22808819682b8a42fa13d61bc"
+      },
+      "model_output": {
+        "response_id": "resp_045b918d8e92e6c60069da5cb22808819682b8a42fa13d61bc",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "code_description_search",
+            "call_id": "call_DF7JtvSDcsusbzYNwqFOgGe3",
+            "arguments": {
+              "description_text": "entailment contradiction margin sentence1 sentence2 predict paraphrase when margin positive mrpc"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "code_description_search",
+        "call_id": "call_DF7JtvSDcsusbzYNwqFOgGe3",
+        "arguments": {
+          "description_text": "entailment contradiction margin sentence1 sentence2 predict paraphrase when margin positive mrpc"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          [
+            "BASE",
+            "This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using the typeform/distilbert-base-uncased-mnli natural language inference model. For each sentence pair, it runs inference in both directions (sentence1\u2192sentence2 and sentence2\u2192sentence1), computes an entailment-versus-contradiction margin for each direction, averages the two margins, and predicts paraphrase only when neither direction is classified as contradiction and the average margin is positive. The notebook stores per-example predictions, directional margins, and gate decisions in TableVault, computes accuracy, F1, and a classification report against the MRPC labels, logs error analysis examples, and saves dataset-, prediction-, summary-, and notebook-level metadata and embeddings for later retrieval and documentation.",
+            "consensus_then_avg_margin_mrpc",
+            "process_list"
+          ]
+        ]
+      },
+      "metrics": {
+        "input_tokens": 20527,
+        "output_tokens": 442,
+        "reasoning_tokens": 404,
+        "conversation_tokens": 18795,
+        "api_latency_s": 8.2719,
+        "exec_latency_s": 0.055
+      },
+      "error": null
+    },
+    {
+      "turn": 28,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_DF7JtvSDcsusbzYNwqFOgGe3",
+            "output": "{\"ok\": true, \"result\": [[\"BASE\", \"This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using the typeform/distilbert-base-uncased-mnli natural language inference model. For each sentence pair, it runs inference in both directions (sentence1\\u2192sentence2 and sentence2\\u2192sentence1), computes an entailment-versus-contradiction margin for each direction, averages the two margins, and predicts paraphrase only when neither direction is classified as contradiction and the average margin is positive. The notebook stores per-example predictions, directional margins, and gate decisions in TableVault, computes accuracy, F1, and a classification report against the MRPC labels, logs error analysis examples, and saves dataset-, prediction-, summary-, and notebook-level metadata and embeddings for later retrieval and documentation.\", \"consensus_then_avg_margin_mrpc\", \"process_list\"]]}"
+          }
+        ],
+        "previous_response_id": "resp_045b918d8e92e6c60069da5cba7cf481969d6ad00cb17d62f4"
+      },
+      "model_output": {
+        "response_id": "resp_045b918d8e92e6c60069da5cba7cf481969d6ad00cb17d62f4",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "code_description_search",
+            "call_id": "call_kRbwDDEOSirrMaXfHmGI9u9g",
+            "arguments": {
+              "description_text": "MRPC entailment scoring positive if sentence1 entails sentence2"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "code_description_search",
+        "call_id": "call_kRbwDDEOSirrMaXfHmGI9u9g",
+        "arguments": {
+          "description_text": "MRPC entailment scoring positive if sentence1 entails sentence2"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": []
+      },
+      "metrics": {
+        "input_tokens": 21169,
+        "output_tokens": 48,
+        "reasoning_tokens": 15,
+        "conversation_tokens": 19437,
+        "api_latency_s": 2.4034,
+        "exec_latency_s": 0.0472
+      },
+      "error": null
+    },
+    {
+      "turn": 29,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_kRbwDDEOSirrMaXfHmGI9u9g",
+            "output": "{\"ok\": true, \"result\": []}"
+          }
+        ],
+        "previous_response_id": "resp_045b918d8e92e6c60069da5cbcee0c8196808716657aa2b582"
+      },
+      "model_output": {
+        "response_id": "resp_045b918d8e92e6c60069da5cbcee0c8196808716657aa2b582",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "code_description_search",
+            "call_id": "call_3wgT3jStmRo5mZAhiRUn274A",
+            "arguments": {
+              "description_text": "swapped sentence order average prompt MRPC google/flan-t5-small"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "code_description_search",
+        "call_id": "call_3wgT3jStmRo5mZAhiRUn274A",
+        "arguments": {
+          "description_text": "swapped sentence order average prompt MRPC google/flan-t5-small"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          [
+            "BASE",
+            "This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using google/flan-t5-small. It frames MRPC as a yes/no text-to-text classification task by prompting the model with two sentences and asking whether they are paraphrases. To reduce order sensitivity, each sentence pair is scored twice\u2014once in the original order and once with the sentences swapped\u2014and the first-token logits for yes and no are averaged across both prompts to produce the final prediction. The notebook loads the validation data from TableVault, runs batched inference with Hugging Face Transformers on MPS or CPU, computes accuracy, F1, and a classification report, inspects example predictions and errors, and stores per-example predictions, logits, summary metrics, and metadata back into TableVault with embedding-based descriptions.",
+            "flan_t5_symmetric_prompt_average_mrpc",
+            "process_list"
+          ]
+        ]
+      },
+      "metrics": {
+        "input_tokens": 21239,
+        "output_tokens": 1717,
+        "reasoning_tokens": 1682,
+        "conversation_tokens": 19507,
+        "api_latency_s": 27.599,
+        "exec_latency_s": 0.0524
+      },
+      "error": null
+    }
+  ],
+  "final_result": null,
+  "run_error": "Max turns reached before finalize_result.",
+  "metrics_summary": {
+    "tokens": {
+      "input": 359244,
+      "output": 4793,
+      "reasoning": 3790,
+      "total": 364037,
+      "system_estimate": 1732,
+      "conversation": 307396
+    },
+    "code": {
+      "executions": 0,
+      "failed_executions": 0,
+      "total_lines": 0
+    },
+    "timing": {
+      "api_latency_s": 110.74,
+      "exec_latency_s": 1.015,
+      "wall_time_s": 111.755
+    },
+    "api_calls": 30,
+    "cost": null
+  }
+}

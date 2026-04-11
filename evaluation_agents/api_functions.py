@@ -122,7 +122,7 @@ def description_search(vault, description_text, n_items = None): # Done
     else:
         return results
 
-def description_embedding_search(vault, description_text, n_items = 10): # TODO: Change
+def description_embedding_search(vault, description_text, n_items = 15): # TODO: Change
     description_embedding = _get_embeddings(description_text)
     descriptions = vault.query_description_embedding(description_embedding)
     results = []
@@ -134,7 +134,7 @@ def description_embedding_search(vault, description_text, n_items = 10): # TODO:
     else:
         return results
 
-def properties_search(vault, description_text,  n_items = 10): #TODO: Change
+def properties_search(vault, description_text,  n_items = 15): #TODO: Change
     description_embedding = _get_embeddings(description_text)
     descriptions = vault.query_description_embedding(description_embedding)
     results = []
@@ -195,7 +195,7 @@ def get_item_properties(vault, name):
             descriptions[result[0]] = result[1]
     return descriptions
 
-def code_description_search(vault, description_text, n_items = 10):
+def code_description_search(vault, description_text, n_items = 15):
     descriptions = vault.query_description(description_text)
     results = []
     for dname, dtext, list_name, list_type in descriptions:
@@ -206,7 +206,7 @@ def code_description_search(vault, description_text, n_items = 10):
     else:
         return results
 
-def code_description_embedding_search(vault, description_text, n_items = 10):
+def code_description_embedding_search(vault, description_text, n_items = 15):
     description_embedding = _get_embeddings(description_text)
     descriptions = vault.query_description_embedding(description_embedding)
     results = []
@@ -218,7 +218,7 @@ def code_description_embedding_search(vault, description_text, n_items = 10):
     else:
         return results
 
-def code_properties_search(vault, description_text, n_items = 10):  # TODO: Change
+def code_properties_search(vault, description_text, n_items = 15):  # TODO: Change
     description_embedding = _get_embeddings(description_text)
     descriptions = vault.query_description_embedding(description_embedding)
     results = []
@@ -523,27 +523,67 @@ FUNCTION_EXPERIMENTS = {
     "code_description": ["get_item", "get_code", "code_description_search"],
     "code_description_embedding": ["get_item", "get_code", "code_description_embedding_search"],
     "code_properties": ["get_item", "get_code", "code_properties_search"],
-    "all_functions": [
-            "get_code",
-            "get_item",
-            "get_code_names",
-            "get_item_names",
-            "code_search",
-            "embedding_search",
-            "record_search",
-            "document_search",
-            "description_search",
-            "description_embedding_search",
-            "properties_search",
-            "get_item_code_name",
-            "get_item_parent_names",
-            "get_item_children_names",
-            "get_item_description",
-            "get_item_properties",
-            "code_description_search",
-            "code_description_embedding_search",
-            "code_properties_search",
-            "get_code_description",
-            "get_code_properties",
-        ]
+    # "all_functions": [
+    #         "get_code",
+    #         "get_item",
+    #         "get_code_names",
+    #         "get_item_names",
+    #         "code_search",
+    #         "embedding_search",
+    #         "record_search",
+    #         "document_search",
+    #         "description_search",
+    #         "description_embedding_search",
+    #         "properties_search",
+    #         "get_item_code_name",
+    #         "get_item_parent_names",
+    #         "get_item_children_names",
+    #         "get_item_description",
+    #         "get_item_properties",
+    #         "code_description_search",
+    #         "code_description_embedding_search",
+    #         "code_properties_search",
+    #         "get_code_description",
+    #         "get_code_properties",
+    #     ]
 }
+
+# FUNCTION_START lists the entry-point items for each experiment variant.
+# These are items from the base version of the experiments; the tablevault repository
+# contains many more experiments across different tasks, models, and datasets.
+#
+# A typical experiment in the vault stores four kinds of data items (all record_list)
+# and one code item (process_list):
+#   - source dataset   : the raw input examples (e.g. sentence pairs with ground-truth labels)
+#   - model predictions: one record per input example with the model's output label
+#   - mistakes         : a sampled subset of misclassified examples for error analysis
+#   - output summary   : a single record with aggregate evaluation metrics (accuracy, F1, report)
+#   - notebook process : the code that ran the full inference and evaluation pipeline
+#
+# Each entry has a name and type; use get_item(vault, name) for record_list items and
+# get_code(vault, name) for process_list items.
+
+_DATA_ITEMS = [
+    {"name": "glue_mrpc_validation",                            "type": "record_list"},
+    {"name": "mrpc_distilbert_predictions",                     "type": "record_list"},
+    {"name": "mrpc_paraphrase_inference_distilbert_mistakes",   "type": "record_list"},
+    {"name": "mrpc_paraphrase_inference_distilbert_output",     "type": "record_list"},
+]
+
+_CODE_ITEM = {"name": "mrpc_paraphrase_inference_distilbert", "type": "process_list"}
+
+FUNCTION_START = {
+    "items_only": _DATA_ITEMS,
+    "items_and_code": [_CODE_ITEM],
+    "dataset_search": _DATA_ITEMS,
+    "dataset_description": _DATA_ITEMS,
+    "dataset_description_embedding": _DATA_ITEMS,
+    "dataset_properties": _DATA_ITEMS,
+    "items_and_lineage": [_CODE_ITEM],
+    "code_search": [_CODE_ITEM],
+    "code_description": [_CODE_ITEM],
+    "code_description_embedding": [_CODE_ITEM],
+    "code_properties": [_CODE_ITEM],
+}
+
+START_TEXT = "Below are items from a experiment that may be useful; the tablevault repository contains many more experiments across different tasks, models, and datasets."

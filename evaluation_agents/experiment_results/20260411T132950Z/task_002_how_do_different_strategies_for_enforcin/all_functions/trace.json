@@ -1,0 +1,1649 @@
+{
+  "run_id": "20260411T144219Z",
+  "timestamp": "2026-04-11T14:42:19.982464+00:00",
+  "model": "gpt-5.4",
+  "task": "How do different strategies for enforcing prediction symmetry affect accuracy when using NLI-based and zero-shot models for paraphrase detection on MRPC?",
+  "system_prompt": "You are a data analyst assistant with access to a TableVault repository.\n\nYour goal is to investigate the repository and extract **structured evidence**\nrelevant to the user task.\n\nThe final output should summarize the evidence stored in the TableVault\nrepository in the form of:\n\n1. a **results table** (structured rows), and\n2. a **scientific-style summary** interpreting that evidence.\n\nThe results table should represent **summary evidence extracted from the\nrepository**. Each row corresponds to a piece of evidence such as an experiment\nresult, dataset observation, workflow output, or other structured record.\n\nExample result table schemas:\n\nExample 1 \u2014 workflow evaluation evidence\n\n[\n  {\n    \"workflow\": \"baseline_xgboost\",\n    \"model\": \"xgboost\",\n    \"running_time\": 132.4,\n    \"accuracy\": 0.91\n  },\n  {\n    \"workflow\": \"llm_augmented_pipeline\",\n    \"model\": \"gpt-4o-mini\",\n    \"running_time\": 245.8,\n    \"accuracy\": 0.94\n  }\n]\n\nExample 2 \u2014 sample-level classification evidence\n\n[\n  {\n    \"data_sample\": \"sample_001\",\n    \"true_label\": \"sports\",\n    \"predicted_label\": \"sports\",\n    \"reasoning_strategy\": \"few-shot classification\"\n  },\n  {\n    \"data_sample\": \"sample_002\",\n    \"true_label\": \"business\",\n    \"predicted_label\": \"technology\",\n    \"reasoning_strategy\": \"two-step reasoning + classification\"\n  }\n]\n\nThe columns depend on what evidence exists in the repository. Choose columns\nthat best summarize the relevant structured evidence. Don't include unnecessary columns.\n\n------------------------------------------------------------\n\n## What is TableVault?\n\nTableVault is a centralized data repository (backed by ArangoDB) that stores\n**item lists** \u2014 ordered collections of data items. Every item list has a\nunique name and belongs to one of four types:\n\n| Type          | Stores                                         |\n|---------------|------------------------------------------------|\n| **file**      | References (paths) to external files           |\n| **document**  | Text strings (paragraphs, logs, notes, etc.)   |\n| **embedding** | Fixed-dimension float vectors                  |\n| **record**    | Structured rows (dict with predefined columns) |\n\n------------------------------------------------------------\n\n## How data gets into TableVault\n\nData is ingested by Python processes. A Python script or notebook initialises\na `Vault` object, and then calls `append_*` helpers to add items to the\nrelevant lists.\n\nThere may also be additional context about the lists stored in the repository.\nThe available tool functions expose what context is accessible.\n\n------------------------------------------------------------\n\n## Tools\n\nCall the available TableVault query functions directly as tool calls \u2014 you do\nnot need to write Python code. Use `finalize_result` to return the final answer.\n\n------------------------------------------------------------\n\n## Rules\n\n- Always act via tool calls \u2014 never just describe what you would do.\n- On errors, read the error message and retry with corrected arguments.\n- **Do not make direct HuggingFace model calls** \u2014 all model inference results\n  are pre-computed and stored in the TableVault repository. Retrieve them there.\n- **Minimize token usage**: gather enough evidence to answer the question well,\n  then stop. More specific queries and filters reduce the number of calls needed \u2014\n  prefer targeted searches over broad scans. Stop as soon as you have sufficient\n  evidence to give a confident, well-supported answer.\n\n------------------------------------------------------------\n\n## Your output\n\nWhen you have enough information, call `finalize_result` with exactly this shape:\n\n{\n  \"rows\": [\n    {\"column1\": \"value1\", \"column2\": \"value2\"}\n  ],\n  \"summary\": \"Scientific-style description of the evidence and interpretation.\"\n}\n\n------------------------------------------------------------\n\n## Summary expectations\n\nThe **summary** should interpret the evidence in a research-style description.\nIt should explain:\n\n\u2022 what the repository evidence suggests about the user's task\n\u2022 key findings or patterns in the retrieved data\n\u2022 notable issues, biases, or inconsistencies in existing workflows or results\n\u2022 limitations or gaps in the available evidence\n\u2022 how the returned table should be interpreted\n\nThe summary should read like a short analytical explanation of the evidence,\nnot just a description of the table.\n\n------------------------------------------------------------\n",
+  "turns": [
+    {
+      "turn": 0,
+      "model_input": {
+        "pending_messages": [
+          {
+            "role": "user",
+            "content": "How do different strategies for enforcing prediction symmetry affect accuracy when using NLI-based and zero-shot models for paraphrase detection on MRPC?"
+          }
+        ],
+        "previous_response_id": "resp_097fb87c0947e5e20069da5dcc24408198a9baebac9cccc6fd"
+      },
+      "model_output": {
+        "response_id": "resp_097fb87c0947e5e20069da5dcc24408198a9baebac9cccc6fd",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "description_search",
+            "call_id": "call_7PLVgn6fOJDFbp8caLLwhsF0",
+            "arguments": {
+              "description_text": "MRPC paraphrase detection symmetry accuracy zero-shot NLI"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "description_search",
+        "call_id": "call_7PLVgn6fOJDFbp8caLLwhsF0",
+        "arguments": {
+          "description_text": "MRPC paraphrase detection symmetry accuracy zero-shot NLI"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": []
+      },
+      "metrics": {
+        "input_tokens": 4784,
+        "output_tokens": 116,
+        "reasoning_tokens": 85,
+        "conversation_tokens": 0,
+        "api_latency_s": 2.3056,
+        "exec_latency_s": 0.0309
+      },
+      "error": null
+    },
+    {
+      "turn": 1,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_7PLVgn6fOJDFbp8caLLwhsF0",
+            "output": "{\"ok\": true, \"result\": []}"
+          }
+        ],
+        "previous_response_id": "resp_097fb87c0947e5e20069da5dceaf2c819884afd9ea3dd675ba"
+      },
+      "model_output": {
+        "response_id": "resp_097fb87c0947e5e20069da5dceaf2c819884afd9ea3dd675ba",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "record_search",
+            "call_id": "call_x5E0joN37zlJ53bbN9qDHakO",
+            "arguments": {
+              "record_text": "MRPC"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "record_search",
+        "call_id": "call_x5E0joN37zlJ53bbN9qDHakO",
+        "arguments": {
+          "record_text": "MRPC"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": []
+      },
+      "metrics": {
+        "input_tokens": 4921,
+        "output_tokens": 32,
+        "reasoning_tokens": 10,
+        "conversation_tokens": 0,
+        "api_latency_s": 4.2752,
+        "exec_latency_s": 0.0102
+      },
+      "error": null
+    },
+    {
+      "turn": 2,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_x5E0joN37zlJ53bbN9qDHakO",
+            "output": "{\"ok\": true, \"result\": []}"
+          }
+        ],
+        "previous_response_id": "resp_097fb87c0947e5e20069da5dd2bff48198ad021701ac6932d0"
+      },
+      "model_output": {
+        "response_id": "resp_097fb87c0947e5e20069da5dd2bff48198ad021701ac6932d0",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "code_description_search",
+            "call_id": "call_OMxqc1ebIiuF1rtPxJ7owqKB",
+            "arguments": {
+              "description_text": "MRPC paraphrase symmetry zero-shot NLI"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "code_description_search",
+        "call_id": "call_OMxqc1ebIiuF1rtPxJ7owqKB",
+        "arguments": {
+          "description_text": "MRPC paraphrase symmetry zero-shot NLI"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": []
+      },
+      "metrics": {
+        "input_tokens": 4974,
+        "output_tokens": 38,
+        "reasoning_tokens": 8,
+        "conversation_tokens": 0,
+        "api_latency_s": 1.5239,
+        "exec_latency_s": 0.0462
+      },
+      "error": null
+    },
+    {
+      "turn": 3,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_OMxqc1ebIiuF1rtPxJ7owqKB",
+            "output": "{\"ok\": true, \"result\": []}"
+          }
+        ],
+        "previous_response_id": "resp_097fb87c0947e5e20069da5dd452c08198896e6cfb51778e31"
+      },
+      "model_output": {
+        "response_id": "resp_097fb87c0947e5e20069da5dd452c08198896e6cfb51778e31",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item_names",
+            "call_id": "call_UuaC2EtVgJr1lguMMbjzLewV",
+            "arguments": {
+              "item_type": "record_list"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item_names",
+        "call_id": "call_UuaC2EtVgJr1lguMMbjzLewV",
+        "arguments": {
+          "item_type": "record_list"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          "consensus_then_avg_margin_mrpc_summary",
+          "cosine_mrpc_max_pool_similarity_prediction",
+          "cosine_mrpc_mean_similarity_prediction",
+          "cosine_mrpc_threshold_score",
+          "distilbert_cls_cosine_mrpc_summary",
+          "distilbert_cross_text_prediction",
+          "distilbert_cross_text_prediction_cutoff",
+          "distilbert_last4_mean_cosine_mrpc_summary",
+          "distilbert_margin_score_prediction_values",
+          "distilbert_max_pool_cosine_mrpc_summary",
+          "distilbert_mean_cosine_median_threshold_mrpc_summary",
+          "distilbert_no_special_tokens_mean_cosine_mrpc_summary",
+          "distilbert_quora_softmax_prediction",
+          "distilbert_swap_prediction_values",
+          "distilbert_symmetric_average_prediction",
+          "distilbert-normalized-text-prediction",
+          "entailment_logprob_odds_mrpc_summary",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_logit_calibrated",
+          "flan_prediction_scored",
+          "flan_t5_answer_prefix_yes_no_mrpcc_summary",
+          "flan_t5_contextual_calibrated_yes_no_mrpc_summary",
+          "flan_t5_full_answer_logprob_mrpc_summary",
+          "flan_t5_symmetric_prompt_average_mrpc_summary",
+          "flan_t5_true_false_first_step_mrpc_summary",
+          "glue_mrpc_validation",
+          "google_flan_prediction_and_logits",
+          "google_flan_prediction_swapped",
+          "hf_pipeline_mrpc_bidirectional_order_average_summary",
+          "hf_pipeline_mrpc_margin_rule_summary",
+          "hf_pipeline_mrpc_raw_logits_softmax_summary",
+          "hf_pipeline_mrpc_short_maxlen_64_summary",
+          "hf_pipeline_mrpc_threshold_070_summary",
+          "min_direction_margin_mrpc_summary",
+          "minilm_cosine_threshold_prediction",
+          "mrpc_distilbert_predictions",
+          "mrpc_entailment_prediction",
+          "mrpc_gate_margin_prediction",
+          "mrpc_mean_gap_prediction",
+          "mrpc_min_margin_prediction",
+          "mrpc_neutral_penalty_prediction",
+          "mrpc_paraphrase_inference_distilbert_mistakes",
+          "mrpc_paraphrase_inference_distilbert_output",
+          "neutral_penalized_margin_mrpc_summary",
+          "no_special_cosine_mrpc_similarity_prediction",
+          "pipeline_distilbert_shortened",
+          "pipeline_distilbert_softmax_probs",
+          "pipeline_distilbert_threshold",
+          "quora_cross_encoder_max_length_64_mrpc_summary",
+          "quora_cross_encoder_prefixed_sentence_tags_mrpc_summary",
+          "quora_cross_encoder_softmax_threshold_065_mrpc_summary",
+          "quora_cross_encoder_symmetric_average_mrpc_summary",
+          "quora_cross_encoder_text_normalized_mrpc_summary",
+          "sentence_transformers_mrpc_prediction_distance",
+          "sentence_transformers_mrpc_prediction_max64",
+          "sentence_transformers_mrpc_prediction_threshold",
+          "sentence_transformers_mrpc_prediction_threshold_2",
+          "softmax_gap_mean_mrpc_summary",
+          "st_all_distilroberta_v1_cosine_threshold_mrpc_summary",
+          "st_all_minilm_l6_l2_distance_threshold_mrpc_summary",
+          "st_all_minilm_l6_max_seq_len_64_cosine_mrpc_summary",
+          "st_paraphrase_minilm_l3_cosine_threshold_mrpc_summary",
+          "st_paraphrase_minilm_l6_cosine_threshold_mrpc_summary",
+          "threshold_cosine_mrpc_similarity_prediction"
+        ]
+      },
+      "metrics": {
+        "input_tokens": 5034,
+        "output_tokens": 37,
+        "reasoning_tokens": 14,
+        "conversation_tokens": 0,
+        "api_latency_s": 1.3855,
+        "exec_latency_s": 0.0138
+      },
+      "error": null
+    },
+    {
+      "turn": 4,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_UuaC2EtVgJr1lguMMbjzLewV",
+            "output": "{\"ok\": true, \"result\": [\"consensus_then_avg_margin_mrpc_summary\", \"cosine_mrpc_max_pool_similarity_prediction\", \"cosine_mrpc_mean_similarity_prediction\", \"cosine_mrpc_threshold_score\", \"distilbert_cls_cosine_mrpc_summary\", \"distilbert_cross_text_prediction\", \"distilbert_cross_text_prediction_cutoff\", \"distilbert_last4_mean_cosine_mrpc_summary\", \"distilbert_margin_score_prediction_values\", \"distilbert_max_pool_cosine_mrpc_summary\", \"distilbert_mean_cosine_median_threshold_mrpc_summary\", \"distilbert_no_special_tokens_mean_cosine_mrpc_summary\", \"distilbert_quora_softmax_prediction\", \"distilbert_swap_prediction_values\", \"distilbert_symmetric_average_prediction\", \"distilbert-normalized-text-prediction\", \"entailment_logprob_odds_mrpc_summary\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_logit_calibrated\", \"flan_prediction_scored\", \"flan_t5_answer_prefix_yes_no_mrpcc_summary\", \"flan_t5_contextual_calibrated_yes_no_mrpc_summary\", \"flan_t5_full_answer_logprob_mrpc_summary\", \"flan_t5_symmetric_prompt_average_mrpc_summary\", \"flan_t5_true_false_first_step_mrpc_summary\", \"glue_mrpc_validation\", \"google_flan_prediction_and_logits\", \"google_flan_prediction_swapped\", \"hf_pipeline_mrpc_bidirectional_order_average_summary\", \"hf_pipeline_mrpc_margin_rule_summary\", \"hf_pipeline_mrpc_raw_logits_softmax_summary\", \"hf_pipeline_mrpc_short_maxlen_64_summary\", \"hf_pipeline_mrpc_threshold_070_summary\", \"min_direction_margin_mrpc_summary\", \"minilm_cosine_threshold_prediction\", \"mrpc_distilbert_predictions\", \"mrpc_entailment_prediction\", \"mrpc_gate_margin_prediction\", \"mrpc_mean_gap_prediction\", \"mrpc_min_margin_prediction\", \"mrpc_neutral_penalty_prediction\", \"mrpc_paraphrase_inference_distilbert_mistakes\", \"mrpc_paraphrase_inference_distilbert_output\", \"neutral_penalized_margin_mrpc_summary\", \"no_special_cosine_mrpc_similarity_prediction\", \"pipeline_distilbert_shortened\", \"pipeline_distilbert_softmax_probs\", \"pipeline_distilbert_threshold\", \"quora_cross_encoder_max_length_64_mrpc_summary\", \"quora_cross_encoder_prefixed_sentence_tags_mrpc_summary\", \"quora_cross_encoder_softmax_threshold_065_mrpc_summary\", \"quora_cross_encoder_symmetric_average_mrpc_summary\", \"quora_cross_encoder_text_normalized_mrpc_summary\", \"sentence_transformers_mrpc_prediction_distance\", \"sentence_transformers_mrpc_prediction_max64\", \"sentence_transformers_mrpc_prediction_threshold\", \"sentence_transformers_mrpc_prediction_threshold_2\", \"softmax_gap_mean_mrpc_summary\", \"st_all_distilroberta_v1_cosine_threshold_mrpc_summary\", \"st_all_minilm_l6_l2_distance_threshold_mrpc_summary\", \"st_all_minilm_l6_max_seq_len_64_cosine_mrpc_summary\", \"st_paraphrase_minilm_l3_cosine_threshold_mrpc_summary\", \"st_paraphrase_minilm_l6_cosine_threshold_mrpc_summary\", \"threshold_cosine_mrpc_similarity_prediction\"]}"
+          }
+        ],
+        "previous_response_id": "resp_097fb87c0947e5e20069da5dd5b77c8198a8c002bce847ce26"
+      },
+      "model_output": {
+        "response_id": "resp_097fb87c0947e5e20069da5dd5b77c8198a8c002bce847ce26",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "description_search",
+            "call_id": "call_fKSEwp94s6umlPMlW6WO759j",
+            "arguments": {
+              "description_text": "symmetric symmetry paraphrase MRPC summary"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "description_search",
+        "call_id": "call_fKSEwp94s6umlPMlW6WO759j",
+        "arguments": {
+          "description_text": "symmetric symmetry paraphrase MRPC summary"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": []
+      },
+      "metrics": {
+        "input_tokens": 5777,
+        "output_tokens": 117,
+        "reasoning_tokens": 89,
+        "conversation_tokens": 56,
+        "api_latency_s": 2.7351,
+        "exec_latency_s": 0.0244
+      },
+      "error": null
+    },
+    {
+      "turn": 5,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_fKSEwp94s6umlPMlW6WO759j",
+            "output": "{\"ok\": true, \"result\": []}"
+          }
+        ],
+        "previous_response_id": "resp_097fb87c0947e5e20069da5dd87c8c8198a296d2eb939c4080"
+      },
+      "model_output": {
+        "response_id": "resp_097fb87c0947e5e20069da5dd87c8c8198a296d2eb939c4080",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_o5GnHUhWG3oau3uj88sKXRPU",
+            "arguments": {
+              "item_name": "quora_cross_encoder_symmetric_average_mrpc_summary",
+              "start_position": 0,
+              "end_position": 5
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_o5GnHUhWG3oau3uj88sKXRPU",
+        "arguments": {
+          "item_name": "quora_cross_encoder_symmetric_average_mrpc_summary",
+          "start_position": 0,
+          "end_position": 5
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.6985294117647058,
+            "f1": 0.7807486631016043,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.52      0.51      0.52       129\n    paraphrase       0.78      0.78      0.78       279\n\n      accuracy                           0.70       408\n     macro avg       0.65      0.65      0.65       408\n  weighted avg       0.70      0.70      0.70       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 5915,
+        "output_tokens": 156,
+        "reasoning_tokens": 116,
+        "conversation_tokens": 194,
+        "api_latency_s": 2.861,
+        "exec_latency_s": 0.021
+      },
+      "error": null
+    },
+    {
+      "turn": 6,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_o5GnHUhWG3oau3uj88sKXRPU",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.6985294117647058, \"f1\": 0.7807486631016043, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.52      0.51      0.52       129\\n    paraphrase       0.78      0.78      0.78       279\\n\\n      accuracy                           0.70       408\\n     macro avg       0.65      0.65      0.65       408\\n  weighted avg       0.70      0.70      0.70       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_097fb87c0947e5e20069da5ddb5b6081988fe6404ba36ab4e7"
+      },
+      "model_output": {
+        "response_id": "resp_097fb87c0947e5e20069da5ddb5b6081988fe6404ba36ab4e7",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item_description",
+            "call_id": "call_eOkOcXd9Qa0AA263ohnu0J5J",
+            "arguments": {
+              "name": "quora_cross_encoder_symmetric_average_mrpc_summary"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item_description",
+        "call_id": "call_eOkOcXd9Qa0AA263ohnu0J5J",
+        "arguments": {
+          "name": "quora_cross_encoder_symmetric_average_mrpc_summary"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": "Summary dataset for the notebook\u2019s evaluation run of the cross-encoder/quora-distilroberta-base model on the GLUE MRPC validation set using symmetric scoring. It contains aggregate performance results computed after predicting each sentence pair in both original and reversed order, averaging the two positive-class scores, and thresholding at 0.5.\n\nStructure: a record list with columns accuracy, f1, and classification_report. accuracy is the overall validation accuracy, f1 is the binary F1 score for paraphrase detection, and classification_report is the full sklearn text report summarizing class-wise precision, recall, F1, and support for the labels not_paraphrase and paraphrase.\n\nRole in the workflow: this dataset stores the run-level evaluation summary for the prediction dataset distilbert_symmetric_average_prediction, linked to both the source input dataset glue_mrpc_validation and the generated prediction records. It is intended as the compact experiment result table for comparing or auditing this notebook run."
+      },
+      "metrics": {
+        "input_tokens": 6237,
+        "output_tokens": 49,
+        "reasoning_tokens": 19,
+        "conversation_tokens": 516,
+        "api_latency_s": 2.8455,
+        "exec_latency_s": 0.0161
+      },
+      "error": null
+    },
+    {
+      "turn": 7,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_eOkOcXd9Qa0AA263ohnu0J5J",
+            "output": "{\"ok\": true, \"result\": \"Summary dataset for the notebook\\u2019s evaluation run of the cross-encoder/quora-distilroberta-base model on the GLUE MRPC validation set using symmetric scoring. It contains aggregate performance results computed after predicting each sentence pair in both original and reversed order, averaging the two positive-class scores, and thresholding at 0.5.\\n\\nStructure: a record list with columns accuracy, f1, and classification_report. accuracy is the overall validation accuracy, f1 is the binary F1 score for paraphrase detection, and classification_report is the full sklearn text report summarizing class-wise precision, recall, F1, and support for the labels not_paraphrase and paraphrase.\\n\\nRole in the workflow: this dataset stores the run-level evaluation summary for the prediction dataset distilbert_symmetric_average_prediction, linked to both the source input dataset glue_mrpc_validation and the generated prediction records. It is intended as the compact experiment result table for comparing or auditing this notebook run.\"}"
+          }
+        ],
+        "previous_response_id": "resp_097fb87c0947e5e20069da5dde3ec48198a236c3c2dc9a5dec"
+      },
+      "model_output": {
+        "response_id": "resp_097fb87c0947e5e20069da5dde3ec48198a236c3c2dc9a5dec",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item_description",
+            "call_id": "call_QAB5Vl2Vr8tFxTyuAs0XIBio",
+            "arguments": {
+              "name": "hf_pipeline_mrpc_bidirectional_order_average_summary"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item_description",
+        "call_id": "call_QAB5Vl2Vr8tFxTyuAs0XIBio",
+        "arguments": {
+          "name": "hf_pipeline_mrpc_bidirectional_order_average_summary"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": "Summary dataset for the bidirectional MRPC evaluation run. It contains aggregate evaluation results for the TextAttack DistilBERT MRPC classifier on the GLUE MRPC validation set, where paraphrase probabilities are computed for both the original sentence order and the swapped sentence order, then averaged before thresholding to make the final prediction.\n\nStructure:\n- accuracy: float overall classification accuracy on the validation set\n- f1: float F1 score for the paraphrase class\n- classification_report: string version of the sklearn classification report, including per-class precision, recall, F1, and support\n\nRole in this workflow:\nThis dataset serves as the experiment-level evaluation summary for the notebook. It records the final performance metrics derived from comparing the averaged bidirectional predictions against the true labels, and links those metrics back to both the source dataset (glue_mrpc_validation) and the per-example prediction dataset (distilbert_swap_prediction_values)."
+      },
+      "metrics": {
+        "input_tokens": 6510,
+        "output_tokens": 125,
+        "reasoning_tokens": 96,
+        "conversation_tokens": 789,
+        "api_latency_s": 3.1967,
+        "exec_latency_s": 0.0163
+      },
+      "error": null
+    },
+    {
+      "turn": 8,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_QAB5Vl2Vr8tFxTyuAs0XIBio",
+            "output": "{\"ok\": true, \"result\": \"Summary dataset for the bidirectional MRPC evaluation run. It contains aggregate evaluation results for the TextAttack DistilBERT MRPC classifier on the GLUE MRPC validation set, where paraphrase probabilities are computed for both the original sentence order and the swapped sentence order, then averaged before thresholding to make the final prediction.\\n\\nStructure:\\n- accuracy: float overall classification accuracy on the validation set\\n- f1: float F1 score for the paraphrase class\\n- classification_report: string version of the sklearn classification report, including per-class precision, recall, F1, and support\\n\\nRole in this workflow:\\nThis dataset serves as the experiment-level evaluation summary for the notebook. It records the final performance metrics derived from comparing the averaged bidirectional predictions against the true labels, and links those metrics back to both the source dataset (glue_mrpc_validation) and the per-example prediction dataset (distilbert_swap_prediction_values).\"}"
+          }
+        ],
+        "previous_response_id": "resp_097fb87c0947e5e20069da5de17504819898225c47b46084c6"
+      },
+      "model_output": {
+        "response_id": "resp_097fb87c0947e5e20069da5de17504819898225c47b46084c6",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item_description",
+            "call_id": "call_Y5Bq3JUKhjiHHEJXk4SQlcHR",
+            "arguments": {
+              "name": "entailment_logprob_odds_mrpc_summary"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item_description",
+        "call_id": "call_Y5Bq3JUKhjiHHEJXk4SQlcHR",
+        "arguments": {
+          "name": "entailment_logprob_odds_mrpc_summary"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": "Summary dataset for the MRPC entailment-logprob-odds experiment on the GLUE MRPC validation split. It contains evaluation results for paraphrase predictions produced from a zero-shot NLI model (typeform/distilbert-base-uncased-mnli), where each sentence pair is scored using the average entailment-vs-contradiction log-odds across both input orders. Structure: one record with columns accuracy (float), f1 (float), and classification_report (string). Its role in this workflow is to provide a compact experiment-level summary of model performance, derived from the full per-example outputs in mrpc_entailment_prediction and the ground-truth labels in glue_mrpc_validation."
+      },
+      "metrics": {
+        "input_tokens": 6848,
+        "output_tokens": 106,
+        "reasoning_tokens": 76,
+        "conversation_tokens": 1127,
+        "api_latency_s": 2.406,
+        "exec_latency_s": 0.014
+      },
+      "error": null
+    },
+    {
+      "turn": 9,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_Y5Bq3JUKhjiHHEJXk4SQlcHR",
+            "output": "{\"ok\": true, \"result\": \"Summary dataset for the MRPC entailment-logprob-odds experiment on the GLUE MRPC validation split. It contains evaluation results for paraphrase predictions produced from a zero-shot NLI model (typeform/distilbert-base-uncased-mnli), where each sentence pair is scored using the average entailment-vs-contradiction log-odds across both input orders. Structure: one record with columns accuracy (float), f1 (float), and classification_report (string). Its role in this workflow is to provide a compact experiment-level summary of model performance, derived from the full per-example outputs in mrpc_entailment_prediction and the ground-truth labels in glue_mrpc_validation.\"}"
+          }
+        ],
+        "previous_response_id": "resp_097fb87c0947e5e20069da5de3ddf88198bc973b360dd85fde"
+      },
+      "model_output": {
+        "response_id": "resp_097fb87c0947e5e20069da5de3ddf88198bc973b360dd85fde",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item_description",
+            "call_id": "call_lNoqxG7MdhpCDHmhAQiEICku",
+            "arguments": {
+              "name": "consensus_then_avg_margin_mrpc_summary"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item_description",
+        "call_id": "call_lNoqxG7MdhpCDHmhAQiEICku",
+        "arguments": {
+          "name": "consensus_then_avg_margin_mrpc_summary"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": "Summary dataset for the MRPC validation evaluation of the consensus-then-average-margin inference method. It contains aggregate performance results computed by comparing the generated paraphrase predictions against the true labels from glue_mrpc_validation, using prediction records stored in mrpc_gate_margin_prediction. The dataset is structured as a record list with columns: accuracy (float), f1 (float), and classification_report (string containing the full per-class sklearn classification report for not_paraphrase and paraphrase). In this workflow, it serves as the final evaluation artifact for the notebook, linking the full MRPC validation set and the per-example prediction dataset to a compact summary of model performance."
+      },
+      "metrics": {
+        "input_tokens": 7119,
+        "output_tokens": 77,
+        "reasoning_tokens": 49,
+        "conversation_tokens": 1398,
+        "api_latency_s": 2.0498,
+        "exec_latency_s": 0.0166
+      },
+      "error": null
+    },
+    {
+      "turn": 10,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_lNoqxG7MdhpCDHmhAQiEICku",
+            "output": "{\"ok\": true, \"result\": \"Summary dataset for the MRPC validation evaluation of the consensus-then-average-margin inference method. It contains aggregate performance results computed by comparing the generated paraphrase predictions against the true labels from glue_mrpc_validation, using prediction records stored in mrpc_gate_margin_prediction. The dataset is structured as a record list with columns: accuracy (float), f1 (float), and classification_report (string containing the full per-class sklearn classification report for not_paraphrase and paraphrase). In this workflow, it serves as the final evaluation artifact for the notebook, linking the full MRPC validation set and the per-example prediction dataset to a compact summary of model performance.\"}"
+          }
+        ],
+        "previous_response_id": "resp_097fb87c0947e5e20069da5de5ef4081988639589de1dd0fea"
+      },
+      "model_output": {
+        "response_id": "resp_097fb87c0947e5e20069da5de5ef4081988639589de1dd0fea",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item_description",
+            "call_id": "call_fJLlvweSzmVFRI1ZrvbQzXUt",
+            "arguments": {
+              "name": "min_direction_margin_mrpc_summary"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item_description",
+        "call_id": "call_fJLlvweSzmVFRI1ZrvbQzXUt",
+        "arguments": {
+          "name": "min_direction_margin_mrpc_summary"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": "Summary dataset for the min_direction_margin_mrpc workflow. It contains experiment-level evaluation results for paraphrase detection on the GLUE MRPC validation set, where predictions are made by scoring each sentence pair in both directions with an MNLI model and using the minimum entailment-minus-contradiction margin as the decision signal. The dataset has one record with three fields: accuracy (float), f1 (float), and classification_report (string). Its role is to store the final aggregated performance summary derived from the source validation examples and the per-example prediction dataset mrpc_min_margin_prediction, so future users can quickly inspect the overall outcome of this notebook without recomputing metrics."
+      },
+      "metrics": {
+        "input_tokens": 7348,
+        "output_tokens": 24,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 1627,
+        "api_latency_s": 1.0901,
+        "exec_latency_s": 0.0168
+      },
+      "error": null
+    },
+    {
+      "turn": 11,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_fJLlvweSzmVFRI1ZrvbQzXUt",
+            "output": "{\"ok\": true, \"result\": \"Summary dataset for the min_direction_margin_mrpc workflow. It contains experiment-level evaluation results for paraphrase detection on the GLUE MRPC validation set, where predictions are made by scoring each sentence pair in both directions with an MNLI model and using the minimum entailment-minus-contradiction margin as the decision signal. The dataset has one record with three fields: accuracy (float), f1 (float), and classification_report (string). Its role is to store the final aggregated performance summary derived from the source validation examples and the per-example prediction dataset mrpc_min_margin_prediction, so future users can quickly inspect the overall outcome of this notebook without recomputing metrics.\"}"
+          }
+        ],
+        "previous_response_id": "resp_097fb87c0947e5e20069da5de70b388198b5d1709f6f98398b"
+      },
+      "model_output": {
+        "response_id": "resp_097fb87c0947e5e20069da5de70b388198b5d1709f6f98398b",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item_description",
+            "call_id": "call_66Ovywt8FZ9Yf317jKQtvSTA",
+            "arguments": {
+              "name": "neutral_penalized_margin_mrpc_summary"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item_description",
+        "call_id": "call_66Ovywt8FZ9Yf317jKQtvSTA",
+        "arguments": {
+          "name": "neutral_penalized_margin_mrpc_summary"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": "Aggregate evaluation summary for the neutral-penalized margin MRPC experiment. This dataset contains a single summary record computed from the GLUE MRPC validation set and the derived mrpc_neutral_penalty_prediction records. Its fields are: accuracy (float, overall prediction accuracy), f1 (float, F1 score for the paraphrase class), and classification_report (string, full sklearn classification report with per-class precision, recall, F1, and support). In this workflow, it serves as the compact experiment-level output used to record and retrieve overall model performance after scoring sentence pairs with the MNLI model and converting the bidirectional entailment-vs.-non-entailment margin into paraphrase predictions."
+      },
+      "metrics": {
+        "input_tokens": 7528,
+        "output_tokens": 26,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 1807,
+        "api_latency_s": 1.3145,
+        "exec_latency_s": 0.0166
+      },
+      "error": null
+    },
+    {
+      "turn": 12,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_66Ovywt8FZ9Yf317jKQtvSTA",
+            "output": "{\"ok\": true, \"result\": \"Aggregate evaluation summary for the neutral-penalized margin MRPC experiment. This dataset contains a single summary record computed from the GLUE MRPC validation set and the derived mrpc_neutral_penalty_prediction records. Its fields are: accuracy (float, overall prediction accuracy), f1 (float, F1 score for the paraphrase class), and classification_report (string, full sklearn classification report with per-class precision, recall, F1, and support). In this workflow, it serves as the compact experiment-level output used to record and retrieve overall model performance after scoring sentence pairs with the MNLI model and converting the bidirectional entailment-vs.-non-entailment margin into paraphrase predictions.\"}"
+          }
+        ],
+        "previous_response_id": "resp_097fb87c0947e5e20069da5de85bc081989e3f447d2cb11ad2"
+      },
+      "model_output": {
+        "response_id": "resp_097fb87c0947e5e20069da5de85bc081989e3f447d2cb11ad2",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item_description",
+            "call_id": "call_EwcdQeDo9sA088RaPm9U1UKw",
+            "arguments": {
+              "name": "softmax_gap_mean_mrpc_summary"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item_description",
+        "call_id": "call_EwcdQeDo9sA088RaPm9U1UKw",
+        "arguments": {
+          "name": "softmax_gap_mean_mrpc_summary"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": "Summary dataset for the MRPC validation experiment using an MNLI sequence-classification model and the mean softmax-gap decision rule. It contains a single aggregate record with three fields: accuracy (float), f1 (float), and classification_report (string). These metrics are computed by comparing ground-truth MRPC labels from glue_mrpc_validation against predictions in mrpc_mean_gap_prediction, where each prediction is based on the average of the entailment-minus-contradiction probability gap for both sentence orders (sentence1, sentence2) and (sentence2, sentence1). In this workflow, this dataset serves as the experiment-level evaluation output summarizing model performance over the full validation set."
+      },
+      "metrics": {
+        "input_tokens": 7717,
+        "output_tokens": 25,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 1996,
+        "api_latency_s": 2.4392,
+        "exec_latency_s": 0.0152
+      },
+      "error": null
+    },
+    {
+      "turn": 13,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_EwcdQeDo9sA088RaPm9U1UKw",
+            "output": "{\"ok\": true, \"result\": \"Summary dataset for the MRPC validation experiment using an MNLI sequence-classification model and the mean softmax-gap decision rule. It contains a single aggregate record with three fields: accuracy (float), f1 (float), and classification_report (string). These metrics are computed by comparing ground-truth MRPC labels from glue_mrpc_validation against predictions in mrpc_mean_gap_prediction, where each prediction is based on the average of the entailment-minus-contradiction probability gap for both sentence orders (sentence1, sentence2) and (sentence2, sentence1). In this workflow, this dataset serves as the experiment-level evaluation output summarizing model performance over the full validation set.\"}"
+          }
+        ],
+        "previous_response_id": "resp_097fb87c0947e5e20069da5deadb18819893d926141ab05e5e"
+      },
+      "model_output": {
+        "response_id": "resp_097fb87c0947e5e20069da5deadb18819893d926141ab05e5e",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item_description",
+            "call_id": "call_4vBmZsU2kJKsVDxslWVoiM9q",
+            "arguments": {
+              "name": "flan_t5_symmetric_prompt_average_mrpc_summary"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item_description",
+        "call_id": "call_4vBmZsU2kJKsVDxslWVoiM9q",
+        "arguments": {
+          "name": "flan_t5_symmetric_prompt_average_mrpc_summary"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": "Summary dataset for the FLAN-T5 symmetric-prompt MRPC evaluation run. It contains a single aggregate record describing model performance on the full glue_mrpc_validation split, computed from predictions stored in google_flan_prediction_swapped. The fields are: accuracy (float, overall classification accuracy), f1 (float, binary F1 score for paraphrase detection), and classification_report (string, the full scikit-learn classification report with precision, recall, F1, and support for both not_paraphrase and paraphrase classes). Its role in this workflow is to provide a compact experiment-level evaluation artifact that links the source validation examples and prediction outputs to final metrics for the notebook/process flan_t5_symmetric_prompt_average_mrpc."
+      },
+      "metrics": {
+        "input_tokens": 7901,
+        "output_tokens": 57,
+        "reasoning_tokens": 26,
+        "conversation_tokens": 2180,
+        "api_latency_s": 1.8245,
+        "exec_latency_s": 0.0104
+      },
+      "error": null
+    },
+    {
+      "turn": 14,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_4vBmZsU2kJKsVDxslWVoiM9q",
+            "output": "{\"ok\": true, \"result\": \"Summary dataset for the FLAN-T5 symmetric-prompt MRPC evaluation run. It contains a single aggregate record describing model performance on the full glue_mrpc_validation split, computed from predictions stored in google_flan_prediction_swapped. The fields are: accuracy (float, overall classification accuracy), f1 (float, binary F1 score for paraphrase detection), and classification_report (string, the full scikit-learn classification report with precision, recall, F1, and support for both not_paraphrase and paraphrase classes). Its role in this workflow is to provide a compact experiment-level evaluation artifact that links the source validation examples and prediction outputs to final metrics for the notebook/process flan_t5_symmetric_prompt_average_mrpc.\"}"
+          }
+        ],
+        "previous_response_id": "resp_097fb87c0947e5e20069da5decb0208198ae8e16196f95bcbe"
+      },
+      "model_output": {
+        "response_id": "resp_097fb87c0947e5e20069da5decb0208198ae8e16196f95bcbe",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item_description",
+            "call_id": "call_0o6k4cXYxTWb5fq6ijFdMqEd",
+            "arguments": {
+              "name": "flan_t5_contextual_calibrated_yes_no_mrpc_summary"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item_description",
+        "call_id": "call_0o6k4cXYxTWb5fq6ijFdMqEd",
+        "arguments": {
+          "name": "flan_t5_contextual_calibrated_yes_no_mrpc_summary"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": "Aggregate evaluation summary for the flan-t5-small contextual yes/no paraphrase classifier on the GLUE MRPC validation set after logit calibration. This dataset is a record list with one summary record containing the fields: accuracy (float), f1 (float), and classification_report (string with per-class precision/recall/F1 and support for not_paraphrase and paraphrase). It is produced after generating calibrated predictions in flan_prediction_logit_calibrated and compares those predictions against the ground-truth labels in glue_mrpc_validation. Its role in this workflow is to store run-level performance metrics for the full validation set, providing a compact summary of model quality for this notebook execution."
+      },
+      "metrics": {
+        "input_tokens": 8128,
+        "output_tokens": 32,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 2407,
+        "api_latency_s": 1.528,
+        "exec_latency_s": 0.0147
+      },
+      "error": null
+    },
+    {
+      "turn": 15,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_0o6k4cXYxTWb5fq6ijFdMqEd",
+            "output": "{\"ok\": true, \"result\": \"Aggregate evaluation summary for the flan-t5-small contextual yes/no paraphrase classifier on the GLUE MRPC validation set after logit calibration. This dataset is a record list with one summary record containing the fields: accuracy (float), f1 (float), and classification_report (string with per-class precision/recall/F1 and support for not_paraphrase and paraphrase). It is produced after generating calibrated predictions in flan_prediction_logit_calibrated and compares those predictions against the ground-truth labels in glue_mrpc_validation. Its role in this workflow is to store run-level performance metrics for the full validation set, providing a compact summary of model quality for this notebook execution.\"}"
+          }
+        ],
+        "previous_response_id": "resp_097fb87c0947e5e20069da5dee30108198ac1e14b6e4fde4d3"
+      },
+      "model_output": {
+        "response_id": "resp_097fb87c0947e5e20069da5dee30108198ac1e14b6e4fde4d3",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item_description",
+            "call_id": "call_MsAKRwVL0FLp5qlrYUnTjO3e",
+            "arguments": {
+              "name": "flan_t5_full_answer_logprob_mrpc_summary"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item_description",
+        "call_id": "call_MsAKRwVL0FLp5qlrYUnTjO3e",
+        "arguments": {
+          "name": "flan_t5_full_answer_logprob_mrpc_summary"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": "flan_t5_full_answer_logprob_mrpc_summary is an experiment-level summary dataset for evaluating google/flan-t5-small on the GLUE MRPC validation split using prompt-based yes/no paraphrase prediction with full-answer log-probability scoring. It contains a single record with three fields: accuracy (float), f1 (float), and classification_report (string from sklearn with per-class precision, recall, f1, and support for not_paraphrase and paraphrase). This dataset is produced after generating example-level predictions in flan_prediction_scored and comparing them against the ground-truth MRPC labels. Its role in the workflow is to store the aggregate evaluation results for the entire validation run, linking the underlying input dataset (glue_mrpc_validation) and the per-example prediction dataset (flan_prediction_scored)."
+      },
+      "metrics": {
+        "input_tokens": 8321,
+        "output_tokens": 29,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 2600,
+        "api_latency_s": 1.671,
+        "exec_latency_s": 0.0156
+      },
+      "error": null
+    },
+    {
+      "turn": 16,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_MsAKRwVL0FLp5qlrYUnTjO3e",
+            "output": "{\"ok\": true, \"result\": \"flan_t5_full_answer_logprob_mrpc_summary is an experiment-level summary dataset for evaluating google/flan-t5-small on the GLUE MRPC validation split using prompt-based yes/no paraphrase prediction with full-answer log-probability scoring. It contains a single record with three fields: accuracy (float), f1 (float), and classification_report (string from sklearn with per-class precision, recall, f1, and support for not_paraphrase and paraphrase). This dataset is produced after generating example-level predictions in flan_prediction_scored and comparing them against the ground-truth MRPC labels. Its role in the workflow is to store the aggregate evaluation results for the entire validation run, linking the underlying input dataset (glue_mrpc_validation) and the per-example prediction dataset (flan_prediction_scored).\"}"
+          }
+        ],
+        "previous_response_id": "resp_097fb87c0947e5e20069da5df0efac8198935f6d0c39670b8f"
+      },
+      "model_output": {
+        "response_id": "resp_097fb87c0947e5e20069da5df0efac8198935f6d0c39670b8f",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item_description",
+            "call_id": "call_YoDvM89ZQj6B8Tity1Lsz3s5",
+            "arguments": {
+              "name": "flan_t5_answer_prefix_yes_no_mrpcc_summary"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item_description",
+        "call_id": "call_YoDvM89ZQj6B8Tity1Lsz3s5",
+        "arguments": {
+          "name": "flan_t5_answer_prefix_yes_no_mrpcc_summary"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": "Summary dataset for the FLAN-T5-small MRPC validation run using answer-prefix yes/no scoring. It contains aggregate evaluation results computed from predictions on the glue_mrpc_validation dataset, based on comparing the model\u2019s logits for the tokens \u201cyes\u201d and \u201cno\u201d after the decoder prefix \u201cAnswer:\u201d. The dataset structure has three fields: accuracy (float), f1 (float), and classification_report (string with per-class precision/recall/F1/support). In this workflow, it serves as the experiment-level summary record for the notebook, linking the full validation input set and the per-example prediction/logit dataset flan_prediction_and_logit_prefix into a single compact performance summary."
+      },
+      "metrics": {
+        "input_tokens": 8538,
+        "output_tokens": 30,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 2817,
+        "api_latency_s": 2.6986,
+        "exec_latency_s": 0.0045
+      },
+      "error": null
+    },
+    {
+      "turn": 17,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_YoDvM89ZQj6B8Tity1Lsz3s5",
+            "output": "{\"ok\": true, \"result\": \"Summary dataset for the FLAN-T5-small MRPC validation run using answer-prefix yes/no scoring. It contains aggregate evaluation results computed from predictions on the glue_mrpc_validation dataset, based on comparing the model\\u2019s logits for the tokens \\u201cyes\\u201d and \\u201cno\\u201d after the decoder prefix \\u201cAnswer:\\u201d. The dataset structure has three fields: accuracy (float), f1 (float), and classification_report (string with per-class precision/recall/F1/support). In this workflow, it serves as the experiment-level summary record for the notebook, linking the full validation input set and the per-example prediction/logit dataset flan_prediction_and_logit_prefix into a single compact performance summary.\"}"
+          }
+        ],
+        "previous_response_id": "resp_097fb87c0947e5e20069da5df296dc81989d799bc831023b5d"
+      },
+      "model_output": {
+        "response_id": "resp_097fb87c0947e5e20069da5df296dc81989d799bc831023b5d",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item_description",
+            "call_id": "call_pz5xSVNPZT9eQbmD37905bFK",
+            "arguments": {
+              "name": "flan_t5_true_false_first_step_mrpc_summary"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item_description",
+        "call_id": "call_pz5xSVNPZT9eQbmD37905bFK",
+        "arguments": {
+          "name": "flan_t5_true_false_first_step_mrpc_summary"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": "Summary dataset for the FLAN-T5 MRPC evaluation run using first-step true/false token scoring. It contains aggregate performance results for google/flan-t5-small on the glue_mrpc_validation split, where each example is prompted as a paraphrase detection task and predicted by comparing the first decoder-step logits for the tokens true and false. The record list has three fields: accuracy (float), f1 (float, for the positive/paraphrase class), and classification_report (string containing the full per-class precision/recall/F1 summary). In this workflow, this dataset serves as the experiment-level evaluation artifact that summarizes model performance over the full validation set and links the source validation data with the per-example prediction/logit dataset google_flan_prediction_and_logits."
+      },
+      "metrics": {
+        "input_tokens": 8746,
+        "output_tokens": 29,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 3025,
+        "api_latency_s": 1.6552,
+        "exec_latency_s": 0.0128
+      },
+      "error": null
+    },
+    {
+      "turn": 18,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_pz5xSVNPZT9eQbmD37905bFK",
+            "output": "{\"ok\": true, \"result\": \"Summary dataset for the FLAN-T5 MRPC evaluation run using first-step true/false token scoring. It contains aggregate performance results for google/flan-t5-small on the glue_mrpc_validation split, where each example is prompted as a paraphrase detection task and predicted by comparing the first decoder-step logits for the tokens true and false. The record list has three fields: accuracy (float), f1 (float, for the positive/paraphrase class), and classification_report (string containing the full per-class precision/recall/F1 summary). In this workflow, this dataset serves as the experiment-level evaluation artifact that summarizes model performance over the full validation set and links the source validation data with the per-example prediction/logit dataset google_flan_prediction_and_logits.\"}"
+          }
+        ],
+        "previous_response_id": "resp_097fb87c0947e5e20069da5df4401c8198971b14a60b392bfc"
+      },
+      "model_output": {
+        "response_id": "resp_097fb87c0947e5e20069da5df4401c8198971b14a60b392bfc",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "description_search",
+            "call_id": "call_Ok1KzhWsTKKALnuclJYOu6m0",
+            "arguments": {
+              "description_text": "MNLI MRPC summary"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "description_search",
+        "call_id": "call_Ok1KzhWsTKKALnuclJYOu6m0",
+        "arguments": {
+          "description_text": "MNLI MRPC summary"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          [
+            "BASE",
+            "Summary dataset for the MRPC entailment-logprob-odds experiment on the GLUE MRPC validation split. It contains evaluation results for paraphrase predictions produced from a zero-shot NLI model (typeform/distilbert-base-uncased-mnli), where each sentence pair is scored using the average entailment-vs-contradiction log-odds across both input orders. Structure: one record with columns accuracy (float), f1 (float), and classification_report (string). Its role in this workflow is to provide a compact experiment-level summary of model performance, derived from the full per-example outputs in mrpc_entailment_prediction and the ground-truth labels in glue_mrpc_validation.",
+            "entailment_logprob_odds_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "BASE",
+            "Summary dataset for the min_direction_margin_mrpc workflow. It contains experiment-level evaluation results for paraphrase detection on the GLUE MRPC validation set, where predictions are made by scoring each sentence pair in both directions with an MNLI model and using the minimum entailment-minus-contradiction margin as the decision signal. The dataset has one record with three fields: accuracy (float), f1 (float), and classification_report (string). Its role is to store the final aggregated performance summary derived from the source validation examples and the per-example prediction dataset mrpc_min_margin_prediction, so future users can quickly inspect the overall outcome of this notebook without recomputing metrics.",
+            "min_direction_margin_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "BASE",
+            "mrpc_entailment_prediction contains per-example prediction outputs for the GLUE MRPC validation set generated with the typeform/distilbert-base-uncased-mnli NLI model. Each record corresponds to one validation pair from glue_mrpc_validation and stores three fields: prediction (binary paraphrase decision obtained by thresholding the averaged score at 0), dir12 (entailment-minus-contradiction log-probability score for sentence1 \u2192 sentence2), and dir21 (the same score for sentence2 \u2192 sentence1). The dataset is aligned one-to-one with the source MRPC examples through input item indexing. Its role in this workflow is to capture the model\u2019s directional entailment-based evidence and final paraphrase prediction for downstream evaluation, error analysis, and summary metric computation.",
+            "mrpc_entailment_prediction",
+            "record_list"
+          ],
+          [
+            "BASE",
+            "mrpc_gate_margin_prediction is a per-example prediction dataset derived from the GLUE MRPC validation split. For each validation pair (sentence1, sentence2), the notebook runs the NLI model typeform/distilbert-base-uncased-mnli in both input orders, sentence1\u2192sentence2 and sentence2\u2192sentence1, and stores the resulting decision signals used for paraphrase classification. The dataset has four fields: prediction (final binary paraphrase prediction, 1 for paraphrase and 0 for not paraphrase), margin_12 (entailment logit minus contradiction logit for sentence1 paired with sentence2), margin_21 (the same margin for the reversed order), and gate (boolean flag that is true only when neither direction\u2019s argmax label is contradiction). The final prediction is produced by requiring gate = true and the average of margin_12 and margin_21 to be greater than 0. This dataset serves as the main intermediate output of the workflow: it preserves the model\u2019s directional margin scores and final gated prediction for each MRPC example, and it is then used to compute the summary accuracy, F1, and classification report.",
+            "mrpc_gate_margin_prediction",
+            "record_list"
+          ],
+          [
+            "BASE",
+            "Per-example prediction dataset for the GLUE MRPC validation split, generated by running the sentence pairs through the typeform/distilbert-base-uncased-mnli model in both input orders. Each record corresponds to one MRPC validation example and is linked to the matching row in glue_mrpc_validation. The dataset has three fields: prediction (binary paraphrase decision, where 1 indicates paraphrase and 0 indicates not paraphrase), gap_12 (entailment probability minus contradiction probability for sentence1\u2192sentence2), and gap_21 (the same probability gap for sentence2\u2192sentence1). In this workflow, it serves as the stored per-instance model output used to inspect directional confidence, compare predictions with ground-truth MRPC labels, and build the downstream summary metrics in softmax_gap_mean_mrpc_summary.",
+            "mrpc_mean_gap_prediction",
+            "record_list"
+          ],
+          [
+            "BASE",
+            "Per-example prediction dataset for the GLUE MRPC validation split, produced by applying the typeform/distilbert-base-uncased-mnli model as a zero-shot paraphrase detector. Each record corresponds to one sentence pair from glue_mrpc_validation and stores: prediction (binary paraphrase decision, where 1 indicates paraphrase and 0 indicates not_paraphrase), score_12 (entailment logit minus max(contradiction, neutral) for sentence1 -> sentence2), and score_21 (the same score for sentence2 -> sentence1). The final prediction is derived from the average of the two directional scores. In this workflow, this dataset captures the model\u2019s per-example outputs for downstream evaluation, inspection of mistakes, and construction of the overall summary metrics.",
+            "mrpc_neutral_penalty_prediction",
+            "record_list"
+          ],
+          [
+            "BASE",
+            "Aggregate evaluation summary for the neutral-penalized margin MRPC experiment. This dataset contains a single summary record computed from the GLUE MRPC validation set and the derived mrpc_neutral_penalty_prediction records. Its fields are: accuracy (float, overall prediction accuracy), f1 (float, F1 score for the paraphrase class), and classification_report (string, full sklearn classification report with per-class precision, recall, F1, and support). In this workflow, it serves as the compact experiment-level output used to record and retrieve overall model performance after scoring sentence pairs with the MNLI model and converting the bidirectional entailment-vs.-non-entailment margin into paraphrase predictions.",
+            "neutral_penalized_margin_mrpc_summary",
+            "record_list"
+          ],
+          [
+            "BASE",
+            "Summary dataset for the MRPC validation experiment using an MNLI sequence-classification model and the mean softmax-gap decision rule. It contains a single aggregate record with three fields: accuracy (float), f1 (float), and classification_report (string). These metrics are computed by comparing ground-truth MRPC labels from glue_mrpc_validation against predictions in mrpc_mean_gap_prediction, where each prediction is based on the average of the entailment-minus-contradiction probability gap for both sentence orders (sentence1, sentence2) and (sentence2, sentence1). In this workflow, this dataset serves as the experiment-level evaluation output summarizing model performance over the full validation set.",
+            "softmax_gap_mean_mrpc_summary",
+            "record_list"
+          ]
+        ]
+      },
+      "metrics": {
+        "input_tokens": 8950,
+        "output_tokens": 151,
+        "reasoning_tokens": 126,
+        "conversation_tokens": 3229,
+        "api_latency_s": 3.288,
+        "exec_latency_s": 0.0381
+      },
+      "error": null
+    },
+    {
+      "turn": 19,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_Ok1KzhWsTKKALnuclJYOu6m0",
+            "output": "{\"ok\": true, \"result\": [[\"BASE\", \"Summary dataset for the MRPC entailment-logprob-odds experiment on the GLUE MRPC validation split. It contains evaluation results for paraphrase predictions produced from a zero-shot NLI model (typeform/distilbert-base-uncased-mnli), where each sentence pair is scored using the average entailment-vs-contradiction log-odds across both input orders. Structure: one record with columns accuracy (float), f1 (float), and classification_report (string). Its role in this workflow is to provide a compact experiment-level summary of model performance, derived from the full per-example outputs in mrpc_entailment_prediction and the ground-truth labels in glue_mrpc_validation.\", \"entailment_logprob_odds_mrpc_summary\", \"record_list\"], [\"BASE\", \"Summary dataset for the min_direction_margin_mrpc workflow. It contains experiment-level evaluation results for paraphrase detection on the GLUE MRPC validation set, where predictions are made by scoring each sentence pair in both directions with an MNLI model and using the minimum entailment-minus-contradiction margin as the decision signal. The dataset has one record with three fields: accuracy (float), f1 (float), and classification_report (string). Its role is to store the final aggregated performance summary derived from the source validation examples and the per-example prediction dataset mrpc_min_margin_prediction, so future users can quickly inspect the overall outcome of this notebook without recomputing metrics.\", \"min_direction_margin_mrpc_summary\", \"record_list\"], [\"BASE\", \"mrpc_entailment_prediction contains per-example prediction outputs for the GLUE MRPC validation set generated with the typeform/distilbert-base-uncased-mnli NLI model. Each record corresponds to one validation pair from glue_mrpc_validation and stores three fields: prediction (binary paraphrase decision obtained by thresholding the averaged score at 0), dir12 (entailment-minus-contradiction log-probability score for sentence1 \\u2192 sentence2), and dir21 (the same score for sentence2 \\u2192 sentence1). The dataset is aligned one-to-one with the source MRPC examples through input item indexing. Its role in this workflow is to capture the model\\u2019s directional entailment-based evidence and final paraphrase prediction for downstream evaluation, error analysis, and summary metric computation.\", \"mrpc_entailment_prediction\", \"record_list\"], [\"BASE\", \"mrpc_gate_margin_prediction is a per-example prediction dataset derived from the GLUE MRPC validation split. For each validation pair (sentence1, sentence2), the notebook runs the NLI model typeform/distilbert-base-uncased-mnli in both input orders, sentence1\\u2192sentence2 and sentence2\\u2192sentence1, and stores the resulting decision signals used for paraphrase classification. The dataset has four fields: prediction (final binary paraphrase prediction, 1 for paraphrase and 0 for not paraphrase), margin_12 (entailment logit minus contradiction logit for sentence1 paired with sentence2), margin_21 (the same margin for the reversed order), and gate (boolean flag that is true only when neither direction\\u2019s argmax label is contradiction). The final prediction is produced by requiring gate = true and the average of margin_12 and margin_21 to be greater than 0. This dataset serves as the main intermediate output of the workflow: it preserves the model\\u2019s directional margin scores and final gated prediction for each MRPC example, and it is then used to compute the summary accuracy, F1, and classification report.\", \"mrpc_gate_margin_prediction\", \"record_list\"], [\"BASE\", \"Per-example prediction dataset for the GLUE MRPC validation split, generated by running the sentence pairs through the typeform/distilbert-base-uncased-mnli model in both input orders. Each record corresponds to one MRPC validation example and is linked to the matching row in glue_mrpc_validation. The dataset has three fields: prediction (binary paraphrase decision, where 1 indicates paraphrase and 0 indicates not paraphrase), gap_12 (entailment probability minus contradiction probability for sentence1\\u2192sentence2), and gap_21 (the same probability gap for sentence2\\u2192sentence1). In this workflow, it serves as the stored per-instance model output used to inspect directional confidence, compare predictions with ground-truth MRPC labels, and build the downstream summary metrics in softmax_gap_mean_mrpc_summary.\", \"mrpc_mean_gap_prediction\", \"record_list\"], [\"BASE\", \"Per-example prediction dataset for the GLUE MRPC validation split, produced by applying the typeform/distilbert-base-uncased-mnli model as a zero-shot paraphrase detector. Each record corresponds to one sentence pair from glue_mrpc_validation and stores: prediction (binary paraphrase decision, where 1 indicates paraphrase and 0 indicates not_paraphrase), score_12 (entailment logit minus max(contradiction, neutral) for sentence1 -> sentence2), and score_21 (the same score for sentence2 -> sentence1). The final prediction is derived from the average of the two directional scores. In this workflow, this dataset captures the model\\u2019s per-example outputs for downstream evaluation, inspection of mistakes, and construction of the overall summary metrics.\", \"mrpc_neutral_penalty_prediction\", \"record_list\"], [\"BASE\", \"Aggregate evaluation summary for the neutral-penalized margin MRPC experiment. This dataset contains a single summary record computed from the GLUE MRPC validation set and the derived mrpc_neutral_penalty_prediction records. Its fields are: accuracy (float, overall prediction accuracy), f1 (float, F1 score for the paraphrase class), and classification_report (string, full sklearn classification report with per-class precision, recall, F1, and support). In this workflow, it serves as the compact experiment-level output used to record and retrieve overall model performance after scoring sentence pairs with the MNLI model and converting the bidirectional entailment-vs.-non-entailment margin into paraphrase predictions.\", \"neutral_penalized_margin_mrpc_summary\", \"record_list\"], [\"BASE\", \"Summary dataset for the MRPC validation experiment using an MNLI sequence-classification model and the mean softmax-gap decision rule. It contains a single aggregate record with three fields: accuracy (float), f1 (float), and classification_report (string). These metrics are computed by comparing ground-truth MRPC labels from glue_mrpc_validation against predictions in mrpc_mean_gap_prediction, where each prediction is based on the average of the entailment-minus-contradiction probability gap for both sentence orders (sentence1, sentence2) and (sentence2, sentence1). In this workflow, this dataset serves as the experiment-level evaluation output summarizing model performance over the full validation set.\", \"softmax_gap_mean_mrpc_summary\", \"record_list\"]]}"
+          }
+        ],
+        "previous_response_id": "resp_097fb87c0947e5e20069da5df7a0e48198afff44dbba70fd5c"
+      },
+      "model_output": {
+        "response_id": "resp_097fb87c0947e5e20069da5df7a0e48198afff44dbba70fd5c",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "description_search",
+            "call_id": "call_Iz35qWv5yN3DpNloIdwXfYcZ",
+            "arguments": {
+              "description_text": "FLAN MRPC summary average swapped"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "description_search",
+        "call_id": "call_Iz35qWv5yN3DpNloIdwXfYcZ",
+        "arguments": {
+          "description_text": "FLAN MRPC summary average swapped"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          [
+            "BASE",
+            "Per-example prediction outputs from google/flan-t5-small on the GLUE MRPC validation set using a yes/no paraphrase prompt evaluated in both original and swapped sentence order. Each record is aligned to one input example from glue_mrpc_validation and contains: prediction (binary paraphrase decision after averaging forward and swapped logits), yes_logits (forward-order logit for \u201cyes\u201d), no_logits (forward-order logit for \u201cno\u201d), swapped_yes_logits (swapped-order logit for \u201cyes\u201d), and swapped_no_logits (swapped-order logit for \u201cno\u201d). This dataset is used as the intermediate model-output table in the workflow, supporting order-symmetric paraphrase prediction, error analysis, and computation of final evaluation metrics in the summary dataset.",
+            "google_flan_prediction_swapped",
+            "record_list"
+          ]
+        ]
+      },
+      "metrics": {
+        "input_tokens": 10555,
+        "output_tokens": 39,
+        "reasoning_tokens": 12,
+        "conversation_tokens": 4834,
+        "api_latency_s": 2.1738,
+        "exec_latency_s": 0.0431
+      },
+      "error": null
+    },
+    {
+      "turn": 20,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_Iz35qWv5yN3DpNloIdwXfYcZ",
+            "output": "{\"ok\": true, \"result\": [[\"BASE\", \"Per-example prediction outputs from google/flan-t5-small on the GLUE MRPC validation set using a yes/no paraphrase prompt evaluated in both original and swapped sentence order. Each record is aligned to one input example from glue_mrpc_validation and contains: prediction (binary paraphrase decision after averaging forward and swapped logits), yes_logits (forward-order logit for \\u201cyes\\u201d), no_logits (forward-order logit for \\u201cno\\u201d), swapped_yes_logits (swapped-order logit for \\u201cyes\\u201d), and swapped_no_logits (swapped-order logit for \\u201cno\\u201d). This dataset is used as the intermediate model-output table in the workflow, supporting order-symmetric paraphrase prediction, error analysis, and computation of final evaluation metrics in the summary dataset.\", \"google_flan_prediction_swapped\", \"record_list\"]]}"
+          }
+        ],
+        "previous_response_id": "resp_097fb87c0947e5e20069da5dfb19f48198ac62d9610ddc7e9e"
+      },
+      "model_output": {
+        "response_id": "resp_097fb87c0947e5e20069da5dfb19f48198ac62d9610ddc7e9e",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "description_search",
+            "call_id": "call_xCpx4106MDBJOzvLm6UF9LVj",
+            "arguments": {
+              "description_text": "MRPC validation summary forward order single direction paraphrase"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "description_search",
+        "call_id": "call_xCpx4106MDBJOzvLm6UF9LVj",
+        "arguments": {
+          "description_text": "MRPC validation summary forward order single direction paraphrase"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": []
+      },
+      "metrics": {
+        "input_tokens": 10803,
+        "output_tokens": 221,
+        "reasoning_tokens": 191,
+        "conversation_tokens": 5082,
+        "api_latency_s": 7.2254,
+        "exec_latency_s": 0.0523
+      },
+      "error": null
+    },
+    {
+      "turn": 21,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_xCpx4106MDBJOzvLm6UF9LVj",
+            "output": "{\"ok\": true, \"result\": []}"
+          }
+        ],
+        "previous_response_id": "resp_097fb87c0947e5e20069da5e0114b0819895d5a6d96feae469"
+      },
+      "model_output": {
+        "response_id": "resp_097fb87c0947e5e20069da5e0114b0819895d5a6d96feae469",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_code_names",
+            "call_id": "call_UqxNv8jKBBRycFheRNumG9p8",
+            "arguments": {}
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_code_names",
+        "call_id": "call_UqxNv8jKBBRycFheRNumG9p8",
+        "arguments": {}
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          "consensus_then_avg_margin_mrpc",
+          "distilbert_cls_cosine_mrpc",
+          "distilbert_last4_mean_cosine_mrpc",
+          "distilbert_max_pool_cosine_mrpc",
+          "distilbert_mean_cosine_median_threshold_mrpc",
+          "distilbert_no_special_tokens_mean_cosine_mrpc",
+          "entailment_logprob_odds_mrpc",
+          "flan_t5_answer_prefix_yes_no_mrpc",
+          "flan_t5_contextual_calibrated_yes_no_mrpc",
+          "flan_t5_full_answer_logprob_mrpc",
+          "flan_t5_symmetric_prompt_average_mrpc",
+          "flan_t5_true_false_first_step_mrpc",
+          "gent_1775874373",
+          "gent_1775874650",
+          "gent_1775874933",
+          "gent_1775913615",
+          "gent_1775914000",
+          "gent_1775914190",
+          "hf_pipeline_mrpc_bidirectional_order_average",
+          "hf_pipeline_mrpc_margin_rule",
+          "hf_pipeline_mrpc_raw_logits_softmax",
+          "hf_pipeline_mrpc_short_maxlen_64",
+          "hf_pipeline_mrpc_threshold_070",
+          "min_direction_margin_mrpc",
+          "mrpc_paraphrase_inference_distilbert",
+          "neutral_penalized_margin_mrpc",
+          "quora_cross_encoder_max_length_64_mrpc",
+          "quora_cross_encoder_prefixed_sentence_tags_mrpc",
+          "quora_cross_encoder_softmax_threshold_065_mrpc",
+          "quora_cross_encoder_symmetric_average_mrpc",
+          "quora_cross_encoder_text_normalized_mrpc",
+          "softmax_gap_mean_mrpc",
+          "st_all_distilroberta_v1_cosine_threshold_mrpc",
+          "st_all_minilm_l6_l2_distance_threshold_mrpc",
+          "st_all_minilm_l6_max_seq_len_64_cosine_mrpc",
+          "st_paraphrase_minilm_l3_cosine_threshold_mrpc",
+          "st_paraphrase_minilm_l6_cosine_threshold_mrpc"
+        ]
+      },
+      "metrics": {
+        "input_tokens": 11045,
+        "output_tokens": 145,
+        "reasoning_tokens": 128,
+        "conversation_tokens": 5324,
+        "api_latency_s": 3.4302,
+        "exec_latency_s": 0.0158
+      },
+      "error": null
+    },
+    {
+      "turn": 22,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_UqxNv8jKBBRycFheRNumG9p8",
+            "output": "{\"ok\": true, \"result\": [\"consensus_then_avg_margin_mrpc\", \"distilbert_cls_cosine_mrpc\", \"distilbert_last4_mean_cosine_mrpc\", \"distilbert_max_pool_cosine_mrpc\", \"distilbert_mean_cosine_median_threshold_mrpc\", \"distilbert_no_special_tokens_mean_cosine_mrpc\", \"entailment_logprob_odds_mrpc\", \"flan_t5_answer_prefix_yes_no_mrpc\", \"flan_t5_contextual_calibrated_yes_no_mrpc\", \"flan_t5_full_answer_logprob_mrpc\", \"flan_t5_symmetric_prompt_average_mrpc\", \"flan_t5_true_false_first_step_mrpc\", \"gent_1775874373\", \"gent_1775874650\", \"gent_1775874933\", \"gent_1775913615\", \"gent_1775914000\", \"gent_1775914190\", \"hf_pipeline_mrpc_bidirectional_order_average\", \"hf_pipeline_mrpc_margin_rule\", \"hf_pipeline_mrpc_raw_logits_softmax\", \"hf_pipeline_mrpc_short_maxlen_64\", \"hf_pipeline_mrpc_threshold_070\", \"min_direction_margin_mrpc\", \"mrpc_paraphrase_inference_distilbert\", \"neutral_penalized_margin_mrpc\", \"quora_cross_encoder_max_length_64_mrpc\", \"quora_cross_encoder_prefixed_sentence_tags_mrpc\", \"quora_cross_encoder_softmax_threshold_065_mrpc\", \"quora_cross_encoder_symmetric_average_mrpc\", \"quora_cross_encoder_text_normalized_mrpc\", \"softmax_gap_mean_mrpc\", \"st_all_distilroberta_v1_cosine_threshold_mrpc\", \"st_all_minilm_l6_l2_distance_threshold_mrpc\", \"st_all_minilm_l6_max_seq_len_64_cosine_mrpc\", \"st_paraphrase_minilm_l3_cosine_threshold_mrpc\", \"st_paraphrase_minilm_l6_cosine_threshold_mrpc\"]}"
+          }
+        ],
+        "previous_response_id": "resp_097fb87c0947e5e20069da5e0486c881988d9b58473b26adcf"
+      },
+      "model_output": {
+        "response_id": "resp_097fb87c0947e5e20069da5e0486c881988d9b58473b26adcf",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "code_description_search",
+            "call_id": "call_7QYMnYdlT7QvGK493FMU3hnb",
+            "arguments": {
+              "description_text": "MRPC symmetry average swapped prompt"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "code_description_search",
+        "call_id": "call_7QYMnYdlT7QvGK493FMU3hnb",
+        "arguments": {
+          "description_text": "MRPC symmetry average swapped prompt"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": []
+      },
+      "metrics": {
+        "input_tokens": 11620,
+        "output_tokens": 47,
+        "reasoning_tokens": 20,
+        "conversation_tokens": 5899,
+        "api_latency_s": 2.0316,
+        "exec_latency_s": 0.0434
+      },
+      "error": null
+    },
+    {
+      "turn": 23,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_7QYMnYdlT7QvGK493FMU3hnb",
+            "output": "{\"ok\": true, \"result\": []}"
+          }
+        ],
+        "previous_response_id": "resp_097fb87c0947e5e20069da5e06993c8198885493aaedc609f5"
+      },
+      "model_output": {
+        "response_id": "resp_097fb87c0947e5e20069da5e06993c8198885493aaedc609f5",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_code_description",
+            "call_id": "call_OlQNYoFY7O8s362YJ0LCSgwb",
+            "arguments": {
+              "name": "entailment_logprob_odds_mrpc"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_code_description",
+        "call_id": "call_OlQNYoFY7O8s362YJ0LCSgwb",
+        "arguments": {
+          "name": "entailment_logprob_odds_mrpc"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": "This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using an NLI model. It loads sentence pairs and labels from TableVault, applies the typeform/distilbert-base-uncased-mnli sequence classification model, and treats paraphrase detection as entailment scoring: for each pair, it computes the log-probability difference between entailment and contradiction for both sentence orders (sentence1\u2192sentence2 and sentence2\u2192sentence1), averages the two directional scores, and predicts paraphrase when the averaged score is positive. The notebook stores per-example predictions and directional entailment log-odds in TableVault, computes evaluation metrics including accuracy, F1, and a classification report, inspects sample predictions and errors, and saves both dataset-level summaries and notebook-level metadata/descriptions with OpenAI embeddings for documentation and retrieval."
+      },
+      "metrics": {
+        "input_tokens": 11689,
+        "output_tokens": 42,
+        "reasoning_tokens": 13,
+        "conversation_tokens": 5968,
+        "api_latency_s": 1.7445,
+        "exec_latency_s": 0.0153
+      },
+      "error": null
+    },
+    {
+      "turn": 24,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_OlQNYoFY7O8s362YJ0LCSgwb",
+            "output": "{\"ok\": true, \"result\": \"This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using an NLI model. It loads sentence pairs and labels from TableVault, applies the typeform/distilbert-base-uncased-mnli sequence classification model, and treats paraphrase detection as entailment scoring: for each pair, it computes the log-probability difference between entailment and contradiction for both sentence orders (sentence1\\u2192sentence2 and sentence2\\u2192sentence1), averages the two directional scores, and predicts paraphrase when the averaged score is positive. The notebook stores per-example predictions and directional entailment log-odds in TableVault, computes evaluation metrics including accuracy, F1, and a classification report, inspects sample predictions and errors, and saves both dataset-level summaries and notebook-level metadata/descriptions with OpenAI embeddings for documentation and retrieval.\"}"
+          }
+        ],
+        "previous_response_id": "resp_097fb87c0947e5e20069da5e0860348198bc71a374b9e9cc51"
+      },
+      "model_output": {
+        "response_id": "resp_097fb87c0947e5e20069da5e0860348198bc71a374b9e9cc51",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_code_description",
+            "call_id": "call_uaAG2IQv9YfriBm3lN6BIJYO",
+            "arguments": {
+              "name": "min_direction_margin_mrpc"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_code_description",
+        "call_id": "call_uaAG2IQv9YfriBm3lN6BIJYO",
+        "arguments": {
+          "name": "min_direction_margin_mrpc"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": "This notebook evaluates a directional-margin approach to paraphrase detection on the GLUE MRPC validation set. It loads sentence pairs and labels from TableVault, runs the typeform/distilbert-base-uncased-mnli sequence classification model as an NLI-based paraphrase scorer in both directions (sentence1\u2192sentence2 and sentence2\u2192sentence1), computes the entailment-minus-contradiction logit margin for each direction, and uses the minimum of the two margins as the final paraphrase score; pairs with positive minimum margin are predicted as paraphrases. The workflow then stores per-example predictions and margins in TableVault, computes accuracy, F1, and a classification report against the MRPC labels, inspects sample predictions and errors, and saves a summary record and notebook-level metadata back to TableVault."
+      },
+      "metrics": {
+        "input_tokens": 11930,
+        "output_tokens": 23,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 6209,
+        "api_latency_s": 1.8821,
+        "exec_latency_s": 0.0153
+      },
+      "error": null
+    },
+    {
+      "turn": 25,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_uaAG2IQv9YfriBm3lN6BIJYO",
+            "output": "{\"ok\": true, \"result\": \"This notebook evaluates a directional-margin approach to paraphrase detection on the GLUE MRPC validation set. It loads sentence pairs and labels from TableVault, runs the typeform/distilbert-base-uncased-mnli sequence classification model as an NLI-based paraphrase scorer in both directions (sentence1\\u2192sentence2 and sentence2\\u2192sentence1), computes the entailment-minus-contradiction logit margin for each direction, and uses the minimum of the two margins as the final paraphrase score; pairs with positive minimum margin are predicted as paraphrases. The workflow then stores per-example predictions and margins in TableVault, computes accuracy, F1, and a classification report against the MRPC labels, inspects sample predictions and errors, and saves a summary record and notebook-level metadata back to TableVault.\"}"
+          }
+        ],
+        "previous_response_id": "resp_097fb87c0947e5e20069da5e0a41f481989ff970f2b1bbb928"
+      },
+      "model_output": {
+        "response_id": "resp_097fb87c0947e5e20069da5e0a41f481989ff970f2b1bbb928",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_code_description",
+            "call_id": "call_Izyq184POgpr1EJFM0qHxA3R",
+            "arguments": {
+              "name": "neutral_penalized_margin_mrpc"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_code_description",
+        "call_id": "call_Izyq184POgpr1EJFM0qHxA3R",
+        "arguments": {
+          "name": "neutral_penalized_margin_mrpc"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": "This notebook runs a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using the NLI model typeform/distilbert-base-uncased-mnli. Its purpose is to score sentence pairs as paraphrase vs. not paraphrase without task-specific fine-tuning, using a neutral-penalized entailment margin. For each MRPC pair, the notebook evaluates both sentence orders, computes an entailment score minus the larger of the contradiction or neutral scores, averages the two directional margins, and predicts paraphrase when the averaged margin is positive. It then stores per-example predictions and scores in TableVault, links them back to the source validation records, computes evaluation metrics including accuracy, F1, and a classification report, inspects example predictions and errors, and saves dataset-, prediction-, summary-, and process-level metadata and semantic descriptions using OpenAI embeddings."
+      },
+      "metrics": {
+        "input_tokens": 12142,
+        "output_tokens": 25,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 6421,
+        "api_latency_s": 1.4191,
+        "exec_latency_s": 0.0169
+      },
+      "error": null
+    },
+    {
+      "turn": 26,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_Izyq184POgpr1EJFM0qHxA3R",
+            "output": "{\"ok\": true, \"result\": \"This notebook runs a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using the NLI model typeform/distilbert-base-uncased-mnli. Its purpose is to score sentence pairs as paraphrase vs. not paraphrase without task-specific fine-tuning, using a neutral-penalized entailment margin. For each MRPC pair, the notebook evaluates both sentence orders, computes an entailment score minus the larger of the contradiction or neutral scores, averages the two directional margins, and predicts paraphrase when the averaged margin is positive. It then stores per-example predictions and scores in TableVault, links them back to the source validation records, computes evaluation metrics including accuracy, F1, and a classification report, inspects example predictions and errors, and saves dataset-, prediction-, summary-, and process-level metadata and semantic descriptions using OpenAI embeddings.\"}"
+          }
+        ],
+        "previous_response_id": "resp_097fb87c0947e5e20069da5e0bb41481989ed98b935651a077"
+      },
+      "model_output": {
+        "response_id": "resp_097fb87c0947e5e20069da5e0bb41481989ed98b935651a077",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_code_description",
+            "call_id": "call_QU8sj5x8xObmzHA3ByrDm4vE",
+            "arguments": {
+              "name": "softmax_gap_mean_mrpc"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_code_description",
+        "call_id": "call_QU8sj5x8xObmzHA3ByrDm4vE",
+        "arguments": {
+          "name": "softmax_gap_mean_mrpc"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": "This notebook runs a paraphrase detection experiment on the GLUE MRPC validation set using the typeform/distilbert-base-uncased-mnli sequence classification model in an NLI-style formulation. For each sentence pair, it scores both input orders (sentence1, sentence2) and (sentence2, sentence1), computes the softmax probability gap between entailment and contradiction for each order, averages the two gaps, and predicts paraphrase when the mean gap is greater than zero. The workflow loads the MRPC validation examples from TableVault, performs batched inference with Hugging Face Transformers and PyTorch, and stores per-example predictions and gap scores back into TableVault with lineage to the source records. It then evaluates the method with accuracy, F1, and a classification report, inspects sample predictions and errors, and saves an experiment summary plus descriptive metadata and embeddings for the prediction table, summary table, and overall notebook process."
+      },
+      "metrics": {
+        "input_tokens": 12365,
+        "output_tokens": 24,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 6644,
+        "api_latency_s": 1.8262,
+        "exec_latency_s": 0.0155
+      },
+      "error": null
+    },
+    {
+      "turn": 27,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_QU8sj5x8xObmzHA3ByrDm4vE",
+            "output": "{\"ok\": true, \"result\": \"This notebook runs a paraphrase detection experiment on the GLUE MRPC validation set using the typeform/distilbert-base-uncased-mnli sequence classification model in an NLI-style formulation. For each sentence pair, it scores both input orders (sentence1, sentence2) and (sentence2, sentence1), computes the softmax probability gap between entailment and contradiction for each order, averages the two gaps, and predicts paraphrase when the mean gap is greater than zero. The workflow loads the MRPC validation examples from TableVault, performs batched inference with Hugging Face Transformers and PyTorch, and stores per-example predictions and gap scores back into TableVault with lineage to the source records. It then evaluates the method with accuracy, F1, and a classification report, inspects sample predictions and errors, and saves an experiment summary plus descriptive metadata and embeddings for the prediction table, summary table, and overall notebook process.\"}"
+          }
+        ],
+        "previous_response_id": "resp_097fb87c0947e5e20069da5e0d890c8198a1940b1d224b6388"
+      },
+      "model_output": {
+        "response_id": "resp_097fb87c0947e5e20069da5e0d890c8198a1940b1d224b6388",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_code_description",
+            "call_id": "call_3jmhnxxDXsb8rY6dC5ZqmMyD",
+            "arguments": {
+              "name": "consensus_then_avg_margin_mrpc"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_code_description",
+        "call_id": "call_3jmhnxxDXsb8rY6dC5ZqmMyD",
+        "arguments": {
+          "name": "consensus_then_avg_margin_mrpc"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": "This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using the typeform/distilbert-base-uncased-mnli natural language inference model. For each sentence pair, it runs inference in both directions (sentence1\u2192sentence2 and sentence2\u2192sentence1), computes an entailment-versus-contradiction margin for each direction, averages the two margins, and predicts paraphrase only when neither direction is classified as contradiction and the average margin is positive. The notebook stores per-example predictions, directional margins, and gate decisions in TableVault, computes accuracy, F1, and a classification report against the MRPC labels, logs error analysis examples, and saves dataset-, prediction-, summary-, and notebook-level metadata and embeddings for later retrieval and documentation."
+      },
+      "metrics": {
+        "input_tokens": 12599,
+        "output_tokens": 25,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 6878,
+        "api_latency_s": 1.6192,
+        "exec_latency_s": 0.0114
+      },
+      "error": null
+    },
+    {
+      "turn": 28,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_3jmhnxxDXsb8rY6dC5ZqmMyD",
+            "output": "{\"ok\": true, \"result\": \"This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using the typeform/distilbert-base-uncased-mnli natural language inference model. For each sentence pair, it runs inference in both directions (sentence1\\u2192sentence2 and sentence2\\u2192sentence1), computes an entailment-versus-contradiction margin for each direction, averages the two margins, and predicts paraphrase only when neither direction is classified as contradiction and the average margin is positive. The notebook stores per-example predictions, directional margins, and gate decisions in TableVault, computes accuracy, F1, and a classification report against the MRPC labels, logs error analysis examples, and saves dataset-, prediction-, summary-, and notebook-level metadata and embeddings for later retrieval and documentation.\"}"
+          }
+        ],
+        "previous_response_id": "resp_097fb87c0947e5e20069da5e0f2e2081989283cba7903c1f5c"
+      },
+      "model_output": {
+        "response_id": "resp_097fb87c0947e5e20069da5e0f2e2081989283cba7903c1f5c",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_code_description",
+            "call_id": "call_gMiitzpg56mT8i89j0SJA7Iq",
+            "arguments": {
+              "name": "flan_t5_symmetric_prompt_average_mrpc"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_code_description",
+        "call_id": "call_gMiitzpg56mT8i89j0SJA7Iq",
+        "arguments": {
+          "name": "flan_t5_symmetric_prompt_average_mrpc"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": "This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using google/flan-t5-small. It frames MRPC as a yes/no text-to-text classification task by prompting the model with two sentences and asking whether they are paraphrases. To reduce order sensitivity, each sentence pair is scored twice\u2014once in the original order and once with the sentences swapped\u2014and the first-token logits for yes and no are averaged across both prompts to produce the final prediction. The notebook loads the validation data from TableVault, runs batched inference with Hugging Face Transformers on MPS or CPU, computes accuracy, F1, and a classification report, inspects example predictions and errors, and stores per-example predictions, logits, summary metrics, and metadata back into TableVault with embedding-based descriptions."
+      },
+      "metrics": {
+        "input_tokens": 12808,
+        "output_tokens": 42,
+        "reasoning_tokens": 12,
+        "conversation_tokens": 7087,
+        "api_latency_s": 1.6647,
+        "exec_latency_s": 0.0085
+      },
+      "error": null
+    },
+    {
+      "turn": 29,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_gMiitzpg56mT8i89j0SJA7Iq",
+            "output": "{\"ok\": true, \"result\": \"This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using google/flan-t5-small. It frames MRPC as a yes/no text-to-text classification task by prompting the model with two sentences and asking whether they are paraphrases. To reduce order sensitivity, each sentence pair is scored twice\\u2014once in the original order and once with the sentences swapped\\u2014and the first-token logits for yes and no are averaged across both prompts to produce the final prediction. The notebook loads the validation data from TableVault, runs batched inference with Hugging Face Transformers on MPS or CPU, computes accuracy, F1, and a classification report, inspects example predictions and errors, and stores per-example predictions, logits, summary metrics, and metadata back into TableVault with embedding-based descriptions.\"}"
+          }
+        ],
+        "previous_response_id": "resp_097fb87c0947e5e20069da5e10d5a881989222e6da330549dc"
+      },
+      "model_output": {
+        "response_id": "resp_097fb87c0947e5e20069da5e10d5a881989222e6da330549dc",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_code_description",
+            "call_id": "call_YTOKuT5GK71XbYZafrYOf0g5",
+            "arguments": {
+              "name": "flan_t5_true_false_first_step_mrpc"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_code_description",
+        "call_id": "call_YTOKuT5GK71XbYZafrYOf0g5",
+        "arguments": {
+          "name": "flan_t5_true_false_first_step_mrpc"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": "This notebook evaluates google/flan-t5-small on the GLUE MRPC validation set for binary paraphrase detection using a prompt-based true/false formulation. It loads sentence pairs and labels from the glue_mrpc_validation dataset stored in TableVault, prompts the model with an instruction asking whether the two sentences are paraphrases, and uses the first decoder-step logits for the single-token verbalizers true and false to make predictions. The workflow records per-example predictions and logits in TableVault, computes summary metrics including accuracy, F1, and a classification report, inspects a few examples and errors, and stores dataset, result, and notebook-level descriptions with OpenAI text embeddings for metadata and retrieval."
+      },
+      "metrics": {
+        "input_tokens": 13039,
+        "output_tokens": 28,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 7318,
+        "api_latency_s": 1.7977,
+        "exec_latency_s": 0.0148
+      },
+      "error": null
+    }
+  ],
+  "final_result": null,
+  "run_error": "Max turns reached before finalize_result.",
+  "metrics_summary": {
+    "tokens": {
+      "input": 261891,
+      "output": 1917,
+      "reasoning": 1090,
+      "total": 263808,
+      "system_estimate": 5721,
+      "conversation": 93432
+    },
+    "code": {
+      "executions": 0,
+      "failed_executions": 0,
+      "total_lines": 0
+    },
+    "timing": {
+      "api_latency_s": 69.908,
+      "exec_latency_s": 0.607,
+      "wall_time_s": 70.515
+    },
+    "api_calls": 30,
+    "cost": null
+  }
+}

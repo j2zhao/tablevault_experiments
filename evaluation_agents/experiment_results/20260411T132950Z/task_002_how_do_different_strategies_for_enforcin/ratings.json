@@ -1,0 +1,68 @@
+{
+  "task": "How do different strategies for enforcing prediction symmetry affect accuracy when using NLI-based and zero-shot models for paraphrase detection on MRPC?",
+  "ratings": {
+    "ratings": {
+      "items_only": {
+        "score": 4,
+        "notebook_coverage": "6 of 9 expected notebooks cited",
+        "rationale": "Only agent to meet the minimum coverage, explicitly citing hf_pipeline_mrpc_bidirectional_order_average, softmax_gap_mean_mrpc, consensus_then_avg_margin_mrpc, min_direction_margin_mrpc, neutral_penalized_margin_mrpc, and flan_t5_symmetric_prompt_average_mrpc. Correctly reports that HF bidirectional averaging is nearly neutral/slightly worse and that min-direction style symmetry is overly conservative and harms recall. However, it misses direct_nli_entailment_mrpc, bidirectional_averaged_zero_shot_mrpc, and quora_cross_encoder_symmetric_average_mrpc, so it does not fully recover the model-family-dependent picture, and it somewhat conflates fine-tuned HF and direct-NLI results."
+      },
+      "dataset_search": {
+        "score": 1,
+        "notebook_coverage": "0 of 9 expected notebooks cited",
+        "rationale": "No finalized result was produced; max turns were reached before answering."
+      },
+      "dataset_description": {
+        "score": 3,
+        "notebook_coverage": "5 of 9 expected notebooks cited",
+        "rationale": "Provides close variants for several direct-NLI symmetry notebooks and flan_t5_symmetric_prompt_average_mrpc, and it correctly notes that min-direction and neutral-penalized rules collapse paraphrase recall. But it omits the HF pipeline, zero-shot NLI bidirectional notebook, and cross-encoder, so coverage is below the minimum and the summary overstates that soft symmetry is broadly best rather than family-dependent."
+      },
+      "dataset_description_embedding": {
+        "score": 2,
+        "notebook_coverage": "5 of 9 expected notebooks cited",
+        "rationale": "Recovers much of the direct-NLI/Flan evidence and correctly identifies min-direction as too conservative, but misses the HF pipeline, zero-shot NLI pipeline, and cross-encoder notebooks. Its headline conclusion that symmetric averaging is helpful across both families conflicts with the expected finding that gains are not uniform and are clearest only for the cross-encoder (with HF nearly unchanged and zero-shot NLI slightly worse)."
+      },
+      "dataset_properties": {
+        "score": 1,
+        "notebook_coverage": "0 of 9 expected notebooks cited",
+        "rationale": "No finalized result was produced; max turns were reached before answering."
+      },
+      "items_and_code": {
+        "score": 3,
+        "notebook_coverage": "5 of 9 expected notebooks cited",
+        "rationale": "Covers the main direct-NLI aggregation strategies plus Flan-T5 symmetry and gives useful recall-based interpretation and limitations. But it is still below minimum coverage because it omits direct_nli_entailment_mrpc, hf_pipeline_mrpc_bidirectional_order_average, bidirectional_averaged_zero_shot_mrpc, and quora_cross_encoder_symmetric_average_mrpc, and it generalizes that soft bidirectional averaging is usually best instead of emphasizing the family-dependent effects."
+      },
+      "items_and_lineage": {
+        "score": 1,
+        "notebook_coverage": "0 of 9 expected notebooks cited",
+        "rationale": "No finalized result was produced; max turns were reached before answering."
+      },
+      "code_search": {
+        "score": 1,
+        "notebook_coverage": "0 of 9 expected notebooks cited",
+        "rationale": "No finalized result was produced; max turns were reached before answering."
+      },
+      "code_description": {
+        "score": 1,
+        "notebook_coverage": "0 of 9 expected notebooks cited",
+        "rationale": "No finalized result was produced; max turns were reached before answering."
+      },
+      "code_description_embedding": {
+        "score": 2,
+        "notebook_coverage": "5 of 9 expected notebooks cited",
+        "rationale": "Finds several direct-NLI symmetry strategies and the Flan-T5 symmetric prompt notebook, and its discussion of recall collapse under hard symmetry is valid. Still, it undercovers the expected set by missing the HF pipeline, zero-shot NLI pipeline, and cross-encoder notebooks, and it draws the misleading broader conclusion that symmetry helps in both families rather than noting the expected mixed, family-specific effects."
+      },
+      "code_properties": {
+        "score": 1,
+        "notebook_coverage": "0 of 9 expected notebooks cited",
+        "rationale": "No finalized result was produced; max turns were reached before answering."
+      },
+      "all_functions": {
+        "score": 1,
+        "notebook_coverage": "0 of 9 expected notebooks cited",
+        "rationale": "No finalized result was produced; max turns were reached before answering."
+      }
+    },
+    "overall_comment": "items_only is clearly the strongest result: it is the only agent that reaches the 6-notebook minimum and it captures two important parts of the key finding, namely that HF bidirectional averaging is nearly neutral and that min-direction symmetry is too conservative. The other non-error agents mostly recovered the direct-NLI aggregation notebooks plus Flan-T5 symmetry, but they missed the zero-shot NLI bidirectional notebook, the HF bidirectional notebook, and especially the cross-encoder notebook; as a result, they tended to overgeneralize that soft symmetry averaging is broadly beneficial. Most remaining agents failed to produce any finalized answer."
+  }
+}

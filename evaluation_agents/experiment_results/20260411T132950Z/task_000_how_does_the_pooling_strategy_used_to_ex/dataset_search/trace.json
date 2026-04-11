@@ -1,0 +1,747 @@
+{
+  "run_id": "20260411T133123Z",
+  "timestamp": "2026-04-11T13:31:23.436087+00:00",
+  "model": "gpt-5.4",
+  "task": "How does the pooling strategy used to extract sentence representations from DistilBERT affect paraphrase detection accuracy on MRPC?",
+  "system_prompt": "You are a data analyst assistant with access to a TableVault repository.\n\nYour goal is to investigate the repository and extract **structured evidence**\nrelevant to the user task.\n\nThe final output should summarize the evidence stored in the TableVault\nrepository in the form of:\n\n1. a **results table** (structured rows), and\n2. a **scientific-style summary** interpreting that evidence.\n\nThe results table should represent **summary evidence extracted from the\nrepository**. Each row corresponds to a piece of evidence such as an experiment\nresult, dataset observation, workflow output, or other structured record.\n\nExample result table schemas:\n\nExample 1 \u2014 workflow evaluation evidence\n\n[\n  {\n    \"workflow\": \"baseline_xgboost\",\n    \"model\": \"xgboost\",\n    \"running_time\": 132.4,\n    \"accuracy\": 0.91\n  },\n  {\n    \"workflow\": \"llm_augmented_pipeline\",\n    \"model\": \"gpt-4o-mini\",\n    \"running_time\": 245.8,\n    \"accuracy\": 0.94\n  }\n]\n\nExample 2 \u2014 sample-level classification evidence\n\n[\n  {\n    \"data_sample\": \"sample_001\",\n    \"true_label\": \"sports\",\n    \"predicted_label\": \"sports\",\n    \"reasoning_strategy\": \"few-shot classification\"\n  },\n  {\n    \"data_sample\": \"sample_002\",\n    \"true_label\": \"business\",\n    \"predicted_label\": \"technology\",\n    \"reasoning_strategy\": \"two-step reasoning + classification\"\n  }\n]\n\nThe columns depend on what evidence exists in the repository. Choose columns\nthat best summarize the relevant structured evidence. Don't include unnecessary columns.\n\n------------------------------------------------------------\n\n## What is TableVault?\n\nTableVault is a centralized data repository (backed by ArangoDB) that stores\n**item lists** \u2014 ordered collections of data items. Every item list has a\nunique name and belongs to one of four types:\n\n| Type          | Stores                                         |\n|---------------|------------------------------------------------|\n| **file**      | References (paths) to external files           |\n| **document**  | Text strings (paragraphs, logs, notes, etc.)   |\n| **embedding** | Fixed-dimension float vectors                  |\n| **record**    | Structured rows (dict with predefined columns) |\n\n------------------------------------------------------------\n\n## How data gets into TableVault\n\nData is ingested by Python processes. A Python script or notebook initialises\na `Vault` object, and then calls `append_*` helpers to add items to the\nrelevant lists.\n\nThere may also be additional context about the lists stored in the repository.\nThe available tool functions expose what context is accessible.\n\n------------------------------------------------------------\n\n## Tools\n\nCall the available TableVault query functions directly as tool calls \u2014 you do\nnot need to write Python code. Use `finalize_result` to return the final answer.\n\n------------------------------------------------------------\n\n## Rules\n\n- Always act via tool calls \u2014 never just describe what you would do.\n- On errors, read the error message and retry with corrected arguments.\n- **Do not make direct HuggingFace model calls** \u2014 all model inference results\n  are pre-computed and stored in the TableVault repository. Retrieve them there.\n- **Minimize token usage**: gather enough evidence to answer the question well,\n  then stop. More specific queries and filters reduce the number of calls needed \u2014\n  prefer targeted searches over broad scans. Stop as soon as you have sufficient\n  evidence to give a confident, well-supported answer.\n\n------------------------------------------------------------\n\n## Your output\n\nWhen you have enough information, call `finalize_result` with exactly this shape:\n\n{\n  \"rows\": [\n    {\"column1\": \"value1\", \"column2\": \"value2\"}\n  ],\n  \"summary\": \"Scientific-style description of the evidence and interpretation.\"\n}\n\n------------------------------------------------------------\n\n## Summary expectations\n\nThe **summary** should interpret the evidence in a research-style description.\nIt should explain:\n\n\u2022 what the repository evidence suggests about the user's task\n\u2022 key findings or patterns in the retrieved data\n\u2022 notable issues, biases, or inconsistencies in existing workflows or results\n\u2022 limitations or gaps in the available evidence\n\u2022 how the returned table should be interpreted\n\nThe summary should read like a short analytical explanation of the evidence,\nnot just a description of the table.\n\n------------------------------------------------------------\n",
+  "turns": [
+    {
+      "turn": 0,
+      "model_input": {
+        "pending_messages": [
+          {
+            "role": "user",
+            "content": "How does the pooling strategy used to extract sentence representations from DistilBERT affect paraphrase detection accuracy on MRPC?"
+          }
+        ],
+        "previous_response_id": "resp_075374610e59c1490069da4d2b93048196a4ec77fc9863f405"
+      },
+      "model_output": {
+        "response_id": "resp_075374610e59c1490069da4d2b93048196a4ec77fc9863f405",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item_names",
+            "call_id": "call_HXnIlXLqb8DtCy4DWSxhHZNc",
+            "arguments": {
+              "item_type": "record_list"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item_names",
+        "call_id": "call_HXnIlXLqb8DtCy4DWSxhHZNc",
+        "arguments": {
+          "item_type": "record_list"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          "consensus_then_avg_margin_mrpc_summary",
+          "cosine_mrpc_max_pool_similarity_prediction",
+          "cosine_mrpc_mean_similarity_prediction",
+          "cosine_mrpc_threshold_score",
+          "distilbert_cls_cosine_mrpc_summary",
+          "distilbert_cross_text_prediction",
+          "distilbert_cross_text_prediction_cutoff",
+          "distilbert_last4_mean_cosine_mrpc_summary",
+          "distilbert_margin_score_prediction_values",
+          "distilbert_max_pool_cosine_mrpc_summary",
+          "distilbert_mean_cosine_median_threshold_mrpc_summary",
+          "distilbert_no_special_tokens_mean_cosine_mrpc_summary",
+          "distilbert_quora_softmax_prediction",
+          "distilbert_swap_prediction_values",
+          "distilbert_symmetric_average_prediction",
+          "distilbert-normalized-text-prediction",
+          "entailment_logprob_odds_mrpc_summary",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_logit_calibrated",
+          "flan_prediction_scored",
+          "flan_t5_answer_prefix_yes_no_mrpcc_summary",
+          "flan_t5_contextual_calibrated_yes_no_mrpc_summary",
+          "flan_t5_full_answer_logprob_mrpc_summary",
+          "flan_t5_symmetric_prompt_average_mrpc_summary",
+          "flan_t5_true_false_first_step_mrpc_summary",
+          "glue_mrpc_validation",
+          "google_flan_prediction_and_logits",
+          "google_flan_prediction_swapped",
+          "hf_pipeline_mrpc_bidirectional_order_average_summary",
+          "hf_pipeline_mrpc_margin_rule_summary",
+          "hf_pipeline_mrpc_raw_logits_softmax_summary",
+          "hf_pipeline_mrpc_short_maxlen_64_summary",
+          "hf_pipeline_mrpc_threshold_070_summary",
+          "min_direction_margin_mrpc_summary",
+          "minilm_cosine_threshold_prediction",
+          "mrpc_distilbert_predictions",
+          "mrpc_entailment_prediction",
+          "mrpc_gate_margin_prediction",
+          "mrpc_mean_gap_prediction",
+          "mrpc_min_margin_prediction",
+          "mrpc_neutral_penalty_prediction",
+          "mrpc_paraphrase_inference_distilbert_mistakes",
+          "mrpc_paraphrase_inference_distilbert_output",
+          "neutral_penalized_margin_mrpc_summary",
+          "no_special_cosine_mrpc_similarity_prediction",
+          "pipeline_distilbert_shortened",
+          "pipeline_distilbert_softmax_probs",
+          "pipeline_distilbert_threshold",
+          "quora_cross_encoder_max_length_64_mrpc_summary",
+          "quora_cross_encoder_prefixed_sentence_tags_mrpc_summary",
+          "quora_cross_encoder_softmax_threshold_065_mrpc_summary",
+          "quora_cross_encoder_symmetric_average_mrpc_summary",
+          "quora_cross_encoder_text_normalized_mrpc_summary",
+          "sentence_transformers_mrpc_prediction_distance",
+          "sentence_transformers_mrpc_prediction_max64",
+          "sentence_transformers_mrpc_prediction_threshold",
+          "sentence_transformers_mrpc_prediction_threshold_2",
+          "softmax_gap_mean_mrpc_summary",
+          "st_all_distilroberta_v1_cosine_threshold_mrpc_summary",
+          "st_all_minilm_l6_l2_distance_threshold_mrpc_summary",
+          "st_all_minilm_l6_max_seq_len_64_cosine_mrpc_summary",
+          "st_paraphrase_minilm_l3_cosine_threshold_mrpc_summary",
+          "st_paraphrase_minilm_l6_cosine_threshold_mrpc_summary",
+          "threshold_cosine_mrpc_similarity_prediction"
+        ]
+      },
+      "metrics": {
+        "input_tokens": 1875,
+        "output_tokens": 87,
+        "reasoning_tokens": 64,
+        "conversation_tokens": 0,
+        "api_latency_s": 2.037,
+        "exec_latency_s": 0.025
+      },
+      "error": null
+    },
+    {
+      "turn": 1,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_HXnIlXLqb8DtCy4DWSxhHZNc",
+            "output": "{\"ok\": true, \"result\": [\"consensus_then_avg_margin_mrpc_summary\", \"cosine_mrpc_max_pool_similarity_prediction\", \"cosine_mrpc_mean_similarity_prediction\", \"cosine_mrpc_threshold_score\", \"distilbert_cls_cosine_mrpc_summary\", \"distilbert_cross_text_prediction\", \"distilbert_cross_text_prediction_cutoff\", \"distilbert_last4_mean_cosine_mrpc_summary\", \"distilbert_margin_score_prediction_values\", \"distilbert_max_pool_cosine_mrpc_summary\", \"distilbert_mean_cosine_median_threshold_mrpc_summary\", \"distilbert_no_special_tokens_mean_cosine_mrpc_summary\", \"distilbert_quora_softmax_prediction\", \"distilbert_swap_prediction_values\", \"distilbert_symmetric_average_prediction\", \"distilbert-normalized-text-prediction\", \"entailment_logprob_odds_mrpc_summary\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_logit_calibrated\", \"flan_prediction_scored\", \"flan_t5_answer_prefix_yes_no_mrpcc_summary\", \"flan_t5_contextual_calibrated_yes_no_mrpc_summary\", \"flan_t5_full_answer_logprob_mrpc_summary\", \"flan_t5_symmetric_prompt_average_mrpc_summary\", \"flan_t5_true_false_first_step_mrpc_summary\", \"glue_mrpc_validation\", \"google_flan_prediction_and_logits\", \"google_flan_prediction_swapped\", \"hf_pipeline_mrpc_bidirectional_order_average_summary\", \"hf_pipeline_mrpc_margin_rule_summary\", \"hf_pipeline_mrpc_raw_logits_softmax_summary\", \"hf_pipeline_mrpc_short_maxlen_64_summary\", \"hf_pipeline_mrpc_threshold_070_summary\", \"min_direction_margin_mrpc_summary\", \"minilm_cosine_threshold_prediction\", \"mrpc_distilbert_predictions\", \"mrpc_entailment_prediction\", \"mrpc_gate_margin_prediction\", \"mrpc_mean_gap_prediction\", \"mrpc_min_margin_prediction\", \"mrpc_neutral_penalty_prediction\", \"mrpc_paraphrase_inference_distilbert_mistakes\", \"mrpc_paraphrase_inference_distilbert_output\", \"neutral_penalized_margin_mrpc_summary\", \"no_special_cosine_mrpc_similarity_prediction\", \"pipeline_distilbert_shortened\", \"pipeline_distilbert_softmax_probs\", \"pipeline_distilbert_threshold\", \"quora_cross_encoder_max_length_64_mrpc_summary\", \"quora_cross_encoder_prefixed_sentence_tags_mrpc_summary\", \"quora_cross_encoder_softmax_threshold_065_mrpc_summary\", \"quora_cross_encoder_symmetric_average_mrpc_summary\", \"quora_cross_encoder_text_normalized_mrpc_summary\", \"sentence_transformers_mrpc_prediction_distance\", \"sentence_transformers_mrpc_prediction_max64\", \"sentence_transformers_mrpc_prediction_threshold\", \"sentence_transformers_mrpc_prediction_threshold_2\", \"softmax_gap_mean_mrpc_summary\", \"st_all_distilroberta_v1_cosine_threshold_mrpc_summary\", \"st_all_minilm_l6_l2_distance_threshold_mrpc_summary\", \"st_all_minilm_l6_max_seq_len_64_cosine_mrpc_summary\", \"st_paraphrase_minilm_l3_cosine_threshold_mrpc_summary\", \"st_paraphrase_minilm_l6_cosine_threshold_mrpc_summary\", \"threshold_cosine_mrpc_similarity_prediction\"]}"
+          }
+        ],
+        "previous_response_id": "resp_075374610e59c1490069da4d2da390819699e0b85b1a4885fe"
+      },
+      "model_output": {
+        "response_id": "resp_075374610e59c1490069da4d2da390819699e0b85b1a4885fe",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_KYnTuMvSBJuDf5Mq081Q1V6L",
+            "arguments": {
+              "item_name": "distilbert_cls_cosine_mrpc_summary",
+              "start_position": 0,
+              "end_position": 5
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_KYnTuMvSBJuDf5Mq081Q1V6L",
+        "arguments": {
+          "item_name": "distilbert_cls_cosine_mrpc_summary",
+          "start_position": 0,
+          "end_position": 5
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.6862745098039216,
+            "f1": 0.8134110787172012,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       1.00      0.01      0.02       129\n    paraphrase       0.69      1.00      0.81       279\n\n      accuracy                           0.69       408\n     macro avg       0.84      0.50      0.41       408\n  weighted avg       0.78      0.69      0.56       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 2668,
+        "output_tokens": 168,
+        "reasoning_tokens": 129,
+        "conversation_tokens": 598,
+        "api_latency_s": 3.0442,
+        "exec_latency_s": 0.0194
+      },
+      "error": null
+    },
+    {
+      "turn": 2,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_KYnTuMvSBJuDf5Mq081Q1V6L",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.6862745098039216, \"f1\": 0.8134110787172012, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       1.00      0.01      0.02       129\\n    paraphrase       0.69      1.00      0.81       279\\n\\n      accuracy                           0.69       408\\n     macro avg       0.84      0.50      0.41       408\\n  weighted avg       0.78      0.69      0.56       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_075374610e59c1490069da4d30af848196be3aa0d3932564f3"
+      },
+      "model_output": {
+        "response_id": "resp_075374610e59c1490069da4d30af848196be3aa0d3932564f3",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_XPLPA5XgZipY2tJf4GYwjxkR",
+            "arguments": {
+              "item_name": "distilbert_mean_cosine_median_threshold_mrpc_summary",
+              "start_position": 0,
+              "end_position": 5
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_XPLPA5XgZipY2tJf4GYwjxkR",
+        "arguments": {
+          "item_name": "distilbert_mean_cosine_median_threshold_mrpc_summary",
+          "start_position": 0,
+          "end_position": 5
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.6495098039215687,
+            "f1": 0.7039337474120083,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.47      0.74      0.57       129\n    paraphrase       0.83      0.61      0.70       279\n\n      accuracy                           0.65       408\n     macro avg       0.65      0.67      0.64       408\n  weighted avg       0.72      0.65      0.66       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 3002,
+        "output_tokens": 40,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 932,
+        "api_latency_s": 1.3113,
+        "exec_latency_s": 0.012
+      },
+      "error": null
+    },
+    {
+      "turn": 3,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_XPLPA5XgZipY2tJf4GYwjxkR",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.6495098039215687, \"f1\": 0.7039337474120083, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.47      0.74      0.57       129\\n    paraphrase       0.83      0.61      0.70       279\\n\\n      accuracy                           0.65       408\\n     macro avg       0.65      0.67      0.64       408\\n  weighted avg       0.72      0.65      0.66       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_075374610e59c1490069da4d32050081969168ea49499abf43"
+      },
+      "model_output": {
+        "response_id": "resp_075374610e59c1490069da4d32050081969168ea49499abf43",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_fJPYwP896gvjgR6euDVQ7xr2",
+            "arguments": {
+              "item_name": "distilbert_max_pool_cosine_mrpc_summary",
+              "start_position": 0,
+              "end_position": 5
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_fJPYwP896gvjgR6euDVQ7xr2",
+        "arguments": {
+          "item_name": "distilbert_max_pool_cosine_mrpc_summary",
+          "start_position": 0,
+          "end_position": 5
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.6838235294117647,
+            "f1": 0.8122270742358079,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.00      0.00      0.00       129\n    paraphrase       0.68      1.00      0.81       279\n\n      accuracy                           0.68       408\n     macro avg       0.34      0.50      0.41       408\n  weighted avg       0.47      0.68      0.56       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 3208,
+        "output_tokens": 38,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 1138,
+        "api_latency_s": 1.5241,
+        "exec_latency_s": 0.0112
+      },
+      "error": null
+    },
+    {
+      "turn": 4,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_fJPYwP896gvjgR6euDVQ7xr2",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.6838235294117647, \"f1\": 0.8122270742358079, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.00      0.00      0.00       129\\n    paraphrase       0.68      1.00      0.81       279\\n\\n      accuracy                           0.68       408\\n     macro avg       0.34      0.50      0.41       408\\n  weighted avg       0.47      0.68      0.56       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_075374610e59c1490069da4d338be08196bddeca32a30943f2"
+      },
+      "model_output": {
+        "response_id": "resp_075374610e59c1490069da4d338be08196bddeca32a30943f2",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_xR7YYzBFhiSe9yBVKp60ApIf",
+            "arguments": {
+              "item_name": "distilbert_last4_mean_cosine_mrpc_summary",
+              "start_position": 0,
+              "end_position": 5
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_xR7YYzBFhiSe9yBVKp60ApIf",
+        "arguments": {
+          "item_name": "distilbert_last4_mean_cosine_mrpc_summary",
+          "start_position": 0,
+          "end_position": 5
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.6838235294117647,
+            "f1": 0.8122270742358079,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.00      0.00      0.00       129\n    paraphrase       0.68      1.00      0.81       279\n\n      accuracy                           0.68       408\n     macro avg       0.34      0.50      0.41       408\n  weighted avg       0.47      0.68      0.56       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 3412,
+        "output_tokens": 39,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 1342,
+        "api_latency_s": 1.424,
+        "exec_latency_s": 0.0211
+      },
+      "error": null
+    },
+    {
+      "turn": 5,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_xR7YYzBFhiSe9yBVKp60ApIf",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.6838235294117647, \"f1\": 0.8122270742358079, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.00      0.00      0.00       129\\n    paraphrase       0.68      1.00      0.81       279\\n\\n      accuracy                           0.68       408\\n     macro avg       0.34      0.50      0.41       408\\n  weighted avg       0.47      0.68      0.56       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_075374610e59c1490069da4d35015c819692c96f5af0b3980c"
+      },
+      "model_output": {
+        "response_id": "resp_075374610e59c1490069da4d35015c819692c96f5af0b3980c",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_5FTsEFdTY9CZLJYOFeTP5Ton",
+            "arguments": {
+              "item_name": "distilbert_no_special_tokens_mean_cosine_mrpc_summary",
+              "start_position": 0,
+              "end_position": 5
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_5FTsEFdTY9CZLJYOFeTP5Ton",
+        "arguments": {
+          "item_name": "distilbert_no_special_tokens_mean_cosine_mrpc_summary",
+          "start_position": 0,
+          "end_position": 5
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.7034313725490197,
+            "f1": 0.8212703101920237,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.90      0.07      0.13       129\n    paraphrase       0.70      1.00      0.82       279\n\n      accuracy                           0.70       408\n     macro avg       0.80      0.53      0.48       408\n  weighted avg       0.76      0.70      0.60       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 3617,
+        "output_tokens": 40,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 1547,
+        "api_latency_s": 1.5415,
+        "exec_latency_s": 0.0105
+      },
+      "error": null
+    },
+    {
+      "turn": 6,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_5FTsEFdTY9CZLJYOFeTP5Ton",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.7034313725490197, \"f1\": 0.8212703101920237, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.90      0.07      0.13       129\\n    paraphrase       0.70      1.00      0.82       279\\n\\n      accuracy                           0.70       408\\n     macro avg       0.80      0.53      0.48       408\\n  weighted avg       0.76      0.70      0.60       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_075374610e59c1490069da4d368ef0819696b9c99898adbdca"
+      },
+      "model_output": {
+        "response_id": "resp_075374610e59c1490069da4d368ef0819696b9c99898adbdca",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item_names",
+            "call_id": "call_oiGC6QaIqWctWhXHpSHCyYLx",
+            "arguments": {
+              "item_type": "document_list"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item_names",
+        "call_id": "call_oiGC6QaIqWctWhXHpSHCyYLx",
+        "arguments": {
+          "item_type": "document_list"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": []
+      },
+      "metrics": {
+        "input_tokens": 3823,
+        "output_tokens": 370,
+        "reasoning_tokens": 347,
+        "conversation_tokens": 1753,
+        "api_latency_s": 7.1306,
+        "exec_latency_s": 0.0236
+      },
+      "error": null
+    },
+    {
+      "turn": 7,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_oiGC6QaIqWctWhXHpSHCyYLx",
+            "output": "{\"ok\": true, \"result\": []}"
+          }
+        ],
+        "previous_response_id": "resp_075374610e59c1490069da4d3db27c8196a9ff5f33d96b289c"
+      },
+      "model_output": {
+        "response_id": "resp_075374610e59c1490069da4d3db27c8196a9ff5f33d96b289c",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_8Y0G5OuYGL3YGaJnbgVwOTbt",
+            "arguments": {
+              "item_name": "cosine_mrpc_mean_similarity_prediction",
+              "start_position": 0,
+              "end_position": 3
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_8Y0G5OuYGL3YGaJnbgVwOTbt",
+        "arguments": {
+          "item_name": "cosine_mrpc_mean_similarity_prediction",
+          "start_position": 0,
+          "end_position": 3
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "prediction": 1,
+            "similarities": 0.9810966849327087
+          },
+          {
+            "prediction": 1,
+            "similarities": 0.9638397097587585
+          },
+          {
+            "prediction": 1,
+            "similarities": 0.9804420471191406
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 4215,
+        "output_tokens": 203,
+        "reasoning_tokens": 166,
+        "conversation_tokens": 2145,
+        "api_latency_s": 4.2945,
+        "exec_latency_s": 0.0225
+      },
+      "error": null
+    },
+    {
+      "turn": 8,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_8Y0G5OuYGL3YGaJnbgVwOTbt",
+            "output": "{\"ok\": true, \"result\": [{\"prediction\": 1, \"similarities\": 0.9810966849327087}, {\"prediction\": 1, \"similarities\": 0.9638397097587585}, {\"prediction\": 1, \"similarities\": 0.9804420471191406}]}"
+          }
+        ],
+        "previous_response_id": "resp_075374610e59c1490069da4d4204e08196895d4a0a7adc5f46"
+      },
+      "model_output": {
+        "response_id": "resp_075374610e59c1490069da4d4204e08196895d4a0a7adc5f46",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_sk3WOfAhf8RRkvbqtem1ytnE",
+            "arguments": {
+              "item_name": "cosine_mrpc_threshold_score",
+              "start_position": 0,
+              "end_position": 5
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_sk3WOfAhf8RRkvbqtem1ytnE",
+        "arguments": {
+          "item_name": "cosine_mrpc_threshold_score",
+          "start_position": 0,
+          "end_position": 5
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "prediction": 1,
+            "score": 0.937690019607544
+          },
+          {
+            "prediction": 1,
+            "score": 0.9651895761489868
+          },
+          {
+            "prediction": 1,
+            "score": 0.9854921102523804
+          },
+          {
+            "prediction": 1,
+            "score": 0.9670572280883789
+          },
+          {
+            "prediction": 1,
+            "score": 0.9688267707824707
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 4498,
+        "output_tokens": 58,
+        "reasoning_tokens": 22,
+        "conversation_tokens": 2428,
+        "api_latency_s": 1.7207,
+        "exec_latency_s": 0.0199
+      },
+      "error": null
+    },
+    {
+      "turn": 9,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_sk3WOfAhf8RRkvbqtem1ytnE",
+            "output": "{\"ok\": true, \"result\": [{\"prediction\": 1, \"score\": 0.937690019607544}, {\"prediction\": 1, \"score\": 0.9651895761489868}, {\"prediction\": 1, \"score\": 0.9854921102523804}, {\"prediction\": 1, \"score\": 0.9670572280883789}, {\"prediction\": 1, \"score\": 0.9688267707824707}]}"
+          }
+        ],
+        "previous_response_id": "resp_075374610e59c1490069da4d43c5f4819681239b7b9cd516b5"
+      },
+      "model_output": {
+        "response_id": "resp_075374610e59c1490069da4d43c5f4819681239b7b9cd516b5",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_YeM55VU1jdw7DarWort2jGC4",
+            "arguments": {
+              "item_name": "glue_mrpc_validation",
+              "start_position": 0,
+              "end_position": 3
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_YeM55VU1jdw7DarWort2jGC4",
+        "arguments": {
+          "item_name": "glue_mrpc_validation",
+          "start_position": 0,
+          "end_position": 3
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "sentence1": "He said the foodservice pie business doesn 't fit the company 's long-term growth strategy .",
+            "sentence2": "\" The foodservice pie business does not fit our long-term growth strategy .",
+            "label": 1,
+            "idx": 9
+          },
+          {
+            "sentence1": "Magnarelli said Racicot hated the Iraqi regime and looked forward to using his long years of training in the war .",
+            "sentence2": "His wife said he was \" 100 percent behind George Bush \" and looked forward to using his years of training in the war .",
+            "label": 0,
+            "idx": 18
+          },
+          {
+            "sentence1": "The dollar was at 116.92 yen against the yen , flat on the session , and at 1.2891 against the Swiss franc , also flat .",
+            "sentence2": "The dollar was at 116.78 yen JPY = , virtually flat on the session , and at 1.2871 against the Swiss franc CHF = , down 0.1 percent .",
+            "label": 0,
+            "idx": 25
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 4670,
+        "output_tokens": 87,
+        "reasoning_tokens": 52,
+        "conversation_tokens": 2600,
+        "api_latency_s": 2.2146,
+        "exec_latency_s": 0.0097
+      },
+      "error": null
+    },
+    {
+      "turn": 10,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_YeM55VU1jdw7DarWort2jGC4",
+            "output": "{\"ok\": true, \"result\": [{\"sentence1\": \"He said the foodservice pie business doesn 't fit the company 's long-term growth strategy .\", \"sentence2\": \"\\\" The foodservice pie business does not fit our long-term growth strategy .\", \"label\": 1, \"idx\": 9}, {\"sentence1\": \"Magnarelli said Racicot hated the Iraqi regime and looked forward to using his long years of training in the war .\", \"sentence2\": \"His wife said he was \\\" 100 percent behind George Bush \\\" and looked forward to using his years of training in the war .\", \"label\": 0, \"idx\": 18}, {\"sentence1\": \"The dollar was at 116.92 yen against the yen , flat on the session , and at 1.2891 against the Swiss franc , also flat .\", \"sentence2\": \"The dollar was at 116.78 yen JPY = , virtually flat on the session , and at 1.2871 against the Swiss franc CHF = , down 0.1 percent .\", \"label\": 0, \"idx\": 25}]}"
+          }
+        ],
+        "previous_response_id": "resp_075374610e59c1490069da4d4602448196bc986ab0ba2acefb"
+      },
+      "model_output": {
+        "response_id": "resp_075374610e59c1490069da4d4602448196bc986ab0ba2acefb",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "finalize_result",
+            "call_id": "call_xovvTjb6HH4GFXSS0kWMxRP5",
+            "arguments": {
+              "summary": "{\"rows\":[{\"pooling_strategy\":\"CLS token\",\"layer_scope\":\"final layer\",\"token_scope\":\"special classification token only\",\"accuracy\":0.6862745098039216,\"f1\":0.8134110787172012,\"not_paraphrase_recall\":0.01,\"paraphrase_recall\":1.0},{\"pooling_strategy\":\"Mean pooling\",\"layer_scope\":\"final layer\",\"token_scope\":\"all tokens\",\"accuracy\":0.6495098039215687,\"f1\":0.7039337474120083,\"not_paraphrase_recall\":0.74,\"paraphrase_recall\":0.61},{\"pooling_strategy\":\"Max pooling\",\"layer_scope\":\"final layer\",\"token_scope\":\"all tokens\",\"accuracy\":0.6838235294117647,\"f1\":0.8122270742358079,\"not_paraphrase_recall\":0.0,\"paraphrase_recall\":1.0},{\"pooling_strategy\":\"Mean pooling\",\"layer_scope\":\"last 4 layers\",\"token_scope\":\"all tokens\",\"accuracy\":0.6838235294117647,\"f1\":0.8122270742358079,\"not_paraphrase_recall\":0.0,\"paraphrase_recall\":1.0},{\"pooling_strategy\":\"Mean pooling\",\"layer_scope\":\"final layer\",\"token_scope\":\"exclude special tokens\",\"accuracy\":0.7034313725490197,\"f1\":0.8212703101920237,\"not_paraphrase_recall\":0.07,\"paraphrase_recall\":1.0}],\"summary\":\"Repository evidence shows that the DistilBERT pooling choice changes MRPC behavior substantially, but mostly by changing class bias rather than producing a clean gain in balanced paraphrase detection. Among the stored evaluations, the highest accuracy is obtained by mean pooling over non-special tokens (0.703), followed by CLS pooling (0.686), while max pooling and last-4-layer mean pooling both reach 0.684 and standard mean pooling over all final-layer tokens is lowest at 0.650. However, the class-wise reports reveal that max pooling and last-4 mean pooling completely fail to recover the non-paraphrase class (non-paraphrase recall = 0.00, paraphrase recall = 1.00), and CLS pooling is only marginally better (non-paraphrase recall = 0.01). This pattern is consistent with near-majority-class prediction on MRPC, whose stored support counts are 279 paraphrases versus 129 non-paraphrases. In contrast, standard mean pooling is the only strategy that meaningfully separates both classes, with non-paraphrase recall 0.74 and paraphrase recall 0.61, though its headline accuracy is lower. Thus, if accuracy alone is used, excluding special tokens appears best; if balanced discrimination matters, mean pooling over tokens is more informative. The evidence also suggests that averaging the last 4 layers does not improve over max pooling in these stored runs. A limitation is that the repository records are workflow summaries rather than a perfectly controlled ablation, and some item names indicate minor procedural differences beyond pooling itself (for example, median-threshold scoring or excluding special tokens), so conclusions should be interpreted as comparative evidence from the stored experiments rather than a definitive causal benchmark.\"}"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "finalize_result",
+        "call_id": "call_xovvTjb6HH4GFXSS0kWMxRP5",
+        "arguments": {
+          "summary": "{\"rows\":[{\"pooling_strategy\":\"CLS token\",\"layer_scope\":\"final layer\",\"token_scope\":\"special classification token only\",\"accuracy\":0.6862745098039216,\"f1\":0.8134110787172012,\"not_paraphrase_recall\":0.01,\"paraphrase_recall\":1.0},{\"pooling_strategy\":\"Mean pooling\",\"layer_scope\":\"final layer\",\"token_scope\":\"all tokens\",\"accuracy\":0.6495098039215687,\"f1\":0.7039337474120083,\"not_paraphrase_recall\":0.74,\"paraphrase_recall\":0.61},{\"pooling_strategy\":\"Max pooling\",\"layer_scope\":\"final layer\",\"token_scope\":\"all tokens\",\"accuracy\":0.6838235294117647,\"f1\":0.8122270742358079,\"not_paraphrase_recall\":0.0,\"paraphrase_recall\":1.0},{\"pooling_strategy\":\"Mean pooling\",\"layer_scope\":\"last 4 layers\",\"token_scope\":\"all tokens\",\"accuracy\":0.6838235294117647,\"f1\":0.8122270742358079,\"not_paraphrase_recall\":0.0,\"paraphrase_recall\":1.0},{\"pooling_strategy\":\"Mean pooling\",\"layer_scope\":\"final layer\",\"token_scope\":\"exclude special tokens\",\"accuracy\":0.7034313725490197,\"f1\":0.8212703101920237,\"not_paraphrase_recall\":0.07,\"paraphrase_recall\":1.0}],\"summary\":\"Repository evidence shows that the DistilBERT pooling choice changes MRPC behavior substantially, but mostly by changing class bias rather than producing a clean gain in balanced paraphrase detection. Among the stored evaluations, the highest accuracy is obtained by mean pooling over non-special tokens (0.703), followed by CLS pooling (0.686), while max pooling and last-4-layer mean pooling both reach 0.684 and standard mean pooling over all final-layer tokens is lowest at 0.650. However, the class-wise reports reveal that max pooling and last-4 mean pooling completely fail to recover the non-paraphrase class (non-paraphrase recall = 0.00, paraphrase recall = 1.00), and CLS pooling is only marginally better (non-paraphrase recall = 0.01). This pattern is consistent with near-majority-class prediction on MRPC, whose stored support counts are 279 paraphrases versus 129 non-paraphrases. In contrast, standard mean pooling is the only strategy that meaningfully separates both classes, with non-paraphrase recall 0.74 and paraphrase recall 0.61, though its headline accuracy is lower. Thus, if accuracy alone is used, excluding special tokens appears best; if balanced discrimination matters, mean pooling over tokens is more informative. The evidence also suggests that averaging the last 4 layers does not improve over max pooling in these stored runs. A limitation is that the repository records are workflow summaries rather than a perfectly controlled ablation, and some item names indicate minor procedural differences beyond pooling itself (for example, median-threshold scoring or excluding special tokens), so conclusions should be interpreted as comparative evidence from the stored experiments rather than a definitive causal benchmark.\"}"
+        }
+      },
+      "tool_output": {
+        "summary": "{\"rows\":[{\"pooling_strategy\":\"CLS token\",\"layer_scope\":\"final layer\",\"token_scope\":\"special classification token only\",\"accuracy\":0.6862745098039216,\"f1\":0.8134110787172012,\"not_paraphrase_recall\":0.01,\"paraphrase_recall\":1.0},{\"pooling_strategy\":\"Mean pooling\",\"layer_scope\":\"final layer\",\"token_scope\":\"all tokens\",\"accuracy\":0.6495098039215687,\"f1\":0.7039337474120083,\"not_paraphrase_recall\":0.74,\"paraphrase_recall\":0.61},{\"pooling_strategy\":\"Max pooling\",\"layer_scope\":\"final layer\",\"token_scope\":\"all tokens\",\"accuracy\":0.6838235294117647,\"f1\":0.8122270742358079,\"not_paraphrase_recall\":0.0,\"paraphrase_recall\":1.0},{\"pooling_strategy\":\"Mean pooling\",\"layer_scope\":\"last 4 layers\",\"token_scope\":\"all tokens\",\"accuracy\":0.6838235294117647,\"f1\":0.8122270742358079,\"not_paraphrase_recall\":0.0,\"paraphrase_recall\":1.0},{\"pooling_strategy\":\"Mean pooling\",\"layer_scope\":\"final layer\",\"token_scope\":\"exclude special tokens\",\"accuracy\":0.7034313725490197,\"f1\":0.8212703101920237,\"not_paraphrase_recall\":0.07,\"paraphrase_recall\":1.0}],\"summary\":\"Repository evidence shows that the DistilBERT pooling choice changes MRPC behavior substantially, but mostly by changing class bias rather than producing a clean gain in balanced paraphrase detection. Among the stored evaluations, the highest accuracy is obtained by mean pooling over non-special tokens (0.703), followed by CLS pooling (0.686), while max pooling and last-4-layer mean pooling both reach 0.684 and standard mean pooling over all final-layer tokens is lowest at 0.650. However, the class-wise reports reveal that max pooling and last-4 mean pooling completely fail to recover the non-paraphrase class (non-paraphrase recall = 0.00, paraphrase recall = 1.00), and CLS pooling is only marginally better (non-paraphrase recall = 0.01). This pattern is consistent with near-majority-class prediction on MRPC, whose stored support counts are 279 paraphrases versus 129 non-paraphrases. In contrast, standard mean pooling is the only strategy that meaningfully separates both classes, with non-paraphrase recall 0.74 and paraphrase recall 0.61, though its headline accuracy is lower. Thus, if accuracy alone is used, excluding special tokens appears best; if balanced discrimination matters, mean pooling over tokens is more informative. The evidence also suggests that averaging the last 4 layers does not improve over max pooling in these stored runs. A limitation is that the repository records are workflow summaries rather than a perfectly controlled ablation, and some item names indicate minor procedural differences beyond pooling itself (for example, median-threshold scoring or excluding special tokens), so conclusions should be interpreted as comparative evidence from the stored experiments rather than a definitive causal benchmark.\"}"
+      },
+      "metrics": {
+        "input_tokens": 5006,
+        "output_tokens": 2773,
+        "reasoning_tokens": 2070,
+        "conversation_tokens": 2936,
+        "api_latency_s": 42.5003,
+        "exec_latency_s": 0.0
+      },
+      "error": null
+    }
+  ],
+  "final_result": {
+    "summary": "{\"rows\":[{\"pooling_strategy\":\"CLS token\",\"layer_scope\":\"final layer\",\"token_scope\":\"special classification token only\",\"accuracy\":0.6862745098039216,\"f1\":0.8134110787172012,\"not_paraphrase_recall\":0.01,\"paraphrase_recall\":1.0},{\"pooling_strategy\":\"Mean pooling\",\"layer_scope\":\"final layer\",\"token_scope\":\"all tokens\",\"accuracy\":0.6495098039215687,\"f1\":0.7039337474120083,\"not_paraphrase_recall\":0.74,\"paraphrase_recall\":0.61},{\"pooling_strategy\":\"Max pooling\",\"layer_scope\":\"final layer\",\"token_scope\":\"all tokens\",\"accuracy\":0.6838235294117647,\"f1\":0.8122270742358079,\"not_paraphrase_recall\":0.0,\"paraphrase_recall\":1.0},{\"pooling_strategy\":\"Mean pooling\",\"layer_scope\":\"last 4 layers\",\"token_scope\":\"all tokens\",\"accuracy\":0.6838235294117647,\"f1\":0.8122270742358079,\"not_paraphrase_recall\":0.0,\"paraphrase_recall\":1.0},{\"pooling_strategy\":\"Mean pooling\",\"layer_scope\":\"final layer\",\"token_scope\":\"exclude special tokens\",\"accuracy\":0.7034313725490197,\"f1\":0.8212703101920237,\"not_paraphrase_recall\":0.07,\"paraphrase_recall\":1.0}],\"summary\":\"Repository evidence shows that the DistilBERT pooling choice changes MRPC behavior substantially, but mostly by changing class bias rather than producing a clean gain in balanced paraphrase detection. Among the stored evaluations, the highest accuracy is obtained by mean pooling over non-special tokens (0.703), followed by CLS pooling (0.686), while max pooling and last-4-layer mean pooling both reach 0.684 and standard mean pooling over all final-layer tokens is lowest at 0.650. However, the class-wise reports reveal that max pooling and last-4 mean pooling completely fail to recover the non-paraphrase class (non-paraphrase recall = 0.00, paraphrase recall = 1.00), and CLS pooling is only marginally better (non-paraphrase recall = 0.01). This pattern is consistent with near-majority-class prediction on MRPC, whose stored support counts are 279 paraphrases versus 129 non-paraphrases. In contrast, standard mean pooling is the only strategy that meaningfully separates both classes, with non-paraphrase recall 0.74 and paraphrase recall 0.61, though its headline accuracy is lower. Thus, if accuracy alone is used, excluding special tokens appears best; if balanced discrimination matters, mean pooling over tokens is more informative. The evidence also suggests that averaging the last 4 layers does not improve over max pooling in these stored runs. A limitation is that the repository records are workflow summaries rather than a perfectly controlled ablation, and some item names indicate minor procedural differences beyond pooling itself (for example, median-threshold scoring or excluding special tokens), so conclusions should be interpreted as comparative evidence from the stored experiments rather than a definitive causal benchmark.\"}"
+  },
+  "run_error": null,
+  "metrics_summary": {
+    "tokens": {
+      "input": 39994,
+      "output": 3903,
+      "reasoning": 2850,
+      "total": 43897,
+      "system_estimate": 2070,
+      "conversation": 17419
+    },
+    "code": {
+      "executions": 0,
+      "failed_executions": 0,
+      "total_lines": 0
+    },
+    "timing": {
+      "api_latency_s": 68.743,
+      "exec_latency_s": 0.175,
+      "wall_time_s": 68.918
+    },
+    "api_calls": 11,
+    "cost": null
+  }
+}

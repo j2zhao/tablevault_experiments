@@ -1,0 +1,2213 @@
+# Agent Trace — 20260411T142016Z
+
+**Model:** `gpt-5.4`  
+**Timestamp:** 2026-04-11T14:20:16.846461+00:00  
+**Task:** How do different strategies for enforcing prediction symmetry affect accuracy when using NLI-based and zero-shot models for paraphrase detection on MRPC?
+
+**System Prompt:**
+```
+You are a data analyst assistant with access to a TableVault repository.
+
+Your goal is to investigate the repository and extract **structured evidence**
+relevant to the user task.
+
+The final output should summarize the evidence stored in the TableVault
+repository in the form of:
+
+1. a **results table** (structured rows), and
+2. a **scientific-style summary** interpreting that evidence.
+
+The results table should represent **summary evidence extracted from the
+repository**. Each row corresponds to a piece of evidence such as an experiment
+result, dataset observation, workflow output, or other structured record.
+
+Example result table schemas:
+
+Example 1 — workflow evaluation evidence
+
+[
+  {
+    "workflow": "baseline_xgboost",
+    "model": "xgboost",
+    "running_time": 132.4,
+    "accuracy": 0.91
+  },
+  {
+    "workflow": "llm_augmented_pipeline",
+    "model": "gpt-4o-mini",
+    "running_time": 245.8,
+    "accuracy": 0.94
+  }
+]
+
+Example 2 — sample-level classification evidence
+
+[
+  {
+    "data_sample": "sample_001",
+    "true_label": "sports",
+    "predicted_label": "sports",
+    "reasoning_strategy": "few-shot classification"
+  },
+  {
+    "data_sample": "sample_002",
+    "true_label": "business",
+    "predicted_label": "technology",
+    "reasoning_strategy": "two-step reasoning + classification"
+  }
+]
+
+The columns depend on what evidence exists in the repository. Choose columns
+that best summarize the relevant structured evidence. Don't include unnecessary columns.
+
+------------------------------------------------------------
+
+## What is TableVault?
+
+TableVault is a centralized data repository (backed by ArangoDB) that stores
+**item lists** — ordered collections of data items. Every item list has a
+unique name and belongs to one of four types:
+
+| Type          | Stores                                         |
+|---------------|------------------------------------------------|
+| **file**      | References (paths) to external files           |
+| **document**  | Text strings (paragraphs, logs, notes, etc.)   |
+| **embedding** | Fixed-dimension float vectors                  |
+| **record**    | Structured rows (dict with predefined columns) |
+
+------------------------------------------------------------
+
+## How data gets into TableVault
+
+Data is ingested by Python processes. A Python script or notebook initialises
+a `Vault` object, and then calls `append_*` helpers to add items to the
+relevant lists.
+
+There may also be additional context about the lists stored in the repository.
+The available tool functions expose what context is accessible.
+
+------------------------------------------------------------
+
+## Tools
+
+Call the available TableVault query functions directly as tool calls — you do
+not need to write Python code. Use `finalize_result` to return the final answer.
+
+------------------------------------------------------------
+
+## Rules
+
+- Always act via tool calls — never just describe what you would do.
+- On errors, read the error message and retry with corrected arguments.
+- **Do not make direct HuggingFace model calls** — all model inference results
+  are pre-computed and stored in the TableVault repository. Retrieve them there.
+- **Minimize token usage**: gather enough evidence to answer the question well,
+  then stop. More specific queries and filters reduce the number of calls needed —
+  prefer targeted searches over broad scans. Stop as soon as you have sufficient
+  evidence to give a confident, well-supported answer.
+
+------------------------------------------------------------
+
+## Your output
+
+When you have enough information, call `finalize_result` with exactly this shape:
+
+{
+  "rows": [
+    {"column1": "value1", "column2": "value2"}
+  ],
+  "summary": "Scientific-style description of the evidence and interpretation."
+}
+
+------------------------------------------------------------
+
+## Summary expectations
+
+The **summary** should interpret the evidence in a research-style description.
+It should explain:
+
+• what the repository evidence suggests about the user's task
+• key findings or patterns in the retrieved data
+• notable issues, biases, or inconsistencies in existing workflows or results
+• limitations or gaps in the available evidence
+• how the returned table should be interpreted
+
+The summary should read like a short analytical explanation of the evidence,
+not just a description of the table.
+
+------------------------------------------------------------
+
+```
+
+---
+
+## Turn 0 — `get_item_names` [ok]
+
+### Model Input
+**previous_response_id:** `resp_05d35342911bad440069da58a0e950819aa3fb2aa70614909b`
+
+**Pending messages:**
+```json
+[
+  {
+    "role": "user",
+    "content": "How do different strategies for enforcing prediction symmetry affect accuracy when using NLI-based and zero-shot models for paraphrase detection on MRPC?"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_05d35342911bad440069da58a0e950819aa3fb2aa70614909b`
+
+**Output items:**
+```json
+[
+  {
+    "type": "reasoning",
+    "summary": []
+  },
+  {
+    "type": "function_call",
+    "name": "get_item_names",
+    "call_id": "call_9atnv5F3YO8otmfFI4XPFUdR",
+    "arguments": {
+      "item_type": "record_list"
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item_names` | **call_id:** `call_9atnv5F3YO8otmfFI4XPFUdR`
+
+**Arguments:**
+```json
+{
+  "item_type": "record_list"
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    "consensus_then_avg_margin_mrpc_summary",
+    "cosine_mrpc_max_pool_similarity_prediction",
+    "cosine_mrpc_mean_similarity_prediction",
+    "cosine_mrpc_threshold_score",
+    "distilbert_cls_cosine_mrpc_summary",
+    "distilbert_cross_text_prediction",
+    "distilbert_cross_text_prediction_cutoff",
+    "distilbert_last4_mean_cosine_mrpc_summary",
+    "distilbert_margin_score_prediction_values",
+    "distilbert_max_pool_cosine_mrpc_summary",
+    "distilbert_mean_cosine_median_threshold_mrpc_summary",
+    "distilbert_no_special_tokens_mean_cosine_mrpc_summary",
+    "distilbert_quora_softmax_prediction",
+    "distilbert_swap_prediction_values",
+    "distilbert_symmetric_average_prediction",
+    "distilbert-normalized-text-prediction",
+    "entailment_logprob_odds_mrpc_summary",
+    "flan_prediction_and_logit_prefix",
+    "flan_prediction_logit_calibrated",
+    "flan_prediction_scored",
+    "flan_t5_answer_prefix_yes_no_mrpcc_summary",
+    "flan_t5_contextual_calibrated_yes_no_mrpc_summary",
+    "flan_t5_full_answer_logprob_mrpc_summary",
+    "flan_t5_symmetric_prompt_average_mrpc_summary",
+    "flan_t5_true_false_first_step_mrpc_summary",
+    "glue_mrpc_validation",
+    "google_flan_prediction_and_logits",
+    "google_flan_prediction_swapped",
+    "hf_pipeline_mrpc_bidirectional_order_average_summary",
+    "hf_pipeline_mrpc_margin_rule_summary",
+    "hf_pipeline_mrpc_raw_logits_softmax_summary",
+    "hf_pipeline_mrpc_short_maxlen_64_summary",
+    "hf_pipeline_mrpc_threshold_070_summary",
+    "min_direction_margin_mrpc_summary",
+    "minilm_cosine_threshold_prediction",
+    "mrpc_distilbert_predictions",
+    "mrpc_entailment_prediction",
+    "mrpc_gate_margin_prediction",
+    "mrpc_mean_gap_prediction",
+    "mrpc_min_margin_prediction",
+    "mrpc_neutral_penalty_prediction",
+    "mrpc_paraphrase_inference_distilbert_mistakes",
+    "mrpc_paraphrase_inference_distilbert_output",
+    "neutral_penalized_margin_mrpc_summary",
+    "no_special_cosine_mrpc_similarity_prediction",
+    "pipeline_distilbert_shortened",
+    "pipeline_distilbert_softmax_probs",
+    "pipeline_distilbert_threshold",
+    "quora_cross_encoder_max_length_64_mrpc_summary",
+    "quora_cross_encoder_prefixed_sentence_tags_mrpc_summary",
+    "quora_cross_encoder_softmax_threshold_065_mrpc_summary",
+    "quora_cross_encoder_symmetric_average_mrpc_summary",
+    "quora_cross_encoder_text_normalized_mrpc_summary",
+    "sentence_transformers_mrpc_prediction_distance",
+    "sentence_transformers_mrpc_prediction_max64",
+    "sentence_transformers_mrpc_prediction_threshold",
+    "sentence_transformers_mrpc_prediction_threshold_2",
+    "softmax_gap_mean_mrpc_summary",
+    "st_all_distilroberta_v1_cosine_threshold_mrpc_summary",
+    "st_all_minilm_l6_l2_distance_threshold_mrpc_summary",
+    "st_all_minilm_l6_max_seq_len_64_cosine_mrpc_summary",
+    "st_paraphrase_minilm_l3_cosine_threshold_mrpc_summary",
+    "st_paraphrase_minilm_l6_cosine_threshold_mrpc_summary",
+    "threshold_cosine_mrpc_similarity_prediction"
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 1435 | 52 | 29 | 0 | 1.297s | 0.014s |
+
+---
+
+## Turn 1 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_05d35342911bad440069da58a23890819aab75476064ad2ed7`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_9atnv5F3YO8otmfFI4XPFUdR",
+    "output": "{\"ok\": true, \"result\": [\"consensus_then_avg_margin_mrpc_summary\", \"cosine_mrpc_max_pool_similarity_prediction\", \"cosine_mrpc_mean_similarity_prediction\", \"cosine_mrpc_threshold_score\", \"distilbert_cls_cosine_mrpc_summary\", \"distilbert_cross_text_prediction\", \"distilbert_cross_text_prediction_cutoff\", \"distilbert_last4_mean_cosine_mrpc_summary\", \"distilbert_margin_score_prediction_values\", \"distilbert_max_pool_cosine_mrpc_summary\", \"distilbert_mean_cosine_median_threshold_mrpc_summary\", \"distilbert_no_special_tokens_mean_cosine_mrpc_summary\", \"distilbert_quora_softmax_prediction\", \"distilbert_swap_prediction_values\", \"distilbert_symmetric_average_prediction\", \"distilbert-normalized-text-prediction\", \"entailment_logprob_odds_mrpc_summary\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_logit_calibrated\", \"flan_prediction_scored\", \"flan_t5_answer_prefix_yes_no_mrpcc_summary\", \"flan_t5_contextual_calibrated_yes_no_mrpc_summary\", \"flan_t5_full_answer_logprob_mrpc_summary\", \"flan_t5_symmetric_prompt_average_mrpc_summary\", \"flan_t5_true_false_first_step_mrpc_summary\", \"glue_mrpc_validation\", \"google_flan_prediction_and_logits\", \"google_flan_prediction_swapped\", \"hf_pipeline_mrpc_bidirectional_order_average_summary\", \"hf_pipeline_mrpc_margin_rule_summary\", \"hf_pipeline_mrpc_raw_logits_softmax_summary\", \"hf_pipeline_mrpc_short_maxlen_64_summary\", \"hf_pipeline_mrpc_threshold_070_summary\", \"min_direction_margin_mrpc_summary\", \"minilm_cosine_threshold_prediction\", \"mrpc_distilbert_predictions\", \"mrpc_entailment_prediction\", \"mrpc_gate_margin_prediction\", \"mrpc_mean_gap_prediction\", \"mrpc_min_margin_prediction\", \"mrpc_neutral_penalty_prediction\", \"mrpc_paraphrase_inference_distilbert_mistakes\", \"mrpc_paraphrase_inference_distilbert_output\", \"neutral_penalized_margin_mrpc_summary\", \"no_special_cosine_mrpc_similarity_prediction\", \"pipeline_distilbert_shortened\", \"pipeline_distilbert_softmax_probs\", \"pipeline_distilbert_threshold\", \"quora_cross_encoder_max_length_64_mrpc_summary\", \"quora_cross_encoder_prefixed_sentence_tags_mrpc_summary\", \"quora_cross_encoder_softmax_threshold_065_mrpc_summary\", \"quora_cross_encoder_symmetric_average_mrpc_summary\", \"quora_cross_encoder_text_normalized_mrpc_summary\", \"sentence_transformers_mrpc_prediction_distance\", \"sentence_transformers_mrpc_prediction_max64\", \"sentence_transformers_mrpc_prediction_threshold\", \"sentence_transformers_mrpc_prediction_threshold_2\", \"softmax_gap_mean_mrpc_summary\", \"st_all_distilroberta_v1_cosine_threshold_mrpc_summary\", \"st_all_minilm_l6_l2_distance_threshold_mrpc_summary\", \"st_all_minilm_l6_max_seq_len_64_cosine_mrpc_summary\", \"st_paraphrase_minilm_l3_cosine_threshold_mrpc_summary\", \"st_paraphrase_minilm_l6_cosine_threshold_mrpc_summary\", \"threshold_cosine_mrpc_similarity_prediction\"]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_05d35342911bad440069da58a23890819aab75476064ad2ed7`
+
+**Output items:**
+```json
+[
+  {
+    "type": "reasoning",
+    "summary": []
+  },
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_L7N7F1TunmMwI30wSLS6Ap6Z",
+    "arguments": {
+      "item_name": "hf_pipeline_mrpc_bidirectional_order_average_summary",
+      "start_position": 0,
+      "end_position": 5
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_L7N7F1TunmMwI30wSLS6Ap6Z`
+
+**Arguments:**
+```json
+{
+  "item_name": "hf_pipeline_mrpc_bidirectional_order_average_summary",
+  "start_position": 0,
+  "end_position": 5
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "accuracy": 0.8504901960784313,
+      "f1": 0.897822445561139,
+      "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.88      0.61      0.72       129\n    paraphrase       0.84      0.96      0.90       279\n\n      accuracy                           0.85       408\n     macro avg       0.86      0.79      0.81       408\n  weighted avg       0.85      0.85      0.84       408\n"
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 2193 | 251 | 212 | 691 | 3.756s | 0.019s |
+
+---
+
+## Turn 2 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_05d35342911bad440069da58a5fec0819ab46bb7875ed5e4c9`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_L7N7F1TunmMwI30wSLS6Ap6Z",
+    "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.8504901960784313, \"f1\": 0.897822445561139, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.88      0.61      0.72       129\\n    paraphrase       0.84      0.96      0.90       279\\n\\n      accuracy                           0.85       408\\n     macro avg       0.86      0.79      0.81       408\\n  weighted avg       0.85      0.85      0.84       408\\n\"}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_05d35342911bad440069da58a5fec0819ab46bb7875ed5e4c9`
+
+**Output items:**
+```json
+[
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_BBUaasLKllLvJXNOWnN03xcN",
+    "arguments": {
+      "item_name": "hf_pipeline_mrpc_raw_logits_softmax_summary",
+      "start_position": 0,
+      "end_position": 5
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_BBUaasLKllLvJXNOWnN03xcN`
+
+**Arguments:**
+```json
+{
+  "item_name": "hf_pipeline_mrpc_raw_logits_softmax_summary",
+  "start_position": 0,
+  "end_position": 5
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "accuracy": 0.8578431372549019,
+      "f1": 0.9026845637583892,
+      "classification_report": "              precision    recall  f1-score   support\n\n     LABEL_0       0.89      0.63      0.74       129\n     LABEL_1       0.85      0.96      0.90       279\n\n    accuracy                           0.86       408\n   macro avg       0.87      0.80      0.82       408\nweighted avg       0.86      0.86      0.85       408\n"
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 2609 | 37 | 0 | 1107 | 1.278s | 0.012s |
+
+---
+
+## Turn 3 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_05d35342911bad440069da58a74e98819ab067199525019c25`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_BBUaasLKllLvJXNOWnN03xcN",
+    "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.8578431372549019, \"f1\": 0.9026845637583892, \"classification_report\": \"              precision    recall  f1-score   support\\n\\n     LABEL_0       0.89      0.63      0.74       129\\n     LABEL_1       0.85      0.96      0.90       279\\n\\n    accuracy                           0.86       408\\n   macro avg       0.87      0.80      0.82       408\\nweighted avg       0.86      0.86      0.85       408\\n\"}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_05d35342911bad440069da58a74e98819ab067199525019c25`
+
+**Output items:**
+```json
+[
+  {
+    "type": "reasoning",
+    "summary": []
+  },
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_WQ0bMsCA0Me6mxdtSmu7TfdH",
+    "arguments": {
+      "item_name": "hf_pipeline_mrpc_margin_rule_summary",
+      "start_position": 0,
+      "end_position": 5
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_WQ0bMsCA0Me6mxdtSmu7TfdH`
+
+**Arguments:**
+```json
+{
+  "item_name": "hf_pipeline_mrpc_margin_rule_summary",
+  "start_position": 0,
+  "end_position": 5
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "accuracy": 0.8627450980392157,
+      "f1": 0.9044368600682594,
+      "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.86      0.67      0.76       129\n    paraphrase       0.86      0.95      0.90       279\n\n      accuracy                           0.86       408\n     macro avg       0.86      0.81      0.83       408\n  weighted avg       0.86      0.86      0.86       408\n"
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 2812 | 76 | 39 | 1310 | 2.437s | 0.021s |
+
+---
+
+## Turn 4 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_05d35342911bad440069da58a9c260819aaac2585b0fc562d6`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_WQ0bMsCA0Me6mxdtSmu7TfdH",
+    "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.8627450980392157, \"f1\": 0.9044368600682594, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.86      0.67      0.76       129\\n    paraphrase       0.86      0.95      0.90       279\\n\\n      accuracy                           0.86       408\\n     macro avg       0.86      0.81      0.83       408\\n  weighted avg       0.86      0.86      0.86       408\\n\"}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_05d35342911bad440069da58a9c260819aaac2585b0fc562d6`
+
+**Output items:**
+```json
+[
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_Pet4myCIC94658uBYEbI1Liq",
+    "arguments": {
+      "item_name": "consensus_then_avg_margin_mrpc_summary",
+      "start_position": 0,
+      "end_position": 5
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_Pet4myCIC94658uBYEbI1Liq`
+
+**Arguments:**
+```json
+{
+  "item_name": "consensus_then_avg_margin_mrpc_summary",
+  "start_position": 0,
+  "end_position": 5
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "accuracy": 0.7009803921568627,
+      "f1": 0.769811320754717,
+      "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.52      0.64      0.57       129\n    paraphrase       0.81      0.73      0.77       279\n\n      accuracy                           0.70       408\n     macro avg       0.67      0.68      0.67       408\n  weighted avg       0.72      0.70      0.71       408\n"
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 3054 | 36 | 0 | 1552 | 1.285s | 0.023s |
+
+---
+
+## Turn 5 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_05d35342911bad440069da58ab1010819a875a1e9985baa045`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_Pet4myCIC94658uBYEbI1Liq",
+    "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.7009803921568627, \"f1\": 0.769811320754717, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.52      0.64      0.57       129\\n    paraphrase       0.81      0.73      0.77       279\\n\\n      accuracy                           0.70       408\\n     macro avg       0.67      0.68      0.67       408\\n  weighted avg       0.72      0.70      0.71       408\\n\"}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_05d35342911bad440069da58ab1010819a875a1e9985baa045`
+
+**Output items:**
+```json
+[
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_p62DbdPKrMQ1b09rNI6vEAnr",
+    "arguments": {
+      "item_name": "min_direction_margin_mrpc_summary",
+      "start_position": 0,
+      "end_position": 5
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_p62DbdPKrMQ1b09rNI6vEAnr`
+
+**Arguments:**
+```json
+{
+  "item_name": "min_direction_margin_mrpc_summary",
+  "start_position": 0,
+  "end_position": 5
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "accuracy": 0.5857843137254902,
+      "f1": 0.5888077858880778,
+      "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.43      0.91      0.58       129\n    paraphrase       0.92      0.43      0.59       279\n\n      accuracy                           0.59       408\n     macro avg       0.67      0.67      0.59       408\n  weighted avg       0.76      0.59      0.59       408\n"
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 3255 | 34 | 0 | 1753 | 1.428s | 0.013s |
+
+---
+
+## Turn 6 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_05d35342911bad440069da58ac7df4819a81f113943af956f7`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_p62DbdPKrMQ1b09rNI6vEAnr",
+    "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.5857843137254902, \"f1\": 0.5888077858880778, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.43      0.91      0.58       129\\n    paraphrase       0.92      0.43      0.59       279\\n\\n      accuracy                           0.59       408\\n     macro avg       0.67      0.67      0.59       408\\n  weighted avg       0.76      0.59      0.59       408\\n\"}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_05d35342911bad440069da58ac7df4819a81f113943af956f7`
+
+**Output items:**
+```json
+[
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_1Bs00jCUeWzzFnoKWiKM9rTZ",
+    "arguments": {
+      "item_name": "neutral_penalized_margin_mrpc_summary",
+      "start_position": 0,
+      "end_position": 5
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_1Bs00jCUeWzzFnoKWiKM9rTZ`
+
+**Arguments:**
+```json
+{
+  "item_name": "neutral_penalized_margin_mrpc_summary",
+  "start_position": 0,
+  "end_position": 5
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "accuracy": 0.5563725490196079,
+      "f1": 0.5322997416020672,
+      "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.41      0.96      0.58       129\n    paraphrase       0.95      0.37      0.53       279\n\n      accuracy                           0.56       408\n     macro avg       0.68      0.67      0.56       408\n  weighted avg       0.78      0.56      0.55       408\n"
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 3455 | 36 | 0 | 1953 | 1.204s | 0.006s |
+
+---
+
+## Turn 7 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_05d35342911bad440069da58adb568819aa8a16321724a5744`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_1Bs00jCUeWzzFnoKWiKM9rTZ",
+    "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.5563725490196079, \"f1\": 0.5322997416020672, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.41      0.96      0.58       129\\n    paraphrase       0.95      0.37      0.53       279\\n\\n      accuracy                           0.56       408\\n     macro avg       0.68      0.67      0.56       408\\n  weighted avg       0.78      0.56      0.55       408\\n\"}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_05d35342911bad440069da58adb568819aa8a16321724a5744`
+
+**Output items:**
+```json
+[
+  {
+    "type": "reasoning",
+    "summary": []
+  },
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_4EAfNFxEfuOpDKEGWtwf2LYv",
+    "arguments": {
+      "item_name": "entailment_logprob_odds_mrpc_summary",
+      "start_position": 0,
+      "end_position": 5
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_4EAfNFxEfuOpDKEGWtwf2LYv`
+
+**Arguments:**
+```json
+{
+  "item_name": "entailment_logprob_odds_mrpc_summary",
+  "start_position": 0,
+  "end_position": 5
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "accuracy": 0.7034313725490197,
+      "f1": 0.7729831144465291,
+      "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.53      0.63      0.57       129\n    paraphrase       0.81      0.74      0.77       279\n\n      accuracy                           0.70       408\n     macro avg       0.67      0.68      0.67       408\n  weighted avg       0.72      0.70      0.71       408\n"
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 3657 | 61 | 21 | 2155 | 1.534s | 0.024s |
+
+---
+
+## Turn 8 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_05d35342911bad440069da58af4250819a95106cc26bc0cfbe`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_4EAfNFxEfuOpDKEGWtwf2LYv",
+    "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.7034313725490197, \"f1\": 0.7729831144465291, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.53      0.63      0.57       129\\n    paraphrase       0.81      0.74      0.77       279\\n\\n      accuracy                           0.70       408\\n     macro avg       0.67      0.68      0.67       408\\n  weighted avg       0.72      0.70      0.71       408\\n\"}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_05d35342911bad440069da58af4250819a95106cc26bc0cfbe`
+
+**Output items:**
+```json
+[
+  {
+    "type": "reasoning",
+    "summary": []
+  },
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_dNJsJzl5kcBDqCRi6SuALoeF",
+    "arguments": {
+      "item_name": "flan_t5_full_answer_logprob_mrpc_summary",
+      "start_position": 0,
+      "end_position": 5
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_dNJsJzl5kcBDqCRi6SuALoeF`
+
+**Arguments:**
+```json
+{
+  "item_name": "flan_t5_full_answer_logprob_mrpc_summary",
+  "start_position": 0,
+  "end_position": 5
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "accuracy": 0.6495098039215687,
+      "f1": 0.6911447084233261,
+      "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.47      0.81      0.59       129\n    paraphrase       0.87      0.57      0.69       279\n\n      accuracy                           0.65       408\n     macro avg       0.67      0.69      0.64       408\n  weighted avg       0.74      0.65      0.66       408\n"
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 3884 | 62 | 21 | 2382 | 1.855s | 0.014s |
+
+---
+
+## Turn 9 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_05d35342911bad440069da58b12290819a9465562f5a274a9d`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_dNJsJzl5kcBDqCRi6SuALoeF",
+    "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.6495098039215687, \"f1\": 0.6911447084233261, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.47      0.81      0.59       129\\n    paraphrase       0.87      0.57      0.69       279\\n\\n      accuracy                           0.65       408\\n     macro avg       0.67      0.69      0.64       408\\n  weighted avg       0.74      0.65      0.66       408\\n\"}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_05d35342911bad440069da58b12290819a9465562f5a274a9d`
+
+**Output items:**
+```json
+[
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_UcZJ5Z2biZn8h7Ywc4ArqKUn",
+    "arguments": {
+      "item_name": "flan_t5_symmetric_prompt_average_mrpc_summary",
+      "start_position": 0,
+      "end_position": 5
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_UcZJ5Z2biZn8h7Ywc4ArqKUn`
+
+**Arguments:**
+```json
+{
+  "item_name": "flan_t5_symmetric_prompt_average_mrpc_summary",
+  "start_position": 0,
+  "end_position": 5
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "accuracy": 0.7377450980392157,
+      "f1": 0.8065099457504521,
+      "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.58      0.60      0.59       129\n    paraphrase       0.81      0.80      0.81       279\n\n      accuracy                           0.74       408\n     macro avg       0.70      0.70      0.70       408\n  weighted avg       0.74      0.74      0.74       408\n"
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 4112 | 39 | 0 | 2610 | 1.372s | 0.025s |
+
+---
+
+## Turn 10 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_05d35342911bad440069da58b28c40819a9c9c02a57aeee6ba`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_UcZJ5Z2biZn8h7Ywc4ArqKUn",
+    "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.7377450980392157, \"f1\": 0.8065099457504521, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.58      0.60      0.59       129\\n    paraphrase       0.81      0.80      0.81       279\\n\\n      accuracy                           0.74       408\\n     macro avg       0.70      0.70      0.70       408\\n  weighted avg       0.74      0.74      0.74       408\\n\"}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_05d35342911bad440069da58b28c40819a9c9c02a57aeee6ba`
+
+**Output items:**
+```json
+[
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_z6VlpEz5FI2YU4hZB6LZpbnv",
+    "arguments": {
+      "item_name": "flan_t5_contextual_calibrated_yes_no_mrpc_summary",
+      "start_position": 0,
+      "end_position": 5
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_z6VlpEz5FI2YU4hZB6LZpbnv`
+
+**Arguments:**
+```json
+{
+  "item_name": "flan_t5_contextual_calibrated_yes_no_mrpc_summary",
+  "start_position": 0,
+  "end_position": 5
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "accuracy": 0.40441176470588236,
+      "f1": 0.24299065420560748,
+      "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.34      0.98      0.51       129\n    paraphrase       0.93      0.14      0.24       279\n\n      accuracy                           0.40       408\n     macro avg       0.64      0.56      0.38       408\n  weighted avg       0.74      0.40      0.33       408\n"
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 4317 | 42 | 0 | 2815 | 2.759s | 0.024s |
+
+---
+
+## Turn 11 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_05d35342911bad440069da58b558bc819a8908e0b9e75493d4`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_z6VlpEz5FI2YU4hZB6LZpbnv",
+    "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.40441176470588236, \"f1\": 0.24299065420560748, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.34      0.98      0.51       129\\n    paraphrase       0.93      0.14      0.24       279\\n\\n      accuracy                           0.40       408\\n     macro avg       0.64      0.56      0.38       408\\n  weighted avg       0.74      0.40      0.33       408\\n\"}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_05d35342911bad440069da58b558bc819a8908e0b9e75493d4`
+
+**Output items:**
+```json
+[
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_SxZOuBoITxAzeHy4SmIFkzJn",
+    "arguments": {
+      "item_name": "flan_t5_answer_prefix_yes_no_mrpcc_summary",
+      "start_position": 0,
+      "end_position": 5
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_SxZOuBoITxAzeHy4SmIFkzJn`
+
+**Arguments:**
+```json
+{
+  "item_name": "flan_t5_answer_prefix_yes_no_mrpcc_summary",
+  "start_position": 0,
+  "end_position": 5
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "accuracy": 0.6372549019607843,
+      "f1": 0.6877637130801688,
+      "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.46      0.75      0.57       129\n    paraphrase       0.84      0.58      0.69       279\n\n      accuracy                           0.64       408\n     macro avg       0.65      0.67      0.63       408\n  weighted avg       0.72      0.64      0.65       408\n"
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 4525 | 40 | 0 | 3023 | 4.770s | 0.023s |
+
+---
+
+## Turn 12 — `get_item_names` [ok]
+
+### Model Input
+**previous_response_id:** `resp_05d35342911bad440069da58ba1bdc819aa402ee45fc004f6a`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_SxZOuBoITxAzeHy4SmIFkzJn",
+    "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.6372549019607843, \"f1\": 0.6877637130801688, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.46      0.75      0.57       129\\n    paraphrase       0.84      0.58      0.69       279\\n\\n      accuracy                           0.64       408\\n     macro avg       0.65      0.67      0.63       408\\n  weighted avg       0.72      0.64      0.65       408\\n\"}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_05d35342911bad440069da58ba1bdc819aa402ee45fc004f6a`
+
+**Output items:**
+```json
+[
+  {
+    "type": "reasoning",
+    "summary": []
+  },
+  {
+    "type": "function_call",
+    "name": "get_item_names",
+    "call_id": "call_GJ7XpyXsh86Ry8DKHI4WsKYW",
+    "arguments": {
+      "item_type": "document_list"
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item_names` | **call_id:** `call_GJ7XpyXsh86Ry8DKHI4WsKYW`
+
+**Arguments:**
+```json
+{
+  "item_type": "document_list"
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": []
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 4731 | 399 | 376 | 3229 | 6.249s | 0.025s |
+
+---
+
+## Turn 13 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_05d35342911bad440069da58c063c8819aba8ce33e2bcbb5eb`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_GJ7XpyXsh86Ry8DKHI4WsKYW",
+    "output": "{\"ok\": true, \"result\": []}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_05d35342911bad440069da58c063c8819aba8ce33e2bcbb5eb`
+
+**Output items:**
+```json
+[
+  {
+    "type": "reasoning",
+    "summary": []
+  },
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_EE4KxZRrzyW6rn06jj8gtMvO",
+    "arguments": {
+      "item_name": "glue_mrpc_validation",
+      "start_position": 0,
+      "end_position": 3
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_EE4KxZRrzyW6rn06jj8gtMvO`
+
+**Arguments:**
+```json
+{
+  "item_name": "glue_mrpc_validation",
+  "start_position": 0,
+  "end_position": 3
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "sentence1": "He said the foodservice pie business doesn 't fit the company 's long-term growth strategy .",
+      "sentence2": "\" The foodservice pie business does not fit our long-term growth strategy .",
+      "label": 1,
+      "idx": 9
+    },
+    {
+      "sentence1": "Magnarelli said Racicot hated the Iraqi regime and looked forward to using his long years of training in the war .",
+      "sentence2": "His wife said he was \" 100 percent behind George Bush \" and looked forward to using his years of training in the war .",
+      "label": 0,
+      "idx": 18
+    },
+    {
+      "sentence1": "The dollar was at 116.92 yen against the yen , flat on the session , and at 1.2891 against the Swiss franc , also flat .",
+      "sentence2": "The dollar was at 116.78 yen JPY = , virtually flat on the session , and at 1.2871 against the Swiss franc CHF = , down 0.1 percent .",
+      "label": 0,
+      "idx": 25
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 5152 | 123 | 88 | 3650 | 4.660s | 0.013s |
+
+---
+
+## Turn 14 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_05d35342911bad440069da58c50dec819aa542c7d7d32020ab`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_EE4KxZRrzyW6rn06jj8gtMvO",
+    "output": "{\"ok\": true, \"result\": [{\"sentence1\": \"He said the foodservice pie business doesn 't fit the company 's long-term growth strategy .\", \"sentence2\": \"\\\" The foodservice pie business does not fit our long-term growth strategy .\", \"label\": 1, \"idx\": 9}, {\"sentence1\": \"Magnarelli said Racicot hated the Iraqi regime and looked forward to using his long years of training in the war .\", \"sentence2\": \"His wife said he was \\\" 100 percent behind George Bush \\\" and looked forward to using his years of training in the war .\", \"label\": 0, \"idx\": 18}, {\"sentence1\": \"The dollar was at 116.92 yen against the yen , flat on the session , and at 1.2891 against the Swiss franc , also flat .\", \"sentence2\": \"The dollar was at 116.78 yen JPY = , virtually flat on the session , and at 1.2871 against the Swiss franc CHF = , down 0.1 percent .\", \"label\": 0, \"idx\": 25}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_05d35342911bad440069da58c50dec819aa542c7d7d32020ab`
+
+**Output items:**
+```json
+[
+  {
+    "type": "reasoning",
+    "summary": []
+  },
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_wb00GpTU9GhslIY9m7K0V5Xo",
+    "arguments": {
+      "item_name": "mrpc_entailment_prediction",
+      "start_position": 0,
+      "end_position": 3
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_wb00GpTU9GhslIY9m7K0V5Xo`
+
+**Arguments:**
+```json
+{
+  "item_name": "mrpc_entailment_prediction",
+  "start_position": 0,
+  "end_position": 3
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "prediction": 1,
+      "dir12": 7.967843055725098,
+      "dir21": 6.533724784851074
+    },
+    {
+      "prediction": 0,
+      "dir12": -9.776514053344727,
+      "dir21": -0.8201398849487305
+    },
+    {
+      "prediction": 1,
+      "dir12": -0.6154599189758301,
+      "dir21": 6.547325134277344
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 5524 | 295 | 259 | 4022 | 6.271s | 0.020s |
+
+---
+
+## Turn 15 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_05d35342911bad440069da58cb5878819a91e51940ec0d4d71`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_wb00GpTU9GhslIY9m7K0V5Xo",
+    "output": "{\"ok\": true, \"result\": [{\"prediction\": 1, \"dir12\": 7.967843055725098, \"dir21\": 6.533724784851074}, {\"prediction\": 0, \"dir12\": -9.776514053344727, \"dir21\": -0.8201398849487305}, {\"prediction\": 1, \"dir12\": -0.6154599189758301, \"dir21\": 6.547325134277344}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_05d35342911bad440069da58cb5878819a91e51940ec0d4d71`
+
+**Output items:**
+```json
+[
+  {
+    "type": "reasoning",
+    "summary": []
+  },
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_LBc9BZhJaPUGeiilsIIFAQIT",
+    "arguments": {
+      "item_name": "mrpc_gate_margin_prediction",
+      "start_position": 0,
+      "end_position": 3
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_LBc9BZhJaPUGeiilsIIFAQIT`
+
+**Arguments:**
+```json
+{
+  "item_name": "mrpc_gate_margin_prediction",
+  "start_position": 0,
+  "end_position": 3
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "prediction": 1,
+      "margin_12": 7.967843055725098,
+      "margin_21": 6.533724784851074,
+      "gate": 1
+    },
+    {
+      "prediction": 0,
+      "margin_12": -9.776514053344727,
+      "margin_21": -0.8201401233673096,
+      "gate": 0
+    },
+    {
+      "prediction": 1,
+      "margin_12": -0.6154601573944092,
+      "margin_21": 6.547325134277344,
+      "gate": 1
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 5937 | 55 | 20 | 4435 | 1.928s | 0.013s |
+
+---
+
+## Turn 16 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_05d35342911bad440069da58cd4d7c819abf3d79a6f8c60539`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_LBc9BZhJaPUGeiilsIIFAQIT",
+    "output": "{\"ok\": true, \"result\": [{\"prediction\": 1, \"margin_12\": 7.967843055725098, \"margin_21\": 6.533724784851074, \"gate\": 1}, {\"prediction\": 0, \"margin_12\": -9.776514053344727, \"margin_21\": -0.8201401233673096, \"gate\": 0}, {\"prediction\": 1, \"margin_12\": -0.6154601573944092, \"margin_21\": 6.547325134277344, \"gate\": 1}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_05d35342911bad440069da58cd4d7c819abf3d79a6f8c60539`
+
+**Output items:**
+```json
+[
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_Dt167kwArcNqPhjsMJkqE62v",
+    "arguments": {
+      "item_name": "mrpc_mean_gap_prediction",
+      "start_position": 0,
+      "end_position": 3
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_Dt167kwArcNqPhjsMJkqE62v`
+
+**Arguments:**
+```json
+{
+  "item_name": "mrpc_mean_gap_prediction",
+  "start_position": 0,
+  "end_position": 3
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "prediction": 1,
+      "gap_12": 0.9963528513908386,
+      "gap_21": 0.8122128844261169
+    },
+    {
+      "prediction": 0,
+      "gap_12": -0.9993698596954346,
+      "gap_21": -0.000674131908454001
+    },
+    {
+      "prediction": 1,
+      "gap_12": -0.00016976663027890027,
+      "gap_21": 0.9945570826530457
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 6134 | 33 | 0 | 4632 | 2.617s | 0.024s |
+
+---
+
+## Turn 17 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_05d35342911bad440069da58cff144819ab01e6980e3521f05`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_Dt167kwArcNqPhjsMJkqE62v",
+    "output": "{\"ok\": true, \"result\": [{\"prediction\": 1, \"gap_12\": 0.9963528513908386, \"gap_21\": 0.8122128844261169}, {\"prediction\": 0, \"gap_12\": -0.9993698596954346, \"gap_21\": -0.000674131908454001}, {\"prediction\": 1, \"gap_12\": -0.00016976663027890027, \"gap_21\": 0.9945570826530457}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_05d35342911bad440069da58cff144819ab01e6980e3521f05`
+
+**Output items:**
+```json
+[
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_0SDq6hNEo7ssXOM10YRsroTi",
+    "arguments": {
+      "item_name": "mrpc_min_margin_prediction",
+      "start_position": 0,
+      "end_position": 3
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_0SDq6hNEo7ssXOM10YRsroTi`
+
+**Arguments:**
+```json
+{
+  "item_name": "mrpc_min_margin_prediction",
+  "start_position": 0,
+  "end_position": 3
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "prediction": 1,
+      "min_margin": 6.533724784851074
+    },
+    {
+      "prediction": 0,
+      "min_margin": -9.776514053344727
+    },
+    {
+      "prediction": 0,
+      "min_margin": -0.6154601573944092
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 6296 | 33 | 0 | 4794 | 1.565s | 0.008s |
+
+---
+
+## Turn 18 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_05d35342911bad440069da58d183c8819ab2cdd5560d8f5139`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_0SDq6hNEo7ssXOM10YRsroTi",
+    "output": "{\"ok\": true, \"result\": [{\"prediction\": 1, \"min_margin\": 6.533724784851074}, {\"prediction\": 0, \"min_margin\": -9.776514053344727}, {\"prediction\": 0, \"min_margin\": -0.6154601573944092}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_05d35342911bad440069da58d183c8819ab2cdd5560d8f5139`
+
+**Output items:**
+```json
+[
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_qwUDLFRk2aXZYPqfZKzNv7rq",
+    "arguments": {
+      "item_name": "mrpc_neutral_penalty_prediction",
+      "start_position": 0,
+      "end_position": 3
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_qwUDLFRk2aXZYPqfZKzNv7rq`
+
+**Arguments:**
+```json
+{
+  "item_name": "mrpc_neutral_penalty_prediction",
+  "start_position": 0,
+  "end_position": 3
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "prediction": 1,
+      "score_12": 5.820394039154053,
+      "score_21": 1.4785807132720947
+    },
+    {
+      "prediction": 0,
+      "score_12": -9.776514053344727,
+      "score_21": -7.540008544921875
+    },
+    {
+      "prediction": 0,
+      "score_12": -8.518594741821289,
+      "score_21": 5.9534173011779785
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 6407 | 35 | 0 | 4905 | 1.498s | 0.021s |
+
+---
+
+## Turn 19 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_05d35342911bad440069da58d307a8819aa6db54c03b201ef8`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_qwUDLFRk2aXZYPqfZKzNv7rq",
+    "output": "{\"ok\": true, \"result\": [{\"prediction\": 1, \"score_12\": 5.820394039154053, \"score_21\": 1.4785807132720947}, {\"prediction\": 0, \"score_12\": -9.776514053344727, \"score_21\": -7.540008544921875}, {\"prediction\": 0, \"score_12\": -8.518594741821289, \"score_21\": 5.9534173011779785}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_05d35342911bad440069da58d307a8819aa6db54c03b201ef8`
+
+**Output items:**
+```json
+[
+  {
+    "type": "reasoning",
+    "summary": []
+  },
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_OrQVI1quqMIwXxoiS1GBSdy1",
+    "arguments": {
+      "item_name": "softmax_gap_mean_mrpc_summary",
+      "start_position": 0,
+      "end_position": 5
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_OrQVI1quqMIwXxoiS1GBSdy1`
+
+**Arguments:**
+```json
+{
+  "item_name": "softmax_gap_mean_mrpc_summary",
+  "start_position": 0,
+  "end_position": 5
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "accuracy": 0.7181372549019608,
+      "f1": 0.7905282331511839,
+      "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.55      0.59      0.57       129\n    paraphrase       0.80      0.78      0.79       279\n\n      accuracy                           0.72       408\n     macro avg       0.68      0.68      0.68       408\n  weighted avg       0.72      0.72      0.72       408\n"
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 6566 | 365 | 328 | 5064 | 5.539s | 0.018s |
+
+---
+
+## Turn 20 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_05d35342911bad440069da58d894c0819a89ea75d272a70c22`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_OrQVI1quqMIwXxoiS1GBSdy1",
+    "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.7181372549019608, \"f1\": 0.7905282331511839, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.55      0.59      0.57       129\\n    paraphrase       0.80      0.78      0.79       279\\n\\n      accuracy                           0.72       408\\n     macro avg       0.68      0.68      0.68       408\\n  weighted avg       0.72      0.72      0.72       408\\n\"}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_05d35342911bad440069da58d894c0819a89ea75d272a70c22`
+
+**Output items:**
+```json
+[
+  {
+    "type": "reasoning",
+    "summary": []
+  },
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_87ZsuQW99TGY6y975FzrMIYS",
+    "arguments": {
+      "item_name": "flan_t5_true_false_first_step_mrpc_summary",
+      "start_position": 0,
+      "end_position": 5
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_87ZsuQW99TGY6y975FzrMIYS`
+
+**Arguments:**
+```json
+{
+  "item_name": "flan_t5_true_false_first_step_mrpc_summary",
+  "start_position": 0,
+  "end_position": 5
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "accuracy": 0.5833333333333334,
+      "f1": 0.6443514644351465,
+      "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.40      0.65      0.50       129\n    paraphrase       0.77      0.55      0.64       279\n\n      accuracy                           0.58       408\n     macro avg       0.59      0.60      0.57       408\n  weighted avg       0.66      0.58      0.60       408\n"
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 7097 | 590 | 549 | 5595 | 9.281s | 0.018s |
+
+---
+
+## Turn 21 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_05d35342911bad440069da58e1e3a0819abf3499f560f27a09`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_87ZsuQW99TGY6y975FzrMIYS",
+    "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.5833333333333334, \"f1\": 0.6443514644351465, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.40      0.65      0.50       129\\n    paraphrase       0.77      0.55      0.64       279\\n\\n      accuracy                           0.58       408\\n     macro avg       0.59      0.60      0.57       408\\n  weighted avg       0.66      0.58      0.60       408\\n\"}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_05d35342911bad440069da58e1e3a0819abf3499f560f27a09`
+
+**Output items:**
+```json
+[
+  {
+    "type": "reasoning",
+    "summary": []
+  },
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_X1cOEW1ZCorzYQ1t42oV14HY",
+    "arguments": {
+      "item_name": "pipeline_distilbert_softmax_probs",
+      "start_position": 0,
+      "end_position": 3
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_X1cOEW1ZCorzYQ1t42oV14HY`
+
+**Arguments:**
+```json
+{
+  "item_name": "pipeline_distilbert_softmax_probs",
+  "start_position": 0,
+  "end_position": 3
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "prediction": 1,
+      "positive_probs": 0.983514666557312
+    },
+    {
+      "prediction": 0,
+      "positive_probs": 0.18237046897411346
+    },
+    {
+      "prediction": 0,
+      "positive_probs": 0.2533007562160492
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 7853 | 1375 | 1338 | 6351 | 19.426s | 0.021s |
+
+---
+
+## Turn 22 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_05d35342911bad440069da58f554c8819a9421d318104a73ae`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_X1cOEW1ZCorzYQ1t42oV14HY",
+    "output": "{\"ok\": true, \"result\": [{\"prediction\": 1, \"positive_probs\": 0.983514666557312}, {\"prediction\": 0, \"positive_probs\": 0.18237046897411346}, {\"prediction\": 0, \"positive_probs\": 0.2533007562160492}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_05d35342911bad440069da58f554c8819a9421d318104a73ae`
+
+**Output items:**
+```json
+[
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_XFKTwiZUqsuxqmG2bldXpXwk",
+    "arguments": {
+      "item_name": "pipeline_distilbert_threshold",
+      "start_position": 0,
+      "end_position": 3
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_XFKTwiZUqsuxqmG2bldXpXwk`
+
+**Arguments:**
+```json
+{
+  "item_name": "pipeline_distilbert_threshold",
+  "start_position": 0,
+  "end_position": 3
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "prediction": 1,
+      "paraphrase_probs": 0.983514666557312
+    },
+    {
+      "prediction": 0,
+      "paraphrase_probs": 0.18237046897411346
+    },
+    {
+      "prediction": 0,
+      "paraphrase_probs": 0.2533007562160492
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 9307 | 33 | 0 | 7805 | 1.590s | 0.018s |
+
+---
+
+## Turn 23 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_05d35342911bad440069da58f6ef6c819a94337229a4c9a817`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_XFKTwiZUqsuxqmG2bldXpXwk",
+    "output": "{\"ok\": true, \"result\": [{\"prediction\": 1, \"paraphrase_probs\": 0.983514666557312}, {\"prediction\": 0, \"paraphrase_probs\": 0.18237046897411346}, {\"prediction\": 0, \"paraphrase_probs\": 0.2533007562160492}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_05d35342911bad440069da58f6ef6c819a94337229a4c9a817`
+
+**Output items:**
+```json
+[
+  {
+    "type": "reasoning",
+    "summary": []
+  },
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_xe9PxswePXeFQcGiaIBwSwi5",
+    "arguments": {
+      "item_name": "distilbert_swap_prediction_values",
+      "start_position": 0,
+      "end_position": 3
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_xe9PxswePXeFQcGiaIBwSwi5`
+
+**Arguments:**
+```json
+{
+  "item_name": "distilbert_swap_prediction_values",
+  "start_position": 0,
+  "end_position": 3
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "prediction": 1,
+      "pos_probs": 0.983514666557312,
+      "swap_pos_probs": 0.9827525615692139
+    },
+    {
+      "prediction": 0,
+      "pos_probs": 0.18237046897411346,
+      "swap_pos_probs": 0.19850967824459076
+    },
+    {
+      "prediction": 0,
+      "pos_probs": 0.2533007562160492,
+      "swap_pos_probs": 0.25013408064842224
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 9425 | 82 | 46 | 7923 | 2.165s | 0.027s |
+
+---
+
+## Turn 24 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_05d35342911bad440069da58f91f9c819aa9acd7b545f84945`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_xe9PxswePXeFQcGiaIBwSwi5",
+    "output": "{\"ok\": true, \"result\": [{\"prediction\": 1, \"pos_probs\": 0.983514666557312, \"swap_pos_probs\": 0.9827525615692139}, {\"prediction\": 0, \"pos_probs\": 0.18237046897411346, \"swap_pos_probs\": 0.19850967824459076}, {\"prediction\": 0, \"pos_probs\": 0.2533007562160492, \"swap_pos_probs\": 0.25013408064842224}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_05d35342911bad440069da58f91f9c819aa9acd7b545f84945`
+
+**Output items:**
+```json
+[
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_CaESJ4h3UgxhEJJxmo7ql4qq",
+    "arguments": {
+      "item_name": "distilbert_symmetric_average_prediction",
+      "start_position": 0,
+      "end_position": 3
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_CaESJ4h3UgxhEJJxmo7ql4qq`
+
+**Arguments:**
+```json
+{
+  "item_name": "distilbert_symmetric_average_prediction",
+  "start_position": 0,
+  "end_position": 3
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "y_pred": 1,
+      "orig_score": 0.9779019355773926,
+      "rev_score": 0.9833046197891235
+    },
+    {
+      "y_pred": 0,
+      "orig_score": 0.006291279569268227,
+      "rev_score": 0.005755130667239428
+    },
+    {
+      "y_pred": 0,
+      "orig_score": 0.04939701408147812,
+      "rev_score": 0.026453325524926186
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 9631 | 35 | 0 | 8129 | 1.598s | 0.025s |
+
+---
+
+## Turn 25 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_05d35342911bad440069da58fac438819a991876b06d765f2e`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_CaESJ4h3UgxhEJJxmo7ql4qq",
+    "output": "{\"ok\": true, \"result\": [{\"y_pred\": 1, \"orig_score\": 0.9779019355773926, \"rev_score\": 0.9833046197891235}, {\"y_pred\": 0, \"orig_score\": 0.006291279569268227, \"rev_score\": 0.005755130667239428}, {\"y_pred\": 0, \"orig_score\": 0.04939701408147812, \"rev_score\": 0.026453325524926186}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_05d35342911bad440069da58fac438819a991876b06d765f2e`
+
+**Output items:**
+```json
+[
+  {
+    "type": "reasoning",
+    "summary": []
+  },
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_Ohsw6Yl8edxcow3OeEinNuay",
+    "arguments": {
+      "item_name": "distilbert_margin_score_prediction_values",
+      "start_position": 0,
+      "end_position": 3
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_Ohsw6Yl8edxcow3OeEinNuay`
+
+**Arguments:**
+```json
+{
+  "item_name": "distilbert_margin_score_prediction_values",
+  "start_position": 0,
+  "end_position": 3
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "prediction": 1,
+      "score_pos": 0.983514666557312,
+      "score_neg": 0.01648535393178463
+    },
+    {
+      "prediction": 0,
+      "score_pos": 0.18237046897411346,
+      "score_neg": 0.8176295757293701
+    },
+    {
+      "prediction": 0,
+      "score_pos": 0.2533007562160492,
+      "score_neg": 0.7466992139816284
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 9791 | 93 | 56 | 8289 | 2.630s | 0.028s |
+
+---
+
+## Turn 26 — `finalize_result` [ok]
+
+### Model Input
+**previous_response_id:** `resp_05d35342911bad440069da58fd6a78819a97012ea95e44cb46`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_Ohsw6Yl8edxcow3OeEinNuay",
+    "output": "{\"ok\": true, \"result\": [{\"prediction\": 1, \"score_pos\": 0.983514666557312, \"score_neg\": 0.01648535393178463}, {\"prediction\": 0, \"score_pos\": 0.18237046897411346, \"score_neg\": 0.8176295757293701}, {\"prediction\": 0, \"score_pos\": 0.2533007562160492, \"score_neg\": 0.7466992139816284}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_05d35342911bad440069da58fd6a78819a97012ea95e44cb46`
+
+**Output items:**
+```json
+[
+  {
+    "type": "reasoning",
+    "summary": []
+  },
+  {
+    "type": "function_call",
+    "name": "finalize_result",
+    "call_id": "call_e2rJtp09vogej8yzNYViBb65",
+    "arguments": {
+      "summary": "{\"rows\":[{\"family\":\"NLI-based classifier\",\"source_list\":\"hf_pipeline_mrpc_raw_logits_softmax_summary\",\"symmetry_strategy\":\"No symmetry; single sentence order scored with raw-logit softmax\",\"accuracy\":0.858,\"f1\":0.903,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":0.0},{\"family\":\"NLI-based classifier\",\"source_list\":\"hf_pipeline_mrpc_bidirectional_order_average_summary\",\"symmetry_strategy\":\"Average predictions from both sentence orders\",\"accuracy\":0.85,\"f1\":0.898,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":-0.74},{\"family\":\"NLI-based classifier\",\"source_list\":\"softmax_gap_mean_mrpc_summary\",\"symmetry_strategy\":\"Average entailment-vs-contradiction softmax gap across both directions\",\"accuracy\":0.718,\"f1\":0.791,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":-13.97},{\"family\":\"NLI-based classifier\",\"source_list\":\"consensus_then_avg_margin_mrpc_summary\",\"symmetry_strategy\":\"Require directional consensus, then average margins\",\"accuracy\":0.701,\"f1\":0.77,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":-15.69},{\"family\":\"NLI-based classifier\",\"source_list\":\"min_direction_margin_mrpc_summary\",\"symmetry_strategy\":\"Use the minimum directional margin as the symmetric score\",\"accuracy\":0.586,\"f1\":0.589,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":-27.21},{\"family\":\"NLI-based classifier\",\"source_list\":\"neutral_penalized_margin_mrpc_summary\",\"symmetry_strategy\":\"Conservative symmetric score with neutral-class penalty\",\"accuracy\":0.556,\"f1\":0.532,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":-30.15},{\"family\":\"Zero-shot FLAN-T5 prompting\",\"source_list\":\"flan_t5_full_answer_logprob_mrpc_summary\",\"symmetry_strategy\":\"No symmetry; single prompt order with full-answer logprob scoring\",\"accuracy\":0.65,\"f1\":0.691,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":0.0},{\"family\":\"Zero-shot FLAN-T5 prompting\",\"source_list\":\"flan_t5_answer_prefix_yes_no_mrpcc_summary\",\"symmetry_strategy\":\"No symmetry; single prompt order with yes/no answer prefix\",\"accuracy\":0.637,\"f1\":0.688,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":-1.23},{\"family\":\"Zero-shot FLAN-T5 prompting\",\"source_list\":\"flan_t5_symmetric_prompt_average_mrpc_summary\",\"symmetry_strategy\":\"Average outputs over swapped prompt/sentence orders\",\"accuracy\":0.738,\"f1\":0.807,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":8.82}],\"summary\":\"Across the recorded MRPC workflows, enforcing symmetry has opposite effects for the two model families. For the NLI-based pipeline, the asymmetric single-order baseline (`hf_pipeline_mrpc_raw_logits_softmax_summary`) is strongest among the retrieved runs at 0.858 accuracy and 0.903 F1. Simple bidirectional averaging is nearly accuracy-neutral but still slightly worse (0.850; -0.74 percentage points), while more conservative symmetric rules that combine both directions through mean gaps, consensus, minimum margins, or neutral penalties reduce accuracy sharply to 0.718, 0.701, 0.586, and 0.556. The accompanying class reports indicate that these stricter symmetric rules disproportionately suppress paraphrase recall, suggesting they convert directional disagreement into false negatives. In contrast, for zero-shot FLAN-T5 prompting, symmetry helps substantially: averaging predictions over swapped sentence/prompt orders raises accuracy to 0.738 and F1 to 0.807, improving on the best asymmetric FLAN baseline (`flan_t5_full_answer_logprob_mrpc_summary`, 0.650 accuracy) by +8.82 percentage points and on the yes/no-prefix baseline by +10.05 points. The evidence therefore suggests that prompt-based zero-shot paraphrase judgments are highly order-sensitive and benefit from explicit symmetric averaging, whereas NLI-based paraphrase inference already captures useful directional signal and is often harmed by aggressive symmetry constraints. These are workflow-level summary records on the MRPC validation set (classification reports show 408 examples: 279 paraphrases and 129 non-paraphrases), so the table should be read as evidence from the stored implementations rather than a fully controlled sweep over identical models and thresholds.\"}"
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `finalize_result` | **call_id:** `call_e2rJtp09vogej8yzNYViBb65`
+
+**Arguments:**
+```json
+{
+  "summary": "{\"rows\":[{\"family\":\"NLI-based classifier\",\"source_list\":\"hf_pipeline_mrpc_raw_logits_softmax_summary\",\"symmetry_strategy\":\"No symmetry; single sentence order scored with raw-logit softmax\",\"accuracy\":0.858,\"f1\":0.903,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":0.0},{\"family\":\"NLI-based classifier\",\"source_list\":\"hf_pipeline_mrpc_bidirectional_order_average_summary\",\"symmetry_strategy\":\"Average predictions from both sentence orders\",\"accuracy\":0.85,\"f1\":0.898,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":-0.74},{\"family\":\"NLI-based classifier\",\"source_list\":\"softmax_gap_mean_mrpc_summary\",\"symmetry_strategy\":\"Average entailment-vs-contradiction softmax gap across both directions\",\"accuracy\":0.718,\"f1\":0.791,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":-13.97},{\"family\":\"NLI-based classifier\",\"source_list\":\"consensus_then_avg_margin_mrpc_summary\",\"symmetry_strategy\":\"Require directional consensus, then average margins\",\"accuracy\":0.701,\"f1\":0.77,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":-15.69},{\"family\":\"NLI-based classifier\",\"source_list\":\"min_direction_margin_mrpc_summary\",\"symmetry_strategy\":\"Use the minimum directional margin as the symmetric score\",\"accuracy\":0.586,\"f1\":0.589,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":-27.21},{\"family\":\"NLI-based classifier\",\"source_list\":\"neutral_penalized_margin_mrpc_summary\",\"symmetry_strategy\":\"Conservative symmetric score with neutral-class penalty\",\"accuracy\":0.556,\"f1\":0.532,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":-30.15},{\"family\":\"Zero-shot FLAN-T5 prompting\",\"source_list\":\"flan_t5_full_answer_logprob_mrpc_summary\",\"symmetry_strategy\":\"No symmetry; single prompt order with full-answer logprob scoring\",\"accuracy\":0.65,\"f1\":0.691,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":0.0},{\"family\":\"Zero-shot FLAN-T5 prompting\",\"source_list\":\"flan_t5_answer_prefix_yes_no_mrpcc_summary\",\"symmetry_strategy\":\"No symmetry; single prompt order with yes/no answer prefix\",\"accuracy\":0.637,\"f1\":0.688,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":-1.23},{\"family\":\"Zero-shot FLAN-T5 prompting\",\"source_list\":\"flan_t5_symmetric_prompt_average_mrpc_summary\",\"symmetry_strategy\":\"Average outputs over swapped prompt/sentence orders\",\"accuracy\":0.738,\"f1\":0.807,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":8.82}],\"summary\":\"Across the recorded MRPC workflows, enforcing symmetry has opposite effects for the two model families. For the NLI-based pipeline, the asymmetric single-order baseline (`hf_pipeline_mrpc_raw_logits_softmax_summary`) is strongest among the retrieved runs at 0.858 accuracy and 0.903 F1. Simple bidirectional averaging is nearly accuracy-neutral but still slightly worse (0.850; -0.74 percentage points), while more conservative symmetric rules that combine both directions through mean gaps, consensus, minimum margins, or neutral penalties reduce accuracy sharply to 0.718, 0.701, 0.586, and 0.556. The accompanying class reports indicate that these stricter symmetric rules disproportionately suppress paraphrase recall, suggesting they convert directional disagreement into false negatives. In contrast, for zero-shot FLAN-T5 prompting, symmetry helps substantially: averaging predictions over swapped sentence/prompt orders raises accuracy to 0.738 and F1 to 0.807, improving on the best asymmetric FLAN baseline (`flan_t5_full_answer_logprob_mrpc_summary`, 0.650 accuracy) by +8.82 percentage points and on the yes/no-prefix baseline by +10.05 points. The evidence therefore suggests that prompt-based zero-shot paraphrase judgments are highly order-sensitive and benefit from explicit symmetric averaging, whereas NLI-based paraphrase inference already captures useful directional signal and is often harmed by aggressive symmetry constraints. These are workflow-level summary records on the MRPC validation set (classification reports show 408 examples: 279 paraphrases and 129 non-paraphrases), so the table should be read as evidence from the stored implementations rather than a fully controlled sweep over identical models and thresholds.\"}"
+}
+```
+
+### Tool Output
+```json
+{
+  "summary": "{\"rows\":[{\"family\":\"NLI-based classifier\",\"source_list\":\"hf_pipeline_mrpc_raw_logits_softmax_summary\",\"symmetry_strategy\":\"No symmetry; single sentence order scored with raw-logit softmax\",\"accuracy\":0.858,\"f1\":0.903,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":0.0},{\"family\":\"NLI-based classifier\",\"source_list\":\"hf_pipeline_mrpc_bidirectional_order_average_summary\",\"symmetry_strategy\":\"Average predictions from both sentence orders\",\"accuracy\":0.85,\"f1\":0.898,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":-0.74},{\"family\":\"NLI-based classifier\",\"source_list\":\"softmax_gap_mean_mrpc_summary\",\"symmetry_strategy\":\"Average entailment-vs-contradiction softmax gap across both directions\",\"accuracy\":0.718,\"f1\":0.791,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":-13.97},{\"family\":\"NLI-based classifier\",\"source_list\":\"consensus_then_avg_margin_mrpc_summary\",\"symmetry_strategy\":\"Require directional consensus, then average margins\",\"accuracy\":0.701,\"f1\":0.77,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":-15.69},{\"family\":\"NLI-based classifier\",\"source_list\":\"min_direction_margin_mrpc_summary\",\"symmetry_strategy\":\"Use the minimum directional margin as the symmetric score\",\"accuracy\":0.586,\"f1\":0.589,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":-27.21},{\"family\":\"NLI-based classifier\",\"source_list\":\"neutral_penalized_margin_mrpc_summary\",\"symmetry_strategy\":\"Conservative symmetric score with neutral-class penalty\",\"accuracy\":0.556,\"f1\":0.532,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":-30.15},{\"family\":\"Zero-shot FLAN-T5 prompting\",\"source_list\":\"flan_t5_full_answer_logprob_mrpc_summary\",\"symmetry_strategy\":\"No symmetry; single prompt order with full-answer logprob scoring\",\"accuracy\":0.65,\"f1\":0.691,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":0.0},{\"family\":\"Zero-shot FLAN-T5 prompting\",\"source_list\":\"flan_t5_answer_prefix_yes_no_mrpcc_summary\",\"symmetry_strategy\":\"No symmetry; single prompt order with yes/no answer prefix\",\"accuracy\":0.637,\"f1\":0.688,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":-1.23},{\"family\":\"Zero-shot FLAN-T5 prompting\",\"source_list\":\"flan_t5_symmetric_prompt_average_mrpc_summary\",\"symmetry_strategy\":\"Average outputs over swapped prompt/sentence orders\",\"accuracy\":0.738,\"f1\":0.807,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":8.82}],\"summary\":\"Across the recorded MRPC workflows, enforcing symmetry has opposite effects for the two model families. For the NLI-based pipeline, the asymmetric single-order baseline (`hf_pipeline_mrpc_raw_logits_softmax_summary`) is strongest among the retrieved runs at 0.858 accuracy and 0.903 F1. Simple bidirectional averaging is nearly accuracy-neutral but still slightly worse (0.850; -0.74 percentage points), while more conservative symmetric rules that combine both directions through mean gaps, consensus, minimum margins, or neutral penalties reduce accuracy sharply to 0.718, 0.701, 0.586, and 0.556. The accompanying class reports indicate that these stricter symmetric rules disproportionately suppress paraphrase recall, suggesting they convert directional disagreement into false negatives. In contrast, for zero-shot FLAN-T5 prompting, symmetry helps substantially: averaging predictions over swapped sentence/prompt orders raises accuracy to 0.738 and F1 to 0.807, improving on the best asymmetric FLAN baseline (`flan_t5_full_answer_logprob_mrpc_summary`, 0.650 accuracy) by +8.82 percentage points and on the yes/no-prefix baseline by +10.05 points. The evidence therefore suggests that prompt-based zero-shot paraphrase judgments are highly order-sensitive and benefit from explicit symmetric averaging, whereas NLI-based paraphrase inference already captures useful directional signal and is often harmed by aggressive symmetry constraints. These are workflow-level summary records on the MRPC validation set (classification reports show 408 examples: 279 paraphrases and 129 non-paraphrases), so the table should be read as evidence from the stored implementations rather than a fully controlled sweep over identical models and thresholds.\"}"
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 10005 | 4737 | 3783 | 8503 | 62.262s | 0.000s |
+
+---
+
+# Run Summary
+
+**Final Result:**
+```json
+{
+  "summary": "{\"rows\":[{\"family\":\"NLI-based classifier\",\"source_list\":\"hf_pipeline_mrpc_raw_logits_softmax_summary\",\"symmetry_strategy\":\"No symmetry; single sentence order scored with raw-logit softmax\",\"accuracy\":0.858,\"f1\":0.903,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":0.0},{\"family\":\"NLI-based classifier\",\"source_list\":\"hf_pipeline_mrpc_bidirectional_order_average_summary\",\"symmetry_strategy\":\"Average predictions from both sentence orders\",\"accuracy\":0.85,\"f1\":0.898,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":-0.74},{\"family\":\"NLI-based classifier\",\"source_list\":\"softmax_gap_mean_mrpc_summary\",\"symmetry_strategy\":\"Average entailment-vs-contradiction softmax gap across both directions\",\"accuracy\":0.718,\"f1\":0.791,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":-13.97},{\"family\":\"NLI-based classifier\",\"source_list\":\"consensus_then_avg_margin_mrpc_summary\",\"symmetry_strategy\":\"Require directional consensus, then average margins\",\"accuracy\":0.701,\"f1\":0.77,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":-15.69},{\"family\":\"NLI-based classifier\",\"source_list\":\"min_direction_margin_mrpc_summary\",\"symmetry_strategy\":\"Use the minimum directional margin as the symmetric score\",\"accuracy\":0.586,\"f1\":0.589,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":-27.21},{\"family\":\"NLI-based classifier\",\"source_list\":\"neutral_penalized_margin_mrpc_summary\",\"symmetry_strategy\":\"Conservative symmetric score with neutral-class penalty\",\"accuracy\":0.556,\"f1\":0.532,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":-30.15},{\"family\":\"Zero-shot FLAN-T5 prompting\",\"source_list\":\"flan_t5_full_answer_logprob_mrpc_summary\",\"symmetry_strategy\":\"No symmetry; single prompt order with full-answer logprob scoring\",\"accuracy\":0.65,\"f1\":0.691,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":0.0},{\"family\":\"Zero-shot FLAN-T5 prompting\",\"source_list\":\"flan_t5_answer_prefix_yes_no_mrpcc_summary\",\"symmetry_strategy\":\"No symmetry; single prompt order with yes/no answer prefix\",\"accuracy\":0.637,\"f1\":0.688,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":-1.23},{\"family\":\"Zero-shot FLAN-T5 prompting\",\"source_list\":\"flan_t5_symmetric_prompt_average_mrpc_summary\",\"symmetry_strategy\":\"Average outputs over swapped prompt/sentence orders\",\"accuracy\":0.738,\"f1\":0.807,\"delta_accuracy_pp_vs_family_asymmetric_baseline\":8.82}],\"summary\":\"Across the recorded MRPC workflows, enforcing symmetry has opposite effects for the two model families. For the NLI-based pipeline, the asymmetric single-order baseline (`hf_pipeline_mrpc_raw_logits_softmax_summary`) is strongest among the retrieved runs at 0.858 accuracy and 0.903 F1. Simple bidirectional averaging is nearly accuracy-neutral but still slightly worse (0.850; -0.74 percentage points), while more conservative symmetric rules that combine both directions through mean gaps, consensus, minimum margins, or neutral penalties reduce accuracy sharply to 0.718, 0.701, 0.586, and 0.556. The accompanying class reports indicate that these stricter symmetric rules disproportionately suppress paraphrase recall, suggesting they convert directional disagreement into false negatives. In contrast, for zero-shot FLAN-T5 prompting, symmetry helps substantially: averaging predictions over swapped sentence/prompt orders raises accuracy to 0.738 and F1 to 0.807, improving on the best asymmetric FLAN baseline (`flan_t5_full_answer_logprob_mrpc_summary`, 0.650 accuracy) by +8.82 percentage points and on the yes/no-prefix baseline by +10.05 points. The evidence therefore suggests that prompt-based zero-shot paraphrase judgments are highly order-sensitive and benefit from explicit symmetric averaging, whereas NLI-based paraphrase inference already captures useful directional signal and is often harmed by aggressive symmetry constraints. These are workflow-level summary records on the MRPC validation set (classification reports show 408 examples: 279 paraphrases and 129 non-paraphrases), so the table should be read as evidence from the stored implementations rather than a fully controlled sweep over identical models and thresholds.\"}"
+}
+```
+
+**Metrics Summary:**
+```json
+{
+  "tokens": {
+    "input": 149164,
+    "output": 9049,
+    "reasoning": 7165,
+    "total": 158213,
+    "system_estimate": 1502,
+    "conversation": 108677
+  },
+  "code": {
+    "executions": 0,
+    "failed_executions": 0,
+    "total_lines": 0
+  },
+  "timing": {
+    "api_latency_s": 154.257,
+    "exec_latency_s": 0.496,
+    "wall_time_s": 154.753
+  },
+  "api_calls": 27,
+  "cost": null
+}
+```

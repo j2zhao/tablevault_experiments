@@ -1,0 +1,1091 @@
+{
+  "run_id": "20260411T134202Z",
+  "timestamp": "2026-04-11T13:42:02.252322+00:00",
+  "model": "gpt-5.4",
+  "task": "How does the pooling strategy used to extract sentence representations from DistilBERT affect paraphrase detection accuracy on MRPC?",
+  "system_prompt": "You are a data analyst assistant with access to a TableVault repository.\n\nYour goal is to investigate the repository and extract **structured evidence**\nrelevant to the user task.\n\nThe final output should summarize the evidence stored in the TableVault\nrepository in the form of:\n\n1. a **results table** (structured rows), and\n2. a **scientific-style summary** interpreting that evidence.\n\nThe results table should represent **summary evidence extracted from the\nrepository**. Each row corresponds to a piece of evidence such as an experiment\nresult, dataset observation, workflow output, or other structured record.\n\nExample result table schemas:\n\nExample 1 \u2014 workflow evaluation evidence\n\n[\n  {\n    \"workflow\": \"baseline_xgboost\",\n    \"model\": \"xgboost\",\n    \"running_time\": 132.4,\n    \"accuracy\": 0.91\n  },\n  {\n    \"workflow\": \"llm_augmented_pipeline\",\n    \"model\": \"gpt-4o-mini\",\n    \"running_time\": 245.8,\n    \"accuracy\": 0.94\n  }\n]\n\nExample 2 \u2014 sample-level classification evidence\n\n[\n  {\n    \"data_sample\": \"sample_001\",\n    \"true_label\": \"sports\",\n    \"predicted_label\": \"sports\",\n    \"reasoning_strategy\": \"few-shot classification\"\n  },\n  {\n    \"data_sample\": \"sample_002\",\n    \"true_label\": \"business\",\n    \"predicted_label\": \"technology\",\n    \"reasoning_strategy\": \"two-step reasoning + classification\"\n  }\n]\n\nThe columns depend on what evidence exists in the repository. Choose columns\nthat best summarize the relevant structured evidence. Don't include unnecessary columns.\n\n------------------------------------------------------------\n\n## What is TableVault?\n\nTableVault is a centralized data repository (backed by ArangoDB) that stores\n**item lists** \u2014 ordered collections of data items. Every item list has a\nunique name and belongs to one of four types:\n\n| Type          | Stores                                         |\n|---------------|------------------------------------------------|\n| **file**      | References (paths) to external files           |\n| **document**  | Text strings (paragraphs, logs, notes, etc.)   |\n| **embedding** | Fixed-dimension float vectors                  |\n| **record**    | Structured rows (dict with predefined columns) |\n\n------------------------------------------------------------\n\n## How data gets into TableVault\n\nData is ingested by Python processes. A Python script or notebook initialises\na `Vault` object, and then calls `append_*` helpers to add items to the\nrelevant lists.\n\nThere may also be additional context about the lists stored in the repository.\nThe available tool functions expose what context is accessible.\n\n------------------------------------------------------------\n\n## Tools\n\nCall the available TableVault query functions directly as tool calls \u2014 you do\nnot need to write Python code. Use `finalize_result` to return the final answer.\n\n------------------------------------------------------------\n\n## Rules\n\n- Always act via tool calls \u2014 never just describe what you would do.\n- On errors, read the error message and retry with corrected arguments.\n- **Do not make direct HuggingFace model calls** \u2014 all model inference results\n  are pre-computed and stored in the TableVault repository. Retrieve them there.\n- **Minimize token usage**: gather enough evidence to answer the question well,\n  then stop. More specific queries and filters reduce the number of calls needed \u2014\n  prefer targeted searches over broad scans. Stop as soon as you have sufficient\n  evidence to give a confident, well-supported answer.\n\n------------------------------------------------------------\n\n## Your output\n\nWhen you have enough information, call `finalize_result` with exactly this shape:\n\n{\n  \"rows\": [\n    {\"column1\": \"value1\", \"column2\": \"value2\"}\n  ],\n  \"summary\": \"Scientific-style description of the evidence and interpretation.\"\n}\n\n------------------------------------------------------------\n\n## Summary expectations\n\nThe **summary** should interpret the evidence in a research-style description.\nIt should explain:\n\n\u2022 what the repository evidence suggests about the user's task\n\u2022 key findings or patterns in the retrieved data\n\u2022 notable issues, biases, or inconsistencies in existing workflows or results\n\u2022 limitations or gaps in the available evidence\n\u2022 how the returned table should be interpreted\n\nThe summary should read like a short analytical explanation of the evidence,\nnot just a description of the table.\n\n------------------------------------------------------------\n",
+  "turns": [
+    {
+      "turn": 0,
+      "model_input": {
+        "pending_messages": [
+          {
+            "role": "user",
+            "content": "How does the pooling strategy used to extract sentence representations from DistilBERT affect paraphrase detection accuracy on MRPC?"
+          }
+        ],
+        "previous_response_id": "resp_01808cde76376bbf0069da4faaab3481959ac99c5a238c9c22"
+      },
+      "model_output": {
+        "response_id": "resp_01808cde76376bbf0069da4faaab3481959ac99c5a238c9c22",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "code_description_search",
+            "call_id": "call_TFew8v2gEWWYEwqBLv00QQvR",
+            "arguments": {
+              "description_text": "DistilBERT pooling strategy sentence representations MRPC paraphrase detection accuracy"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "code_description_search",
+        "call_id": "call_TFew8v2gEWWYEwqBLv00QQvR",
+        "arguments": {
+          "description_text": "DistilBERT pooling strategy sentence representations MRPC paraphrase detection accuracy"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": []
+      },
+      "metrics": {
+        "input_tokens": 1617,
+        "output_tokens": 82,
+        "reasoning_tokens": 47,
+        "conversation_tokens": 0,
+        "api_latency_s": 3.1729,
+        "exec_latency_s": 0.0612
+      },
+      "error": null
+    },
+    {
+      "turn": 1,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_TFew8v2gEWWYEwqBLv00QQvR",
+            "output": "{\"ok\": true, \"result\": []}"
+          }
+        ],
+        "previous_response_id": "resp_01808cde76376bbf0069da4fad8d3c819595203feced303e61"
+      },
+      "model_output": {
+        "response_id": "resp_01808cde76376bbf0069da4fad8d3c819595203feced303e61",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "code_description_search",
+            "call_id": "call_kmHwEUYO2lUSrXecNaC67BWm",
+            "arguments": {
+              "description_text": "MRPC paraphrase detection DistilBERT pooling"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "code_description_search",
+        "call_id": "call_kmHwEUYO2lUSrXecNaC67BWm",
+        "arguments": {
+          "description_text": "MRPC paraphrase detection DistilBERT pooling"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          [
+            "BASE",
+            "This notebook evaluates a simple semantic-similarity baseline for paraphrase detection on the GLUE MRPC validation set. It uses distilbert-base-uncased to encode each sentence, averages the last four hidden layers, applies mean pooling over tokens, and L2-normalizes the resulting sentence embeddings. For each sentence pair, it computes cosine similarity between the two embeddings and converts similarity scores into binary paraphrase predictions using a fixed threshold of 0.85. The workflow loads MRPC examples from TableVault, generates pairwise predictions and similarity scores, computes evaluation metrics including accuracy, F1, and a classification report, inspects example predictions and errors, and stores both per-example outputs and summary results back into TableVault with descriptive metadata.",
+            "distilbert_last4_mean_cosine_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook evaluates a simple paraphrase detection pipeline on the GLUE MRPC validation set using DistilBERT sentence embeddings. It loads sentence pairs and labels from TableVault, encodes each sentence with distilbert-base-uncased, applies masked max pooling over token embeddings, L2-normalizes the pooled vectors, and computes cosine similarity between the two sentence embeddings. A fixed cosine threshold is used to convert similarity scores into binary paraphrase predictions, and the notebook reports accuracy, F1, a full classification report, and example errors. It also records per-example predictions, summary metrics, and workflow metadata back into TableVault, with OpenAI-generated description embeddings for searchable experiment documentation.",
+            "distilbert_max_pool_cosine_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook runs a simple unsupervised paraphrase detection experiment on the GLUE MRPC validation set using distilbert-base-uncased sentence embeddings. It loads sentence pairs and labels from TableVault, encodes each sentence with DistilBERT, applies attention-mask mean pooling and L2 normalization, computes cosine similarity between the two sentence embeddings, and converts similarity scores into binary paraphrase predictions using the median similarity as the decision threshold. It then evaluates performance with accuracy, F1, and a classification report, inspects sample predictions and errors, and stores per-example predictions, cosine scores, summary metrics, and notebook-level metadata/descriptions in TableVault with OpenAI-generated description embeddings for documentation and retrieval.",
+            "distilbert_mean_cosine_median_threshold_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook evaluates a simple paraphrase detection baseline on the GLUE MRPC validation set using DistilBERT sentence embeddings. It loads the distilbert-base-uncased model, encodes each sentence in a pair, mean-pools token embeddings while excluding special tokens such as [CLS] and [SEP], L2-normalizes the pooled vectors, and computes cosine similarity between the two sentence embeddings. A fixed similarity threshold of 0.85 is used to predict whether each pair is a paraphrase. The notebook then measures accuracy, F1, and a full classification report, inspects example predictions and errors, and stores per-example predictions, cosine scores, summary metrics, and notebook/process metadata in TableVault with embedding-based descriptions for later retrieval and documentation.",
+            "distilbert_no_special_tokens_mean_cosine_mrpc",
+            "process_list"
+          ]
+        ]
+      },
+      "metrics": {
+        "input_tokens": 1721,
+        "output_tokens": 41,
+        "reasoning_tokens": 10,
+        "conversation_tokens": 0,
+        "api_latency_s": 1.6784,
+        "exec_latency_s": 0.0426
+      },
+      "error": null
+    },
+    {
+      "turn": 2,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_kmHwEUYO2lUSrXecNaC67BWm",
+            "output": "{\"ok\": true, \"result\": [[\"BASE\", \"This notebook evaluates a simple semantic-similarity baseline for paraphrase detection on the GLUE MRPC validation set. It uses distilbert-base-uncased to encode each sentence, averages the last four hidden layers, applies mean pooling over tokens, and L2-normalizes the resulting sentence embeddings. For each sentence pair, it computes cosine similarity between the two embeddings and converts similarity scores into binary paraphrase predictions using a fixed threshold of 0.85. The workflow loads MRPC examples from TableVault, generates pairwise predictions and similarity scores, computes evaluation metrics including accuracy, F1, and a classification report, inspects example predictions and errors, and stores both per-example outputs and summary results back into TableVault with descriptive metadata.\", \"distilbert_last4_mean_cosine_mrpc\", \"process_list\"], [\"BASE\", \"This notebook evaluates a simple paraphrase detection pipeline on the GLUE MRPC validation set using DistilBERT sentence embeddings. It loads sentence pairs and labels from TableVault, encodes each sentence with distilbert-base-uncased, applies masked max pooling over token embeddings, L2-normalizes the pooled vectors, and computes cosine similarity between the two sentence embeddings. A fixed cosine threshold is used to convert similarity scores into binary paraphrase predictions, and the notebook reports accuracy, F1, a full classification report, and example errors. It also records per-example predictions, summary metrics, and workflow metadata back into TableVault, with OpenAI-generated description embeddings for searchable experiment documentation.\", \"distilbert_max_pool_cosine_mrpc\", \"process_list\"], [\"BASE\", \"This notebook runs a simple unsupervised paraphrase detection experiment on the GLUE MRPC validation set using distilbert-base-uncased sentence embeddings. It loads sentence pairs and labels from TableVault, encodes each sentence with DistilBERT, applies attention-mask mean pooling and L2 normalization, computes cosine similarity between the two sentence embeddings, and converts similarity scores into binary paraphrase predictions using the median similarity as the decision threshold. It then evaluates performance with accuracy, F1, and a classification report, inspects sample predictions and errors, and stores per-example predictions, cosine scores, summary metrics, and notebook-level metadata/descriptions in TableVault with OpenAI-generated description embeddings for documentation and retrieval.\", \"distilbert_mean_cosine_median_threshold_mrpc\", \"process_list\"], [\"BASE\", \"This notebook evaluates a simple paraphrase detection baseline on the GLUE MRPC validation set using DistilBERT sentence embeddings. It loads the distilbert-base-uncased model, encodes each sentence in a pair, mean-pools token embeddings while excluding special tokens such as [CLS] and [SEP], L2-normalizes the pooled vectors, and computes cosine similarity between the two sentence embeddings. A fixed similarity threshold of 0.85 is used to predict whether each pair is a paraphrase. The notebook then measures accuracy, F1, and a full classification report, inspects example predictions and errors, and stores per-example predictions, cosine scores, summary metrics, and notebook/process metadata in TableVault with embedding-based descriptions for later retrieval and documentation.\", \"distilbert_no_special_tokens_mean_cosine_mrpc\", \"process_list\"]]}"
+          }
+        ],
+        "previous_response_id": "resp_01808cde76376bbf0069da4faf495481958e11da427fd46215"
+      },
+      "model_output": {
+        "response_id": "resp_01808cde76376bbf0069da4faf495481958e11da427fd46215",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_code",
+            "call_id": "call_bYSHvZWUEtGYOWmSKoq07vxK",
+            "arguments": {
+              "name": "distilbert_last4_mean_cosine_mrpc"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_code",
+        "call_id": "call_bYSHvZWUEtGYOWmSKoq07vxK",
+        "arguments": {
+          "name": "distilbert_last4_mean_cosine_mrpc"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          "def get_embeddings(text):\n    return client.embeddings.create(\n            input=text,\n            model=\"text-embedding-3-large\"\n        ).data[0].embedding",
+          "import torch\nimport numpy as np\nfrom datasets import Dataset\nfrom transformers import AutoTokenizer, AutoModel\nfrom sklearn.metrics import accuracy_score, f1_score, classification_report\nfrom tqdm.auto import tqdm\n\ndevice = torch.device(\"mps\" if torch.backends.mps.is_available() else \"cpu\")\nprint(\"device:\", device)\n",
+          "model_name = \"distilbert-base-uncased\"\n\ntokenizer = AutoTokenizer.from_pretrained(model_name)\nmodel = AutoModel.from_pretrained(model_name).to(device)\nmodel.eval()\n\nprint(model_name)\nprint(\"hidden_size:\", model.config.hidden_size)\n",
+          "ds = vault.query_item_content(\"glue_mrpc_validation\")\nds = Dataset.from_list(ds)\nprint(ds)\nprint(ds[0])\n\nsent1 = ds[\"sentence1\"]\nsent2 = ds[\"sentence2\"]\ny_true = np.array(ds[\"label\"])\n\nprint(\"num_examples:\", len(y_true))\nprint(\"positive_rate:\", float(y_true.mean()))\n",
+          "def mean_pool(token_embeddings, attention_mask):\n    mask = attention_mask.unsqueeze(-1).to(token_embeddings.dtype)\n    summed = (token_embeddings * mask).sum(dim=1)\n    counts = mask.sum(dim=1).clamp(min=1e-9)\n    pooled = summed / counts\n    pooled = torch.nn.functional.normalize(pooled, p=2, dim=-1)\n    return pooled\n\n\ndef encode_texts(texts, batch_size=128, max_length=128):\n    all_embeddings = []\n    with torch.no_grad():\n        for i in tqdm(range(0, len(texts), batch_size)):\n            batch_texts = texts[i:i + batch_size]\n            enc = tokenizer(\n                batch_texts,\n                padding=True,\n                truncation=True,\n                max_length=max_length,\n                return_tensors=\"pt\",\n            )\n            enc = {k: v.to(device) for k, v in enc.items()}\n\n            out = model(**enc, output_hidden_states=True)\n            last_four = torch.stack(out.hidden_states[-4:], dim=0)\n            mixed_tokens = last_four.mean(dim=0)\n            pooled = mean_pool(mixed_tokens, enc[\"attention_mask\"])\n            all_embeddings.append(pooled.cpu())\n\n    return torch.cat(all_embeddings, dim=0)\n",
+          "emb1 = encode_texts(sent1, batch_size=128, max_length=128)\nemb2 = encode_texts(sent2, batch_size=128, max_length=128)\n\nsimilarities = (emb1 * emb2).sum(dim=-1).numpy()\nthreshold = 0.85\ny_pred = (similarities >= threshold).astype(int)\n\nprint(\"emb1 shape:\", tuple(emb1.shape))\nprint(\"emb2 shape:\", tuple(emb2.shape))\nprint(\"similarity range:\", float(similarities.min()), float(similarities.max()))\nprint(\"done\")\n",
+          "\nvault.create_record_list(\"cosine_mrpc_mean_similarity_prediction\", column_names=[\"prediction\", \"similarities\"])\n\nfor i in range(len(y_pred)):\n    vault.append_record(\"cosine_mrpc_mean_similarity_prediction\", \n                        {\n                            \"prediction\": int(y_pred[i]),\n                            \"similarities\": float(similarities[i]),\n                        },\n                       input_items = {\n                           \"glue_mrpc_validation\": [i, i + 1],\n                       }\n                       )\n\ndescription = \"This dataset stores per-example paraphrase predictions for the GLUE MRPC validation set produced by this notebook\\u2019s embedding-similarity baseline. Each record corresponds to one sentence pair from glue_mrpc_validation and contains two fields: prediction, a binary label (1 if the pair is predicted to be a paraphrase, 0 otherwise), and similarities, the cosine similarity score between the L2-normalized sentence embeddings of sentence1 and sentence2. The embeddings are generated with distilbert-base-uncased by averaging the last 4 hidden layers at the token level and then mean-pooling across tokens. Predictions are created by applying a fixed threshold of 0.85 to the similarity score. In this workflow, this dataset is the intermediate model output used to inspect individual examples, analyze errors, and compute the final evaluation summary in distilbert_last4_mean_cosine_mrpc_summary.\"\nembedding = get_embeddings(description)\nvault.create_description(\"cosine_mrpc_mean_similarity_prediction\", description, embedding)\n\nproperties = {\"task\": \"paraphrase detection\", \"dataset_role\": \"prediction output\", \"source\": \"glue/mrpc\", \"input_dataset\": \"glue_mrpc_validation\", \"split\": \"validation\", \"size\": \"408\", \"model\": \"distilbert-base-uncased\", \"embedding_strategy\": \"last4_layers_mean_pooling\", \"similarity_metric\": \"cosine similarity\", \"decision_rule\": \"threshold >= 0.85\", \"text_fields\": \"sentence1,sentence2\", \"label_field\": \"label\", \"output_fields\": \"prediction,similarities\"} #e.g. task: paraphrase detection\n\nfor prop, cat in properties.items():\n    embedding = get_embeddings(prop)\n    vault.create_description(\"cosine_mrpc_mean_similarity_prediction\", cat, embedding, prop)",
+          "acc = accuracy_score(y_true, y_pred)\nf1 = f1_score(y_true, y_pred)\nreport = classification_report(y_true, y_pred, target_names=[\"not_paraphrase\", \"paraphrase\"])\nprint({\"accuracy\": acc, \"f1\": f1, \"threshold\": threshold})\nprint(classification_report(y_true, y_pred, target_names=[\"not_paraphrase\", \"paraphrase\"]))\n",
+          "for i in range(5):\n    print(\"=\" * 80)\n    print(\"sentence1:\", sent1[i])\n    print(\"sentence2:\", sent2[i])\n    print(\"similarity:\", float(similarities[i]))\n    print(\"true:\", int(y_true[i]), \"pred:\", int(y_pred[i]))\n\nmistakes = np.where(y_true != y_pred)[0][:10]\nprint(\"num_errors:\", int((y_true != y_pred).sum()))\n\nfor i in mistakes:\n    print(\"=\" * 80)\n    print(\"idx:\", int(i))\n    print(\"sentence1:\", sent1[i])\n    print(\"sentence2:\", sent2[i])\n    print(\"similarity:\", float(similarities[i]))\n    print(\"true:\", int(y_true[i]), \"pred:\", int(y_pred[i]))\n",
+          "vault.create_record_list(\"distilbert_last4_mean_cosine_mrpc_summary\", column_names=[\"accuracy\", \"f1\", \"classification_report\"])\n\n\nsummary = {\n    \"accuracy\": float(acc),\n    \"f1\": float(f1),\n    \"classification_report\": str(report)\n}\n\nvault.append_record(\"distilbert_last4_mean_cosine_mrpc_summary\", summary,\n                    input_items = {\n                        \"glue_mrpc_validation\": [0, len(ds)],\n                        \"cosine_mrpc_mean_similarity_prediction\": [0, len(ds)]\n                    })\n\nsummary\n\ndescription = \"Summary dataset for the DistilBERT cosine-similarity MRPC validation experiment. It contains an aggregate evaluation record for paraphrase detection on the GLUE MRPC validation split, where sentence1 and sentence2 are encoded with distilbert-base-uncased, the last 4 hidden layers are averaged, mean pooled into sentence embeddings, and classified by cosine similarity using a threshold of 0.85. The dataset structure has 3 fields: accuracy (float), f1 (float), and classification_report (string with per-class precision/recall/F1 and support). In this workflow, it serves as the final experiment-level metrics table summarizing model performance over the full validation set, with provenance linked to both the source dataset glue_mrpc_validation and the per-example prediction dataset cosine_mrpc_mean_similarity_prediction.\"\nembedding = get_embeddings(description)\nvault.create_description(\"distilbert_last4_mean_cosine_mrpc_summary\", description, embedding)\n\nproperties = {\"task\": \"paraphrase detection\", \"artifact_type\": \"evaluation summary\", \"source\": \"glue/mrpc\", \"split\": \"validation\", \"size\": \"408\", \"model\": \"distilbert-base-uncased\", \"embedding_strategy\": \"last4-layer mean pooling\", \"similarity_metric\": \"cosine similarity\", \"decision_rule\": \"threshold >= 0.85\", \"input_type\": \"sentence pair\", \"metrics\": \"accuracy,f1,classification_report\"} #e.g. task: paraphrase detection\n\nfor prop, cat in properties.items():\n    embedding = get_embeddings(prop)\n    vault.create_description(\"distilbert_last4_mean_cosine_mrpc_summary\", cat, embedding, prop)\n\n",
+          "description = \"This notebook evaluates a simple semantic-similarity baseline for paraphrase detection on the GLUE MRPC validation set. It uses distilbert-base-uncased to encode each sentence, averages the last four hidden layers, applies mean pooling over tokens, and L2-normalizes the resulting sentence embeddings. For each sentence pair, it computes cosine similarity between the two embeddings and converts similarity scores into binary paraphrase predictions using a fixed threshold of 0.85. The workflow loads MRPC examples from TableVault, generates pairwise predictions and similarity scores, computes evaluation metrics including accuracy, F1, and a classification report, inspects example predictions and errors, and stores both per-example outputs and summary results back into TableVault with descriptive metadata.\" # description of whole notebook\nembedding = get_embeddings(description)\nvault.create_description(\"distilbert_last4_mean_cosine_mrpc\", description, embedding)\n\nproperties = {\"task\": \"paraphrase detection\", \"dataset\": \"glue/mrpc\", \"data_split\": \"validation\", \"model\": \"distilbert-base-uncased\", \"embedding_strategy\": \"last-4-layer mean pooled sentence embeddings\", \"pooling\": \"attention-masked mean pooling with L2 normalization\", \"similarity_metric\": \"cosine similarity\", \"decision_rule\": \"threshold-based binary classification\", \"threshold\": \"0.85\", \"evaluation\": \"accuracy, f1-score, classification_report\", \"frameworks\": \"transformers, pytorch, scikit-learn, datasets\", \"embedding_metadata_model\": \"text-embedding-3-large\", \"storage\": \"tablevault\", \"process_name\": \"distilbert_last4_mean_cosine_mrpc\"} #e.g. model: distilbert-base-uncased-MRPC\n\nfor prop, cat in properties.items():\n    embedding = get_embeddings(prop)\n    vault.create_description(\"distilbert_last4_mean_cosine_mrpc\", cat, embedding, prop)"
+        ]
+      },
+      "metrics": {
+        "input_tokens": 2444,
+        "output_tokens": 82,
+        "reasoning_tokens": 53,
+        "conversation_tokens": 712,
+        "api_latency_s": 2.0497,
+        "exec_latency_s": 0.0207
+      },
+      "error": null
+    },
+    {
+      "turn": 3,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_bYSHvZWUEtGYOWmSKoq07vxK",
+            "output": "{\"ok\": true, \"result\": [\"def get_embeddings(text):\\n    return client.embeddings.create(\\n            input=text,\\n            model=\\\"text-embedding-3-large\\\"\\n        ).data[0].embedding\", \"import torch\\nimport numpy as np\\nfrom datasets import Dataset\\nfrom transformers import AutoTokenizer, AutoModel\\nfrom sklearn.metrics import accuracy_score, f1_score, classification_report\\nfrom tqdm.auto import tqdm\\n\\ndevice = torch.device(\\\"mps\\\" if torch.backends.mps.is_available() else \\\"cpu\\\")\\nprint(\\\"device:\\\", device)\\n\", \"model_name = \\\"distilbert-base-uncased\\\"\\n\\ntokenizer = AutoTokenizer.from_pretrained(model_name)\\nmodel = AutoModel.from_pretrained(model_name).to(device)\\nmodel.eval()\\n\\nprint(model_name)\\nprint(\\\"hidden_size:\\\", model.config.hidden_size)\\n\", \"ds = vault.query_item_content(\\\"glue_mrpc_validation\\\")\\nds = Dataset.from_list(ds)\\nprint(ds)\\nprint(ds[0])\\n\\nsent1 = ds[\\\"sentence1\\\"]\\nsent2 = ds[\\\"sentence2\\\"]\\ny_true = np.array(ds[\\\"label\\\"])\\n\\nprint(\\\"num_examples:\\\", len(y_true))\\nprint(\\\"positive_rate:\\\", float(y_true.mean()))\\n\", \"def mean_pool(token_embeddings, attention_mask):\\n    mask = attention_mask.unsqueeze(-1).to(token_embeddings.dtype)\\n    summed = (token_embeddings * mask).sum(dim=1)\\n    counts = mask.sum(dim=1).clamp(min=1e-9)\\n    pooled = summed / counts\\n    pooled = torch.nn.functional.normalize(pooled, p=2, dim=-1)\\n    return pooled\\n\\n\\ndef encode_texts(texts, batch_size=128, max_length=128):\\n    all_embeddings = []\\n    with torch.no_grad():\\n        for i in tqdm(range(0, len(texts), batch_size)):\\n            batch_texts = texts[i:i + batch_size]\\n            enc = tokenizer(\\n                batch_texts,\\n                padding=True,\\n                truncation=True,\\n                max_length=max_length,\\n                return_tensors=\\\"pt\\\",\\n            )\\n            enc = {k: v.to(device) for k, v in enc.items()}\\n\\n            out = model(**enc, output_hidden_states=True)\\n            last_four = torch.stack(out.hidden_states[-4:], dim=0)\\n            mixed_tokens = last_four.mean(dim=0)\\n            pooled = mean_pool(mixed_tokens, enc[\\\"attention_mask\\\"])\\n            all_embeddings.append(pooled.cpu())\\n\\n    return torch.cat(all_embeddings, dim=0)\\n\", \"emb1 = encode_texts(sent1, batch_size=128, max_length=128)\\nemb2 = encode_texts(sent2, batch_size=128, max_length=128)\\n\\nsimilarities = (emb1 * emb2).sum(dim=-1).numpy()\\nthreshold = 0.85\\ny_pred = (similarities >= threshold).astype(int)\\n\\nprint(\\\"emb1 shape:\\\", tuple(emb1.shape))\\nprint(\\\"emb2 shape:\\\", tuple(emb2.shape))\\nprint(\\\"similarity range:\\\", float(similarities.min()), float(similarities.max()))\\nprint(\\\"done\\\")\\n\", \"\\nvault.create_record_list(\\\"cosine_mrpc_mean_similarity_prediction\\\", column_names=[\\\"prediction\\\", \\\"similarities\\\"])\\n\\nfor i in range(len(y_pred)):\\n    vault.append_record(\\\"cosine_mrpc_mean_similarity_prediction\\\", \\n                        {\\n                            \\\"prediction\\\": int(y_pred[i]),\\n                            \\\"similarities\\\": float(similarities[i]),\\n                        },\\n                       input_items = {\\n                           \\\"glue_mrpc_validation\\\": [i, i + 1],\\n                       }\\n                       )\\n\\ndescription = \\\"This dataset stores per-example paraphrase predictions for the GLUE MRPC validation set produced by this notebook\\\\u2019s embedding-similarity baseline. Each record corresponds to one sentence pair from glue_mrpc_validation and contains two fields: prediction, a binary label (1 if the pair is predicted to be a paraphrase, 0 otherwise), and similarities, the cosine similarity score between the L2-normalized sentence embeddings of sentence1 and sentence2. The embeddings are generated with distilbert-base-uncased by averaging the last 4 hidden layers at the token level and then mean-pooling across tokens. Predictions are created by applying a fixed threshold of 0.85 to the similarity score. In this workflow, this dataset is the intermediate model output used to inspect individual examples, analyze errors, and compute the final evaluation summary in distilbert_last4_mean_cosine_mrpc_summary.\\\"\\nembedding = get_embeddings(description)\\nvault.create_description(\\\"cosine_mrpc_mean_similarity_prediction\\\", description, embedding)\\n\\nproperties = {\\\"task\\\": \\\"paraphrase detection\\\", \\\"dataset_role\\\": \\\"prediction output\\\", \\\"source\\\": \\\"glue/mrpc\\\", \\\"input_dataset\\\": \\\"glue_mrpc_validation\\\", \\\"split\\\": \\\"validation\\\", \\\"size\\\": \\\"408\\\", \\\"model\\\": \\\"distilbert-base-uncased\\\", \\\"embedding_strategy\\\": \\\"last4_layers_mean_pooling\\\", \\\"similarity_metric\\\": \\\"cosine similarity\\\", \\\"decision_rule\\\": \\\"threshold >= 0.85\\\", \\\"text_fields\\\": \\\"sentence1,sentence2\\\", \\\"label_field\\\": \\\"label\\\", \\\"output_fields\\\": \\\"prediction,similarities\\\"} #e.g. task: paraphrase detection\\n\\nfor prop, cat in properties.items():\\n    embedding = get_embeddings(prop)\\n    vault.create_description(\\\"cosine_mrpc_mean_similarity_prediction\\\", cat, embedding, prop)\", \"acc = accuracy_score(y_true, y_pred)\\nf1 = f1_score(y_true, y_pred)\\nreport = classification_report(y_true, y_pred, target_names=[\\\"not_paraphrase\\\", \\\"paraphrase\\\"])\\nprint({\\\"accuracy\\\": acc, \\\"f1\\\": f1, \\\"threshold\\\": threshold})\\nprint(classification_report(y_true, y_pred, target_names=[\\\"not_paraphrase\\\", \\\"paraphrase\\\"]))\\n\", \"for i in range(5):\\n    print(\\\"=\\\" * 80)\\n    print(\\\"sentence1:\\\", sent1[i])\\n    print(\\\"sentence2:\\\", sent2[i])\\n    print(\\\"similarity:\\\", float(similarities[i]))\\n    print(\\\"true:\\\", int(y_true[i]), \\\"pred:\\\", int(y_pred[i]))\\n\\nmistakes = np.where(y_true != y_pred)[0][:10]\\nprint(\\\"num_errors:\\\", int((y_true != y_pred).sum()))\\n\\nfor i in mistakes:\\n    print(\\\"=\\\" * 80)\\n    print(\\\"idx:\\\", int(i))\\n    print(\\\"sentence1:\\\", sent1[i])\\n    print(\\\"sentence2:\\\", sent2[i])\\n    print(\\\"similarity:\\\", float(similarities[i]))\\n    print(\\\"true:\\\", int(y_true[i]), \\\"pred:\\\", int(y_pred[i]))\\n\", \"vault.create_record_list(\\\"distilbert_last4_mean_cosine_mrpc_summary\\\", column_names=[\\\"accuracy\\\", \\\"f1\\\", \\\"classification_report\\\"])\\n\\n\\nsummary = {\\n    \\\"accuracy\\\": float(acc),\\n    \\\"f1\\\": float(f1),\\n    \\\"classification_report\\\": str(report)\\n}\\n\\nvault.append_record(\\\"distilbert_last4_mean_cosine_mrpc_summary\\\", summary,\\n                    input_items = {\\n                        \\\"glue_mrpc_validation\\\": [0, len(ds)],\\n                        \\\"cosine_mrpc_mean_similarity_prediction\\\": [0, len(ds)]\\n                    })\\n\\nsummary\\n\\ndescription = \\\"Summary dataset for the DistilBERT cosine-similarity MRPC validation experiment. It contains an aggregate evaluation record for paraphrase detection on the GLUE MRPC validation split, where sentence1 and sentence2 are encoded with distilbert-base-uncased, the last 4 hidden layers are averaged, mean pooled into sentence embeddings, and classified by cosine similarity using a threshold of 0.85. The dataset structure has 3 fields: accuracy (float), f1 (float), and classification_report (string with per-class precision/recall/F1 and support). In this workflow, it serves as the final experiment-level metrics table summarizing model performance over the full validation set, with provenance linked to both the source dataset glue_mrpc_validation and the per-example prediction dataset cosine_mrpc_mean_similarity_prediction.\\\"\\nembedding = get_embeddings(description)\\nvault.create_description(\\\"distilbert_last4_mean_cosine_mrpc_summary\\\", description, embedding)\\n\\nproperties = {\\\"task\\\": \\\"paraphrase detection\\\", \\\"artifact_type\\\": \\\"evaluation summary\\\", \\\"source\\\": \\\"glue/mrpc\\\", \\\"split\\\": \\\"validation\\\", \\\"size\\\": \\\"408\\\", \\\"model\\\": \\\"distilbert-base-uncased\\\", \\\"embedding_strategy\\\": \\\"last4-layer mean pooling\\\", \\\"similarity_metric\\\": \\\"cosine similarity\\\", \\\"decision_rule\\\": \\\"threshold >= 0.85\\\", \\\"input_type\\\": \\\"sentence pair\\\", \\\"metrics\\\": \\\"accuracy,f1,classification_report\\\"} #e.g. task: paraphrase detection\\n\\nfor prop, cat in properties.items():\\n    embedding = get_embeddings(prop)\\n    vault.create_description(\\\"distilbert_last4_mean_cosine_mrpc_summary\\\", cat, embedding, prop)\\n\\n\", \"description = \\\"This notebook evaluates a simple semantic-similarity baseline for paraphrase detection on the GLUE MRPC validation set. It uses distilbert-base-uncased to encode each sentence, averages the last four hidden layers, applies mean pooling over tokens, and L2-normalizes the resulting sentence embeddings. For each sentence pair, it computes cosine similarity between the two embeddings and converts similarity scores into binary paraphrase predictions using a fixed threshold of 0.85. The workflow loads MRPC examples from TableVault, generates pairwise predictions and similarity scores, computes evaluation metrics including accuracy, F1, and a classification report, inspects example predictions and errors, and stores both per-example outputs and summary results back into TableVault with descriptive metadata.\\\" # description of whole notebook\\nembedding = get_embeddings(description)\\nvault.create_description(\\\"distilbert_last4_mean_cosine_mrpc\\\", description, embedding)\\n\\nproperties = {\\\"task\\\": \\\"paraphrase detection\\\", \\\"dataset\\\": \\\"glue/mrpc\\\", \\\"data_split\\\": \\\"validation\\\", \\\"model\\\": \\\"distilbert-base-uncased\\\", \\\"embedding_strategy\\\": \\\"last-4-layer mean pooled sentence embeddings\\\", \\\"pooling\\\": \\\"attention-masked mean pooling with L2 normalization\\\", \\\"similarity_metric\\\": \\\"cosine similarity\\\", \\\"decision_rule\\\": \\\"threshold-based binary classification\\\", \\\"threshold\\\": \\\"0.85\\\", \\\"evaluation\\\": \\\"accuracy, f1-score, classification_report\\\", \\\"frameworks\\\": \\\"transformers, pytorch, scikit-learn, datasets\\\", \\\"embedding_metadata_model\\\": \\\"text-embedding-3-large\\\", \\\"storage\\\": \\\"tablevault\\\", \\\"process_name\\\": \\\"distilbert_last4_mean_cosine_mrpc\\\"} #e.g. model: distilbert-base-uncased-MRPC\\n\\nfor prop, cat in properties.items():\\n    embedding = get_embeddings(prop)\\n    vault.create_description(\\\"distilbert_last4_mean_cosine_mrpc\\\", cat, embedding, prop)\"]}"
+          }
+        ],
+        "previous_response_id": "resp_01808cde76376bbf0069da4fb15804819597283e5f30976567"
+      },
+      "model_output": {
+        "response_id": "resp_01808cde76376bbf0069da4fb15804819597283e5f30976567",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_code",
+            "call_id": "call_rQsaB7BO6vvf7dcPWNjifG1l",
+            "arguments": {
+              "name": "distilbert_max_pool_cosine_mrpc"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_code",
+        "call_id": "call_rQsaB7BO6vvf7dcPWNjifG1l",
+        "arguments": {
+          "name": "distilbert_max_pool_cosine_mrpc"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          "def get_embeddings(text):\n    return client.embeddings.create(\n            input=text,\n            model=\"text-embedding-3-large\"\n        ).data[0].embedding",
+          "model_name = \"distilbert-base-uncased\"\n\ntokenizer = AutoTokenizer.from_pretrained(model_name)\nmodel = AutoModel.from_pretrained(model_name).to(device)\nmodel.eval()\n\nprint(model_name)\nprint(\"hidden_size:\", model.config.hidden_size)",
+          "ds = vault.query_item_content(\"glue_mrpc_validation\")\nds = Dataset.from_list(ds)\nprint(ds)\nprint(ds[0])\n\nsent1 = ds[\"sentence1\"]\nsent2 = ds[\"sentence2\"]\ny_true = np.array(ds[\"label\"])\n\nprint(\"num_examples:\", len(y_true))\nprint(\"positive_rate:\", y_true.mean())",
+          "def masked_max_pool(last_hidden_state, attention_mask):\n    mask = attention_mask.unsqueeze(-1).expand_as(last_hidden_state).bool()\n    masked_hidden = last_hidden_state.masked_fill(~mask, -1e9)\n    pooled = masked_hidden.max(dim=1).values\n    pooled = torch.nn.functional.normalize(pooled, p=2, dim=-1)\n    return pooled\n\n\ndef encode_texts(texts, batch_size=128, max_length=128):\n    all_embeddings = []\n    with torch.no_grad():\n        for i in tqdm(range(0, len(texts), batch_size)):\n            batch_texts = texts[i:i + batch_size]\n            enc = tokenizer(\n                batch_texts,\n                padding=True,\n                truncation=True,\n                max_length=max_length,\n                return_tensors=\"pt\",\n            )\n            enc = {k: v.to(device) for k, v in enc.items()}\n            outputs = model(**enc)\n            pooled = masked_max_pool(outputs.last_hidden_state, enc[\"attention_mask\"])\n            all_embeddings.append(pooled.cpu())\n    return torch.cat(all_embeddings, dim=0)\n\n\ntest_hidden = torch.randn(2, 4, 8)\ntest_mask = torch.tensor([[1, 1, 1, 0], [1, 1, 0, 0]])\ntest_pooled = masked_max_pool(test_hidden, test_mask)\nprint(\"test pooled shape:\", tuple(test_pooled.shape))",
+          "batch_size = 128\nthreshold = 0.85\n\nemb1 = encode_texts(sent1, batch_size=batch_size)\nemb2 = encode_texts(sent2, batch_size=batch_size)\n\ncosine_scores = (emb1 * emb2).sum(dim=-1).numpy()\ny_pred = (cosine_scores >= threshold).astype(int)\n\nprint(\"emb1:\", tuple(emb1.shape))\nprint(\"emb2:\", tuple(emb2.shape))\nprint(\"done\")",
+          "\nvault.create_record_list(\"cosine_mrpc_max_pool_similarity_prediction\", column_names=[\"prediction\", \"cosine_scores\"])\n\nfor i in range(len(y_pred)):\n    vault.append_record(\"cosine_mrpc_max_pool_similarity_prediction\", \n                        {\n                            \"prediction\": int(y_pred[i]),\n                            \"cosine_scores\": float(cosine_scores[i]),\n                        },\n                       input_items = {\n                           \"glue_mrpc_validation\": [i, i + 1],\n                       }\n                       )\n\ndescription = \"This dataset stores per-example paraphrase predictions for the GLUE MRPC validation set produced by a DistilBERT-based cosine similarity pipeline. For each sentence pair from glue_mrpc_validation, the notebook encodes sentence1 and sentence2 with distilbert-base-uncased, applies masked max pooling to the token embeddings, computes the cosine similarity between the two normalized sentence embeddings, and converts that score to a binary prediction using a threshold of 0.85.\\n\\nStructure:\\n- prediction: integer binary label predicted by the similarity rule (1 = paraphrase, 0 = not paraphrase)\\n- cosine_scores: float cosine similarity between the max-pooled embeddings of the two sentences\\n\\nEach record corresponds to one input sentence pair and is linked back to the source validation examples through input_items. In this workflow, the dataset serves as the main model-output table for downstream evaluation, inspection of correct and incorrect predictions, and creation of the final summary metrics dataset.\"\nembedding = get_embeddings(description)\nvault.create_description(\"cosine_mrpc_max_pool_similarity_prediction\", description, embedding)\n\nproperties = {\"task\": \"paraphrase detection\", \"artifact_type\": \"prediction dataset\", \"prediction_type\": \"binary classification\", \"score_type\": \"cosine similarity\", \"pooling\": \"masked max pooling\", \"embedding_model\": \"distilbert-base-uncased\", \"similarity_threshold\": \"0.85\", \"input_type\": \"sentence pair\", \"source\": \"glue/mrpc\", \"dataset\": \"MRPC\", \"split\": \"validation\", \"size\": \"408\", \"label_space\": \"0=not_paraphrase, 1=paraphrase\", \"text_fields\": \"sentence1,sentence2\"} #e.g. task: paraphrase detection\n\nfor prop, cat in properties.items():\n    embedding = get_embeddings(prop)\n    vault.create_description(\"cosine_mrpc_max_pool_similarity_prediction\", cat, embedding, prop)",
+          "acc = accuracy_score(y_true, y_pred)\nf1 = f1_score(y_true, y_pred)\nreport = classification_report(y_true, y_pred, target_names=[\"not_paraphrase\", \"paraphrase\"])\nprint({\"accuracy\": acc, \"f1\": f1, \"threshold\": threshold})\nprint(classification_report(y_true, y_pred, target_names=[\"not_paraphrase\", \"paraphrase\"]))",
+          "for i in range(5):\n    print(\"=\" * 80)\n    print(\"sentence1:\", sent1[i])\n    print(\"sentence2:\", sent2[i])\n    print(\"cosine:\", float(cosine_scores[i]))\n    print(\"true:\", int(y_true[i]), \"pred:\", int(y_pred[i]))\n\nmistakes = np.where(y_true != y_pred)[0][:10]\nprint(\"num_errors:\", int((y_true != y_pred).sum()))\n\nfor i in mistakes:\n    print(\"=\" * 80)\n    print(\"idx:\", int(i))\n    print(\"sentence1:\", sent1[i])\n    print(\"sentence2:\", sent2[i])\n    print(\"cosine:\", float(cosine_scores[i]))\n    print(\"true:\", int(y_true[i]), \"pred:\", int(y_pred[i]))",
+          "vault.create_record_list(\"distilbert_max_pool_cosine_mrpc_summary\", column_names=[\"accuracy\", \"f1\", \"classification_report\"])\n\n\nsummary = {\n    \"accuracy\": float(acc),\n    \"f1\": float(f1),\n    \"classification_report\": str(report)\n}\n\nvault.append_record(\"distilbert_max_pool_cosine_mrpc_summary\", summary,\n                    input_items = {\n                        \"glue_mrpc_validation\": [0, len(ds)],\n                        \"cosine_mrpc_max_pool_similarity_prediction\": [0, len(ds)]\n                    })\n\nsummary\n\ndescription = \"This dataset stores the experiment-level evaluation summary for the DistilBERT max-pooling cosine-similarity approach on the GLUE MRPC validation set. It contains a single summary record with three fields: accuracy (float), f1 (float), and classification_report (string). The values are computed by comparing binary paraphrase predictions\\u2014generated by thresholding cosine similarity between max-pooled DistilBERT embeddings of sentence pairs\\u2014against the ground-truth MRPC labels. In this workflow, the dataset serves as the final aggregated results table for the notebook, capturing overall model performance in a compact form for later inspection, comparison, and lineage tracking back to the validation data and prediction outputs.\"\nembedding = get_embeddings(description)\nvault.create_description(\"distilbert_max_pool_cosine_mrpc_summary\", description, embedding)\n\nproperties = {\"task\": \"paraphrase detection\", \"dataset_type\": \"evaluation summary\", \"source\": \"glue/mrpc\", \"split\": \"validation\", \"size\": \"408\", \"model\": \"distilbert-base-uncased\", \"embedding_pooling\": \"masked max pooling\", \"similarity_metric\": \"cosine similarity\", \"decision_rule\": \"threshold-based binary classification\", \"threshold\": \"0.85\", \"inputs\": \"sentence pair\", \"outputs\": \"accuracy, f1, classification report\", \"process\": \"distilbert_max_pool_cosine_mrpc\"} #e.g. task: paraphrase detection\n\nfor prop, cat in properties.items():\n    embedding = get_embeddings(prop)\n    vault.create_description(\"distilbert_max_pool_cosine_mrpc_summary\", cat, embedding, prop)\n\n",
+          "description = \"This notebook evaluates a simple paraphrase detection pipeline on the GLUE MRPC validation set using DistilBERT sentence embeddings. It loads sentence pairs and labels from TableVault, encodes each sentence with distilbert-base-uncased, applies masked max pooling over token embeddings, L2-normalizes the pooled vectors, and computes cosine similarity between the two sentence embeddings. A fixed cosine threshold is used to convert similarity scores into binary paraphrase predictions, and the notebook reports accuracy, F1, a full classification report, and example errors. It also records per-example predictions, summary metrics, and workflow metadata back into TableVault, with OpenAI-generated description embeddings for searchable experiment documentation.\" # description of whole notebook\nembedding = get_embeddings(description)\nvault.create_description(\"distilbert_max_pool_cosine_mrpc\", description, embedding)\n\nproperties = {\"task\": \"paraphrase detection\", \"problem_type\": \"binary sentence-pair classification\", \"dataset\": \"glue/mrpc\", \"data_split\": \"validation\", \"model\": \"distilbert-base-uncased\", \"embedding_strategy\": \"DistilBERT token embeddings with masked max pooling\", \"similarity_metric\": \"cosine similarity\", \"decision_rule\": \"threshold-based classification\", \"threshold\": \"0.85\", \"framework\": \"PyTorch, Hugging Face Transformers\", \"evaluation\": \"accuracy, f1-score, classification_report\", \"workflow\": \"encode sentence pairs, compute cosine similarity, threshold predictions, error analysis\", \"tracking\": \"TableVault\", \"notebook_type\": \"baseline semantic similarity evaluation\"} #e.g. model: distilbert-base-uncased-MRPC\n\nfor prop, cat in properties.items():\n    embedding = get_embeddings(prop)\n    vault.create_description(\"distilbert_max_pool_cosine_mrpc\", cat, embedding, prop)"
+        ]
+      },
+      "metrics": {
+        "input_tokens": 4983,
+        "output_tokens": 152,
+        "reasoning_tokens": 124,
+        "conversation_tokens": 3251,
+        "api_latency_s": 2.9977,
+        "exec_latency_s": 0.0191
+      },
+      "error": null
+    },
+    {
+      "turn": 4,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_rQsaB7BO6vvf7dcPWNjifG1l",
+            "output": "{\"ok\": true, \"result\": [\"def get_embeddings(text):\\n    return client.embeddings.create(\\n            input=text,\\n            model=\\\"text-embedding-3-large\\\"\\n        ).data[0].embedding\", \"model_name = \\\"distilbert-base-uncased\\\"\\n\\ntokenizer = AutoTokenizer.from_pretrained(model_name)\\nmodel = AutoModel.from_pretrained(model_name).to(device)\\nmodel.eval()\\n\\nprint(model_name)\\nprint(\\\"hidden_size:\\\", model.config.hidden_size)\", \"ds = vault.query_item_content(\\\"glue_mrpc_validation\\\")\\nds = Dataset.from_list(ds)\\nprint(ds)\\nprint(ds[0])\\n\\nsent1 = ds[\\\"sentence1\\\"]\\nsent2 = ds[\\\"sentence2\\\"]\\ny_true = np.array(ds[\\\"label\\\"])\\n\\nprint(\\\"num_examples:\\\", len(y_true))\\nprint(\\\"positive_rate:\\\", y_true.mean())\", \"def masked_max_pool(last_hidden_state, attention_mask):\\n    mask = attention_mask.unsqueeze(-1).expand_as(last_hidden_state).bool()\\n    masked_hidden = last_hidden_state.masked_fill(~mask, -1e9)\\n    pooled = masked_hidden.max(dim=1).values\\n    pooled = torch.nn.functional.normalize(pooled, p=2, dim=-1)\\n    return pooled\\n\\n\\ndef encode_texts(texts, batch_size=128, max_length=128):\\n    all_embeddings = []\\n    with torch.no_grad():\\n        for i in tqdm(range(0, len(texts), batch_size)):\\n            batch_texts = texts[i:i + batch_size]\\n            enc = tokenizer(\\n                batch_texts,\\n                padding=True,\\n                truncation=True,\\n                max_length=max_length,\\n                return_tensors=\\\"pt\\\",\\n            )\\n            enc = {k: v.to(device) for k, v in enc.items()}\\n            outputs = model(**enc)\\n            pooled = masked_max_pool(outputs.last_hidden_state, enc[\\\"attention_mask\\\"])\\n            all_embeddings.append(pooled.cpu())\\n    return torch.cat(all_embeddings, dim=0)\\n\\n\\ntest_hidden = torch.randn(2, 4, 8)\\ntest_mask = torch.tensor([[1, 1, 1, 0], [1, 1, 0, 0]])\\ntest_pooled = masked_max_pool(test_hidden, test_mask)\\nprint(\\\"test pooled shape:\\\", tuple(test_pooled.shape))\", \"batch_size = 128\\nthreshold = 0.85\\n\\nemb1 = encode_texts(sent1, batch_size=batch_size)\\nemb2 = encode_texts(sent2, batch_size=batch_size)\\n\\ncosine_scores = (emb1 * emb2).sum(dim=-1).numpy()\\ny_pred = (cosine_scores >= threshold).astype(int)\\n\\nprint(\\\"emb1:\\\", tuple(emb1.shape))\\nprint(\\\"emb2:\\\", tuple(emb2.shape))\\nprint(\\\"done\\\")\", \"\\nvault.create_record_list(\\\"cosine_mrpc_max_pool_similarity_prediction\\\", column_names=[\\\"prediction\\\", \\\"cosine_scores\\\"])\\n\\nfor i in range(len(y_pred)):\\n    vault.append_record(\\\"cosine_mrpc_max_pool_similarity_prediction\\\", \\n                        {\\n                            \\\"prediction\\\": int(y_pred[i]),\\n                            \\\"cosine_scores\\\": float(cosine_scores[i]),\\n                        },\\n                       input_items = {\\n                           \\\"glue_mrpc_validation\\\": [i, i + 1],\\n                       }\\n                       )\\n\\ndescription = \\\"This dataset stores per-example paraphrase predictions for the GLUE MRPC validation set produced by a DistilBERT-based cosine similarity pipeline. For each sentence pair from glue_mrpc_validation, the notebook encodes sentence1 and sentence2 with distilbert-base-uncased, applies masked max pooling to the token embeddings, computes the cosine similarity between the two normalized sentence embeddings, and converts that score to a binary prediction using a threshold of 0.85.\\\\n\\\\nStructure:\\\\n- prediction: integer binary label predicted by the similarity rule (1 = paraphrase, 0 = not paraphrase)\\\\n- cosine_scores: float cosine similarity between the max-pooled embeddings of the two sentences\\\\n\\\\nEach record corresponds to one input sentence pair and is linked back to the source validation examples through input_items. In this workflow, the dataset serves as the main model-output table for downstream evaluation, inspection of correct and incorrect predictions, and creation of the final summary metrics dataset.\\\"\\nembedding = get_embeddings(description)\\nvault.create_description(\\\"cosine_mrpc_max_pool_similarity_prediction\\\", description, embedding)\\n\\nproperties = {\\\"task\\\": \\\"paraphrase detection\\\", \\\"artifact_type\\\": \\\"prediction dataset\\\", \\\"prediction_type\\\": \\\"binary classification\\\", \\\"score_type\\\": \\\"cosine similarity\\\", \\\"pooling\\\": \\\"masked max pooling\\\", \\\"embedding_model\\\": \\\"distilbert-base-uncased\\\", \\\"similarity_threshold\\\": \\\"0.85\\\", \\\"input_type\\\": \\\"sentence pair\\\", \\\"source\\\": \\\"glue/mrpc\\\", \\\"dataset\\\": \\\"MRPC\\\", \\\"split\\\": \\\"validation\\\", \\\"size\\\": \\\"408\\\", \\\"label_space\\\": \\\"0=not_paraphrase, 1=paraphrase\\\", \\\"text_fields\\\": \\\"sentence1,sentence2\\\"} #e.g. task: paraphrase detection\\n\\nfor prop, cat in properties.items():\\n    embedding = get_embeddings(prop)\\n    vault.create_description(\\\"cosine_mrpc_max_pool_similarity_prediction\\\", cat, embedding, prop)\", \"acc = accuracy_score(y_true, y_pred)\\nf1 = f1_score(y_true, y_pred)\\nreport = classification_report(y_true, y_pred, target_names=[\\\"not_paraphrase\\\", \\\"paraphrase\\\"])\\nprint({\\\"accuracy\\\": acc, \\\"f1\\\": f1, \\\"threshold\\\": threshold})\\nprint(classification_report(y_true, y_pred, target_names=[\\\"not_paraphrase\\\", \\\"paraphrase\\\"]))\", \"for i in range(5):\\n    print(\\\"=\\\" * 80)\\n    print(\\\"sentence1:\\\", sent1[i])\\n    print(\\\"sentence2:\\\", sent2[i])\\n    print(\\\"cosine:\\\", float(cosine_scores[i]))\\n    print(\\\"true:\\\", int(y_true[i]), \\\"pred:\\\", int(y_pred[i]))\\n\\nmistakes = np.where(y_true != y_pred)[0][:10]\\nprint(\\\"num_errors:\\\", int((y_true != y_pred).sum()))\\n\\nfor i in mistakes:\\n    print(\\\"=\\\" * 80)\\n    print(\\\"idx:\\\", int(i))\\n    print(\\\"sentence1:\\\", sent1[i])\\n    print(\\\"sentence2:\\\", sent2[i])\\n    print(\\\"cosine:\\\", float(cosine_scores[i]))\\n    print(\\\"true:\\\", int(y_true[i]), \\\"pred:\\\", int(y_pred[i]))\", \"vault.create_record_list(\\\"distilbert_max_pool_cosine_mrpc_summary\\\", column_names=[\\\"accuracy\\\", \\\"f1\\\", \\\"classification_report\\\"])\\n\\n\\nsummary = {\\n    \\\"accuracy\\\": float(acc),\\n    \\\"f1\\\": float(f1),\\n    \\\"classification_report\\\": str(report)\\n}\\n\\nvault.append_record(\\\"distilbert_max_pool_cosine_mrpc_summary\\\", summary,\\n                    input_items = {\\n                        \\\"glue_mrpc_validation\\\": [0, len(ds)],\\n                        \\\"cosine_mrpc_max_pool_similarity_prediction\\\": [0, len(ds)]\\n                    })\\n\\nsummary\\n\\ndescription = \\\"This dataset stores the experiment-level evaluation summary for the DistilBERT max-pooling cosine-similarity approach on the GLUE MRPC validation set. It contains a single summary record with three fields: accuracy (float), f1 (float), and classification_report (string). The values are computed by comparing binary paraphrase predictions\\\\u2014generated by thresholding cosine similarity between max-pooled DistilBERT embeddings of sentence pairs\\\\u2014against the ground-truth MRPC labels. In this workflow, the dataset serves as the final aggregated results table for the notebook, capturing overall model performance in a compact form for later inspection, comparison, and lineage tracking back to the validation data and prediction outputs.\\\"\\nembedding = get_embeddings(description)\\nvault.create_description(\\\"distilbert_max_pool_cosine_mrpc_summary\\\", description, embedding)\\n\\nproperties = {\\\"task\\\": \\\"paraphrase detection\\\", \\\"dataset_type\\\": \\\"evaluation summary\\\", \\\"source\\\": \\\"glue/mrpc\\\", \\\"split\\\": \\\"validation\\\", \\\"size\\\": \\\"408\\\", \\\"model\\\": \\\"distilbert-base-uncased\\\", \\\"embedding_pooling\\\": \\\"masked max pooling\\\", \\\"similarity_metric\\\": \\\"cosine similarity\\\", \\\"decision_rule\\\": \\\"threshold-based binary classification\\\", \\\"threshold\\\": \\\"0.85\\\", \\\"inputs\\\": \\\"sentence pair\\\", \\\"outputs\\\": \\\"accuracy, f1, classification report\\\", \\\"process\\\": \\\"distilbert_max_pool_cosine_mrpc\\\"} #e.g. task: paraphrase detection\\n\\nfor prop, cat in properties.items():\\n    embedding = get_embeddings(prop)\\n    vault.create_description(\\\"distilbert_max_pool_cosine_mrpc_summary\\\", cat, embedding, prop)\\n\\n\", \"description = \\\"This notebook evaluates a simple paraphrase detection pipeline on the GLUE MRPC validation set using DistilBERT sentence embeddings. It loads sentence pairs and labels from TableVault, encodes each sentence with distilbert-base-uncased, applies masked max pooling over token embeddings, L2-normalizes the pooled vectors, and computes cosine similarity between the two sentence embeddings. A fixed cosine threshold is used to convert similarity scores into binary paraphrase predictions, and the notebook reports accuracy, F1, a full classification report, and example errors. It also records per-example predictions, summary metrics, and workflow metadata back into TableVault, with OpenAI-generated description embeddings for searchable experiment documentation.\\\" # description of whole notebook\\nembedding = get_embeddings(description)\\nvault.create_description(\\\"distilbert_max_pool_cosine_mrpc\\\", description, embedding)\\n\\nproperties = {\\\"task\\\": \\\"paraphrase detection\\\", \\\"problem_type\\\": \\\"binary sentence-pair classification\\\", \\\"dataset\\\": \\\"glue/mrpc\\\", \\\"data_split\\\": \\\"validation\\\", \\\"model\\\": \\\"distilbert-base-uncased\\\", \\\"embedding_strategy\\\": \\\"DistilBERT token embeddings with masked max pooling\\\", \\\"similarity_metric\\\": \\\"cosine similarity\\\", \\\"decision_rule\\\": \\\"threshold-based classification\\\", \\\"threshold\\\": \\\"0.85\\\", \\\"framework\\\": \\\"PyTorch, Hugging Face Transformers\\\", \\\"evaluation\\\": \\\"accuracy, f1-score, classification_report\\\", \\\"workflow\\\": \\\"encode sentence pairs, compute cosine similarity, threshold predictions, error analysis\\\", \\\"tracking\\\": \\\"TableVault\\\", \\\"notebook_type\\\": \\\"baseline semantic similarity evaluation\\\"} #e.g. model: distilbert-base-uncased-MRPC\\n\\nfor prop, cat in properties.items():\\n    embedding = get_embeddings(prop)\\n    vault.create_description(\\\"distilbert_max_pool_cosine_mrpc\\\", cat, embedding, prop)\"]}"
+          }
+        ],
+        "previous_response_id": "resp_01808cde76376bbf0069da4fb463888195aa408eaca838d751"
+      },
+      "model_output": {
+        "response_id": "resp_01808cde76376bbf0069da4fb463888195aa408eaca838d751",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_code",
+            "call_id": "call_7TSwIhbeT7jDOcBqiXs3VLQk",
+            "arguments": {
+              "name": "distilbert_mean_cosine_median_threshold_mrpc"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_code",
+        "call_id": "call_7TSwIhbeT7jDOcBqiXs3VLQk",
+        "arguments": {
+          "name": "distilbert_mean_cosine_median_threshold_mrpc"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          "def get_embeddings(text):\n    return client.embeddings.create(\n            input=text,\n            model=\"text-embedding-3-large\"\n        ).data[0].embedding",
+          "model_name = \"distilbert-base-uncased\"\n\ntokenizer = AutoTokenizer.from_pretrained(model_name)\nmodel = AutoModel.from_pretrained(model_name).to(device)\nmodel.eval()\n\nprint(model_name)\nprint(\"hidden_size:\", model.config.hidden_size)\n",
+          "ds = vault.query_item_content(\"glue_mrpc_validation\")\nds = Dataset.from_list(ds)\nprint(ds)\nprint(ds[0])\n\nsent1 = ds[\"sentence1\"]\nsent2 = ds[\"sentence2\"]\ny_true = np.array(ds[\"label\"])\n\nprint(\"num_examples:\", len(y_true))\nprint(\"positive_rate:\", float(y_true.mean()))\n",
+          "def mean_pool(last_hidden_state, attention_mask):\n    mask = attention_mask.unsqueeze(-1).type_as(last_hidden_state)\n    summed = (last_hidden_state * mask).sum(dim=1)\n    counts = mask.sum(dim=1).clamp(min=1e-9)\n    pooled = summed / counts\n    pooled = torch.nn.functional.normalize(pooled, p=2, dim=-1)\n    return pooled\n\ndef encode_sentences(texts, batch_size=64, max_length=128):\n    all_embeddings = []\n    with torch.no_grad():\n        for i in tqdm(range(0, len(texts), batch_size)):\n            batch_texts = texts[i:i + batch_size]\n            enc = tokenizer(\n                batch_texts,\n                padding=True,\n                truncation=True,\n                max_length=max_length,\n                return_tensors=\"pt\",\n            )\n            enc = {k: v.to(device) for k, v in enc.items()}\n            outputs = model(**enc)\n            pooled = mean_pool(outputs.last_hidden_state, enc[\"attention_mask\"])\n            all_embeddings.append(pooled.cpu())\n    return torch.cat(all_embeddings, dim=0)\n",
+          "emb1 = encode_sentences(sent1, batch_size=64, max_length=128)\nemb2 = encode_sentences(sent2, batch_size=64, max_length=128)\n\ncosine_similarities = (emb1 * emb2).sum(dim=1).numpy()\nthreshold = float(np.median(cosine_similarities))\ny_pred = (cosine_similarities >= threshold).astype(int)\n\nprint(\"emb1 shape:\", tuple(emb1.shape))\nprint(\"emb2 shape:\", tuple(emb2.shape))\nprint(\"similarity_stats:\", {\n    \"min\": float(cosine_similarities.min()),\n    \"median\": float(np.median(cosine_similarities)),\n    \"max\": float(cosine_similarities.max()),\n})\nprint(\"threshold:\", threshold)\nprint(\"done\")\n",
+          "\nvault.create_record_list(\"threshold_cosine_mrpc_similarity_prediction\", column_names=[\"prediction\", \"cosine_scores\"])\n\nfor i in range(len(y_pred)):\n    vault.append_record(\"threshold_cosine_mrpc_similarity_prediction\", \n                        {\n                            \"prediction\": int(y_pred[i]),\n                            \"cosine_scores\": float(cosine_similarities[i]),\n                        },\n                       input_items = {\n                           \"glue_mrpc_validation\": [i, i + 1],\n                       }\n                       )\n\ndescription = \"Per-example prediction dataset for the GLUE MRPC validation split generated by a DistilBERT sentence-similarity baseline. Each record corresponds to one sentence pair from glue_mrpc_validation and stores two fields: prediction, a binary label produced by thresholding cosine similarity between the mean-pooled DistilBERT embeddings of sentence1 and sentence2; and cosine_scores, the raw cosine similarity value for that pair. The threshold is the median cosine similarity over the full validation set. In this workflow, this dataset is the intermediate output used to inspect pairwise similarity predictions and to support downstream evaluation and summary metrics.\"\nembedding = get_embeddings(description)\nvault.create_description(\"threshold_cosine_mrpc_similarity_prediction\", description, embedding)\n\nproperties = {\"task\": \"paraphrase detection\", \"dataset_type\": \"model predictions\", \"source\": \"glue/mrpc\", \"split\": \"validation\", \"size\": \"408\", \"model\": \"distilbert-base-uncased\", \"embedding_pooling\": \"mean pooling\", \"similarity_metric\": \"cosine similarity\", \"decision_rule\": \"median threshold\", \"input_type\": \"sentence pair\", \"output_columns\": \"prediction, cosine_scores\", \"label_space\": \"0=not_paraphrase,1=paraphrase\", \"domain\": \"news\"} #e.g. task: paraphrase detection\n\nfor prop, cat in properties.items():\n    embedding = get_embeddings(prop)\n    vault.create_description(\"threshold_cosine_mrpc_similarity_prediction\", cat, embedding, prop)",
+          "acc = accuracy_score(y_true, y_pred)\nf1 = f1_score(y_true, y_pred)\nlabel_names = [\"not_paraphrase\", \"paraphrase\"]\nreport = classification_report(y_true, y_pred, target_names=label_names)\nprint({\"accuracy\": acc, \"f1\": f1})\nprint(classification_report(y_true, y_pred, target_names=label_names))\n\nfor i in range(5):\n    print(\"=\" * 80)\n    print(\"sentence1:\", sent1[i])\n    print(\"sentence2:\", sent2[i])\n    print(\"score:\", float(cosine_similarities[i]))\n    print(\"true:\", int(y_true[i]), \"pred:\", int(y_pred[i]), \"label:\", label_names[int(y_pred[i])])\n\nmistakes = np.where(y_true != y_pred)[0][:10]\nprint(\"num_errors:\", int((y_true != y_pred).sum()))\n\nfor i in mistakes:\n    print(\"=\" * 80)\n    print(\"idx:\", int(i))\n    print(\"sentence1:\", sent1[i])\n    print(\"sentence2:\", sent2[i])\n    print(\"score:\", float(cosine_similarities[i]), \"threshold:\", threshold)\n    print(\"true:\", int(y_true[i]), \"pred:\", int(y_pred[i]))\n",
+          "vault.create_record_list(\"distilbert_mean_cosine_median_threshold_mrpc_summary\", column_names=[\"accuracy\", \"f1\", \"classification_report\"])\n\n\nsummary = {\n    \"accuracy\": float(acc),\n    \"f1\": float(f1),\n    \"classification_report\": str(report)\n}\n\nvault.append_record(\"distilbert_mean_cosine_median_threshold_mrpc_summary\", summary,\n                    input_items = {\n                        \"glue_mrpc_validation\": [0, len(ds)],\n                        \"threshold_cosine_mrpc_similarity_prediction\": [0, len(ds)]\n                    })\n\nsummary\n\ndescription = \"distilbert_mean_cosine_median_threshold_mrpc_summary is a summary dataset containing the evaluation results for the DistilBERT mean-pooled cosine-similarity baseline on the GLUE MRPC validation set. It stores aggregate metrics computed after encoding each sentence pair with distilbert-base-uncased, measuring cosine similarity between the two sentence embeddings, and converting scores to binary paraphrase predictions using the median similarity as the decision threshold. The dataset has three fields: accuracy (float), f1 (float), and classification_report (string with per-class precision/recall/F1 and support). In this workflow, it serves as the final experiment-level output that summarizes model performance over the full validation split, with provenance linked to both the source dataset glue_mrpc_validation and the per-example prediction dataset threshold_cosine_mrpc_similarity_prediction.\"\nembedding = get_embeddings(description)\nvault.create_description(\"distilbert_mean_cosine_median_threshold_mrpc_summary\", description, embedding)\n\nproperties = {\"task\": \"paraphrase detection\", \"dataset_role\": \"evaluation summary\", \"source\": \"glue/mrpc\", \"split\": \"validation\", \"size\": \"408\", \"model\": \"distilbert-base-uncased\", \"embedding_type\": \"sentence embedding from last hidden state\", \"pooling\": \"mean pooling\", \"similarity_metric\": \"cosine similarity\", \"threshold_strategy\": \"median threshold\", \"prediction_type\": \"binary classification\", \"metrics\": \"accuracy,f1,classification_report\", \"framework\": \"transformers+pytorch\", \"upstream_prediction_dataset\": \"threshold_cosine_mrpc_similarity_prediction\", \"process_name\": \"distilbert_mean_cosine_median_threshold_mrpc\"} #e.g. task: paraphrase detection\n\nfor prop, cat in properties.items():\n    embedding = get_embeddings(prop)\n    vault.create_description(\"distilbert_mean_cosine_median_threshold_mrpc_summary\", cat, embedding, prop)\n\n",
+          "description = \"This notebook runs a simple unsupervised paraphrase detection experiment on the GLUE MRPC validation set using distilbert-base-uncased sentence embeddings. It loads sentence pairs and labels from TableVault, encodes each sentence with DistilBERT, applies attention-mask mean pooling and L2 normalization, computes cosine similarity between the two sentence embeddings, and converts similarity scores into binary paraphrase predictions using the median similarity as the decision threshold. It then evaluates performance with accuracy, F1, and a classification report, inspects sample predictions and errors, and stores per-example predictions, cosine scores, summary metrics, and notebook-level metadata/descriptions in TableVault with OpenAI-generated description embeddings for documentation and retrieval.\" # description of whole notebook\nembedding = get_embeddings(description)\nvault.create_description(\"distilbert_mean_cosine_median_threshold_mrpc\", description, embedding)\n\nproperties = {\"task\": \"paraphrase detection\", \"approach\": \"unsupervised sentence similarity classification\", \"model\": \"distilbert-base-uncased\", \"embedding_pooling\": \"mean pooling with L2 normalization\", \"similarity_metric\": \"cosine similarity\", \"decision_rule\": \"median threshold\", \"dataset\": \"glue/mrpc\", \"data_split\": \"validation\", \"frameworks\": \"PyTorch, Hugging Face Transformers, scikit-learn\", \"evaluation\": \"accuracy, f1-score, classification report\", \"prediction_artifact\": \"pairwise cosine similarity predictions\", \"summary_artifact\": \"MRPC evaluation summary\", \"tracking\": \"TableVault\", \"device\": \"MPS or CPU\"} #e.g. model: distilbert-base-uncased-MRPC\n\nfor prop, cat in properties.items():\n    embedding = get_embeddings(prop)\n    vault.create_description(\"distilbert_mean_cosine_median_threshold_mrpc\", cat, embedding, prop)"
+        ]
+      },
+      "metrics": {
+        "input_tokens": 7529,
+        "output_tokens": 28,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 5797,
+        "api_latency_s": 1.5287,
+        "exec_latency_s": 0.0226
+      },
+      "error": null
+    },
+    {
+      "turn": 5,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_7TSwIhbeT7jDOcBqiXs3VLQk",
+            "output": "{\"ok\": true, \"result\": [\"def get_embeddings(text):\\n    return client.embeddings.create(\\n            input=text,\\n            model=\\\"text-embedding-3-large\\\"\\n        ).data[0].embedding\", \"model_name = \\\"distilbert-base-uncased\\\"\\n\\ntokenizer = AutoTokenizer.from_pretrained(model_name)\\nmodel = AutoModel.from_pretrained(model_name).to(device)\\nmodel.eval()\\n\\nprint(model_name)\\nprint(\\\"hidden_size:\\\", model.config.hidden_size)\\n\", \"ds = vault.query_item_content(\\\"glue_mrpc_validation\\\")\\nds = Dataset.from_list(ds)\\nprint(ds)\\nprint(ds[0])\\n\\nsent1 = ds[\\\"sentence1\\\"]\\nsent2 = ds[\\\"sentence2\\\"]\\ny_true = np.array(ds[\\\"label\\\"])\\n\\nprint(\\\"num_examples:\\\", len(y_true))\\nprint(\\\"positive_rate:\\\", float(y_true.mean()))\\n\", \"def mean_pool(last_hidden_state, attention_mask):\\n    mask = attention_mask.unsqueeze(-1).type_as(last_hidden_state)\\n    summed = (last_hidden_state * mask).sum(dim=1)\\n    counts = mask.sum(dim=1).clamp(min=1e-9)\\n    pooled = summed / counts\\n    pooled = torch.nn.functional.normalize(pooled, p=2, dim=-1)\\n    return pooled\\n\\ndef encode_sentences(texts, batch_size=64, max_length=128):\\n    all_embeddings = []\\n    with torch.no_grad():\\n        for i in tqdm(range(0, len(texts), batch_size)):\\n            batch_texts = texts[i:i + batch_size]\\n            enc = tokenizer(\\n                batch_texts,\\n                padding=True,\\n                truncation=True,\\n                max_length=max_length,\\n                return_tensors=\\\"pt\\\",\\n            )\\n            enc = {k: v.to(device) for k, v in enc.items()}\\n            outputs = model(**enc)\\n            pooled = mean_pool(outputs.last_hidden_state, enc[\\\"attention_mask\\\"])\\n            all_embeddings.append(pooled.cpu())\\n    return torch.cat(all_embeddings, dim=0)\\n\", \"emb1 = encode_sentences(sent1, batch_size=64, max_length=128)\\nemb2 = encode_sentences(sent2, batch_size=64, max_length=128)\\n\\ncosine_similarities = (emb1 * emb2).sum(dim=1).numpy()\\nthreshold = float(np.median(cosine_similarities))\\ny_pred = (cosine_similarities >= threshold).astype(int)\\n\\nprint(\\\"emb1 shape:\\\", tuple(emb1.shape))\\nprint(\\\"emb2 shape:\\\", tuple(emb2.shape))\\nprint(\\\"similarity_stats:\\\", {\\n    \\\"min\\\": float(cosine_similarities.min()),\\n    \\\"median\\\": float(np.median(cosine_similarities)),\\n    \\\"max\\\": float(cosine_similarities.max()),\\n})\\nprint(\\\"threshold:\\\", threshold)\\nprint(\\\"done\\\")\\n\", \"\\nvault.create_record_list(\\\"threshold_cosine_mrpc_similarity_prediction\\\", column_names=[\\\"prediction\\\", \\\"cosine_scores\\\"])\\n\\nfor i in range(len(y_pred)):\\n    vault.append_record(\\\"threshold_cosine_mrpc_similarity_prediction\\\", \\n                        {\\n                            \\\"prediction\\\": int(y_pred[i]),\\n                            \\\"cosine_scores\\\": float(cosine_similarities[i]),\\n                        },\\n                       input_items = {\\n                           \\\"glue_mrpc_validation\\\": [i, i + 1],\\n                       }\\n                       )\\n\\ndescription = \\\"Per-example prediction dataset for the GLUE MRPC validation split generated by a DistilBERT sentence-similarity baseline. Each record corresponds to one sentence pair from glue_mrpc_validation and stores two fields: prediction, a binary label produced by thresholding cosine similarity between the mean-pooled DistilBERT embeddings of sentence1 and sentence2; and cosine_scores, the raw cosine similarity value for that pair. The threshold is the median cosine similarity over the full validation set. In this workflow, this dataset is the intermediate output used to inspect pairwise similarity predictions and to support downstream evaluation and summary metrics.\\\"\\nembedding = get_embeddings(description)\\nvault.create_description(\\\"threshold_cosine_mrpc_similarity_prediction\\\", description, embedding)\\n\\nproperties = {\\\"task\\\": \\\"paraphrase detection\\\", \\\"dataset_type\\\": \\\"model predictions\\\", \\\"source\\\": \\\"glue/mrpc\\\", \\\"split\\\": \\\"validation\\\", \\\"size\\\": \\\"408\\\", \\\"model\\\": \\\"distilbert-base-uncased\\\", \\\"embedding_pooling\\\": \\\"mean pooling\\\", \\\"similarity_metric\\\": \\\"cosine similarity\\\", \\\"decision_rule\\\": \\\"median threshold\\\", \\\"input_type\\\": \\\"sentence pair\\\", \\\"output_columns\\\": \\\"prediction, cosine_scores\\\", \\\"label_space\\\": \\\"0=not_paraphrase,1=paraphrase\\\", \\\"domain\\\": \\\"news\\\"} #e.g. task: paraphrase detection\\n\\nfor prop, cat in properties.items():\\n    embedding = get_embeddings(prop)\\n    vault.create_description(\\\"threshold_cosine_mrpc_similarity_prediction\\\", cat, embedding, prop)\", \"acc = accuracy_score(y_true, y_pred)\\nf1 = f1_score(y_true, y_pred)\\nlabel_names = [\\\"not_paraphrase\\\", \\\"paraphrase\\\"]\\nreport = classification_report(y_true, y_pred, target_names=label_names)\\nprint({\\\"accuracy\\\": acc, \\\"f1\\\": f1})\\nprint(classification_report(y_true, y_pred, target_names=label_names))\\n\\nfor i in range(5):\\n    print(\\\"=\\\" * 80)\\n    print(\\\"sentence1:\\\", sent1[i])\\n    print(\\\"sentence2:\\\", sent2[i])\\n    print(\\\"score:\\\", float(cosine_similarities[i]))\\n    print(\\\"true:\\\", int(y_true[i]), \\\"pred:\\\", int(y_pred[i]), \\\"label:\\\", label_names[int(y_pred[i])])\\n\\nmistakes = np.where(y_true != y_pred)[0][:10]\\nprint(\\\"num_errors:\\\", int((y_true != y_pred).sum()))\\n\\nfor i in mistakes:\\n    print(\\\"=\\\" * 80)\\n    print(\\\"idx:\\\", int(i))\\n    print(\\\"sentence1:\\\", sent1[i])\\n    print(\\\"sentence2:\\\", sent2[i])\\n    print(\\\"score:\\\", float(cosine_similarities[i]), \\\"threshold:\\\", threshold)\\n    print(\\\"true:\\\", int(y_true[i]), \\\"pred:\\\", int(y_pred[i]))\\n\", \"vault.create_record_list(\\\"distilbert_mean_cosine_median_threshold_mrpc_summary\\\", column_names=[\\\"accuracy\\\", \\\"f1\\\", \\\"classification_report\\\"])\\n\\n\\nsummary = {\\n    \\\"accuracy\\\": float(acc),\\n    \\\"f1\\\": float(f1),\\n    \\\"classification_report\\\": str(report)\\n}\\n\\nvault.append_record(\\\"distilbert_mean_cosine_median_threshold_mrpc_summary\\\", summary,\\n                    input_items = {\\n                        \\\"glue_mrpc_validation\\\": [0, len(ds)],\\n                        \\\"threshold_cosine_mrpc_similarity_prediction\\\": [0, len(ds)]\\n                    })\\n\\nsummary\\n\\ndescription = \\\"distilbert_mean_cosine_median_threshold_mrpc_summary is a summary dataset containing the evaluation results for the DistilBERT mean-pooled cosine-similarity baseline on the GLUE MRPC validation set. It stores aggregate metrics computed after encoding each sentence pair with distilbert-base-uncased, measuring cosine similarity between the two sentence embeddings, and converting scores to binary paraphrase predictions using the median similarity as the decision threshold. The dataset has three fields: accuracy (float), f1 (float), and classification_report (string with per-class precision/recall/F1 and support). In this workflow, it serves as the final experiment-level output that summarizes model performance over the full validation split, with provenance linked to both the source dataset glue_mrpc_validation and the per-example prediction dataset threshold_cosine_mrpc_similarity_prediction.\\\"\\nembedding = get_embeddings(description)\\nvault.create_description(\\\"distilbert_mean_cosine_median_threshold_mrpc_summary\\\", description, embedding)\\n\\nproperties = {\\\"task\\\": \\\"paraphrase detection\\\", \\\"dataset_role\\\": \\\"evaluation summary\\\", \\\"source\\\": \\\"glue/mrpc\\\", \\\"split\\\": \\\"validation\\\", \\\"size\\\": \\\"408\\\", \\\"model\\\": \\\"distilbert-base-uncased\\\", \\\"embedding_type\\\": \\\"sentence embedding from last hidden state\\\", \\\"pooling\\\": \\\"mean pooling\\\", \\\"similarity_metric\\\": \\\"cosine similarity\\\", \\\"threshold_strategy\\\": \\\"median threshold\\\", \\\"prediction_type\\\": \\\"binary classification\\\", \\\"metrics\\\": \\\"accuracy,f1,classification_report\\\", \\\"framework\\\": \\\"transformers+pytorch\\\", \\\"upstream_prediction_dataset\\\": \\\"threshold_cosine_mrpc_similarity_prediction\\\", \\\"process_name\\\": \\\"distilbert_mean_cosine_median_threshold_mrpc\\\"} #e.g. task: paraphrase detection\\n\\nfor prop, cat in properties.items():\\n    embedding = get_embeddings(prop)\\n    vault.create_description(\\\"distilbert_mean_cosine_median_threshold_mrpc_summary\\\", cat, embedding, prop)\\n\\n\", \"description = \\\"This notebook runs a simple unsupervised paraphrase detection experiment on the GLUE MRPC validation set using distilbert-base-uncased sentence embeddings. It loads sentence pairs and labels from TableVault, encodes each sentence with DistilBERT, applies attention-mask mean pooling and L2 normalization, computes cosine similarity between the two sentence embeddings, and converts similarity scores into binary paraphrase predictions using the median similarity as the decision threshold. It then evaluates performance with accuracy, F1, and a classification report, inspects sample predictions and errors, and stores per-example predictions, cosine scores, summary metrics, and notebook-level metadata/descriptions in TableVault with OpenAI-generated description embeddings for documentation and retrieval.\\\" # description of whole notebook\\nembedding = get_embeddings(description)\\nvault.create_description(\\\"distilbert_mean_cosine_median_threshold_mrpc\\\", description, embedding)\\n\\nproperties = {\\\"task\\\": \\\"paraphrase detection\\\", \\\"approach\\\": \\\"unsupervised sentence similarity classification\\\", \\\"model\\\": \\\"distilbert-base-uncased\\\", \\\"embedding_pooling\\\": \\\"mean pooling with L2 normalization\\\", \\\"similarity_metric\\\": \\\"cosine similarity\\\", \\\"decision_rule\\\": \\\"median threshold\\\", \\\"dataset\\\": \\\"glue/mrpc\\\", \\\"data_split\\\": \\\"validation\\\", \\\"frameworks\\\": \\\"PyTorch, Hugging Face Transformers, scikit-learn\\\", \\\"evaluation\\\": \\\"accuracy, f1-score, classification report\\\", \\\"prediction_artifact\\\": \\\"pairwise cosine similarity predictions\\\", \\\"summary_artifact\\\": \\\"MRPC evaluation summary\\\", \\\"tracking\\\": \\\"TableVault\\\", \\\"device\\\": \\\"MPS or CPU\\\"} #e.g. model: distilbert-base-uncased-MRPC\\n\\nfor prop, cat in properties.items():\\n    embedding = get_embeddings(prop)\\n    vault.create_description(\\\"distilbert_mean_cosine_median_threshold_mrpc\\\", cat, embedding, prop)\"]}"
+          }
+        ],
+        "previous_response_id": "resp_01808cde76376bbf0069da4fb5ec6481958f9b93ecbb6c268d"
+      },
+      "model_output": {
+        "response_id": "resp_01808cde76376bbf0069da4fb5ec6481958f9b93ecbb6c268d",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_code",
+            "call_id": "call_COESmq0u8zjHpBwNfW2vTYye",
+            "arguments": {
+              "name": "distilbert_no_special_tokens_mean_cosine_mrpc"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_code",
+        "call_id": "call_COESmq0u8zjHpBwNfW2vTYye",
+        "arguments": {
+          "name": "distilbert_no_special_tokens_mean_cosine_mrpc"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          "def get_embeddings(text):\n    return client.embeddings.create(\n            input=text,\n            model=\"text-embedding-3-large\"\n        ).data[0].embedding",
+          "import torch\nimport torch.nn.functional as F\nimport numpy as np\nfrom datasets import Dataset\nfrom transformers import AutoTokenizer, AutoModel\nfrom sklearn.metrics import accuracy_score, f1_score, classification_report\nfrom tqdm.auto import tqdm\n",
+          "device = torch.device(\"mps\" if torch.backends.mps.is_available() else \"cpu\")\nprint(\"device:\", device)\n",
+          "model_name = \"distilbert-base-uncased\"\n\ntokenizer = AutoTokenizer.from_pretrained(model_name)\nmodel = AutoModel.from_pretrained(model_name).to(device)\nmodel.eval()\n\nprint(model_name)\nprint(\"cls_token_id:\", tokenizer.cls_token_id)\nprint(\"sep_token_id:\", tokenizer.sep_token_id)\n",
+          "ds = vault.query_item_content(\"glue_mrpc_validation\")\nds = Dataset.from_list(ds)\nprint(ds)\nprint(ds[0])\n\nsent1 = ds[\"sentence1\"]\nsent2 = ds[\"sentence2\"]\ny_true = np.array(ds[\"label\"])\n\nprint(\"num_examples:\", len(y_true))\nprint(\"positive_rate:\", float(y_true.mean()))\n",
+          "def mean_pool_excluding_special(last_hidden_state, attention_mask, input_ids):\n    mask = attention_mask.clone().bool()\n    if tokenizer.cls_token_id is not None:\n        mask &= input_ids != tokenizer.cls_token_id\n    if tokenizer.sep_token_id is not None:\n        mask &= input_ids != tokenizer.sep_token_id\n\n    mask_f = mask.unsqueeze(-1).to(last_hidden_state.dtype)\n    summed = (last_hidden_state * mask_f).sum(dim=1)\n    counts = mask_f.sum(dim=1).clamp(min=1.0)\n    pooled = summed / counts\n    pooled = F.normalize(pooled, p=2, dim=-1, eps=1e-12)\n    return pooled\n\ndef encode_texts(texts, batch_size=128, max_length=128):\n    all_embeddings = []\n    with torch.no_grad():\n        for i in tqdm(range(0, len(texts), batch_size)):\n            batch_texts = texts[i:i + batch_size]\n            enc = tokenizer(\n                batch_texts,\n                padding=True,\n                truncation=True,\n                max_length=max_length,\n                return_tensors=\"pt\",\n            )\n            enc = {k: v.to(device) for k, v in enc.items()}\n            outputs = model(**enc)\n            pooled = mean_pool_excluding_special(\n                outputs.last_hidden_state,\n                enc[\"attention_mask\"],\n                enc[\"input_ids\"],\n            )\n            all_embeddings.append(pooled.cpu())\n    return torch.cat(all_embeddings, dim=0).numpy()\n",
+          "emb1 = encode_texts(sent1, batch_size=128, max_length=128)\nprint(\"emb1 shape:\", emb1.shape)\n",
+          "emb2 = encode_texts(sent2, batch_size=128, max_length=128)\nprint(\"emb2 shape:\", emb2.shape)\n",
+          "cosine_scores = (emb1 * emb2).sum(axis=1)\nthreshold = 0.85\ny_pred = (cosine_scores >= threshold).astype(int)\n\nacc = accuracy_score(y_true, y_pred)\nf1 = f1_score(y_true, y_pred)\nreport = classification_report(y_true, y_pred, target_names=[\"not_paraphrase\", \"paraphrase\"])\n\nprint({\"accuracy\": acc, \"f1\": f1, \"threshold\": threshold})\nprint(classification_report(y_true, y_pred, target_names=[\"not_paraphrase\", \"paraphrase\"]))\n",
+          "\nvault.create_record_list(\"no_special_cosine_mrpc_similarity_prediction\", column_names=[\"prediction\", \"cosine_scores\"])\n\nfor i in range(len(y_pred)):\n    vault.append_record(\"no_special_cosine_mrpc_similarity_prediction\", \n                        {\n                            \"prediction\": int(y_pred[i]),\n                            \"cosine_scores\": float(cosine_scores[i]),\n                        },\n                       input_items = {\n                           \"glue_mrpc_validation\": [i, i + 1],\n                       }\n                       )\n\ndescription = \"Per-example prediction dataset for the GLUE MRPC validation split. Each record corresponds to one sentence pair from glue_mrpc_validation and stores the model output from this notebook\\u2019s similarity-based paraphrase detection pipeline using distilbert-base-uncased embeddings. The fields are: prediction (binary label, 1 if the cosine similarity between the two sentence embeddings is at least 0.85, otherwise 0) and cosine_scores (the raw cosine similarity score as a float). The embeddings are produced by mean-pooling DistilBERT token representations while excluding special tokens such as [CLS] and [SEP], followed by L2 normalization. In this workflow, this dataset serves as the detailed per-row inference output that links back to the original MRPC validation examples and is then used to compute and document overall evaluation metrics in the summary dataset.\"\nembedding = get_embeddings(description)\nvault.create_description(\"no_special_cosine_mrpc_similarity_prediction\", description, embedding)\n\nproperties = {\"task\": \"paraphrase detection\", \"dataset_type\": \"model predictions\", \"source\": \"glue/mrpc\", \"split\": \"validation\", \"size\": \"408\", \"model\": \"distilbert-base-uncased\", \"embedding_pooling\": \"mean pooling excluding [CLS] and [SEP]\", \"similarity_metric\": \"cosine similarity\", \"threshold\": \"0.85\", \"text_fields\": \"sentence1,sentence2\", \"label_field\": \"label\", \"output_fields\": \"prediction,cosine_scores\", \"token_truncation_max_length\": \"128\"} #e.g. task: paraphrase detection\n\nfor prop, cat in properties.items():\n    embedding = get_embeddings(prop)\n    vault.create_description(\"no_special_cosine_mrpc_similarity_prediction\", cat, embedding, prop)",
+          "for i in range(5):\n    print(\"=\" * 80)\n    print(\"sentence1:\", sent1[i])\n    print(\"sentence2:\", sent2[i])\n    print(\"score:\", float(cosine_scores[i]))\n    print(\"true:\", int(y_true[i]), \"pred:\", int(y_pred[i]))\n",
+          "mistakes = np.where(y_true != y_pred)[0][:10]\nprint(\"num_errors:\", int((y_true != y_pred).sum()))\n\nfor i in mistakes:\n    print(\"=\" * 80)\n    print(\"idx:\", int(i))\n    print(\"sentence1:\", sent1[i])\n    print(\"sentence2:\", sent2[i])\n    print(\"score:\", float(cosine_scores[i]))\n    print(\"true:\", int(y_true[i]), \"pred:\", int(y_pred[i]))\n",
+          "vault.create_record_list(\"distilbert_no_special_tokens_mean_cosine_mrpc_summary\", column_names=[\"accuracy\", \"f1\", \"classification_report\"])\n\n\nsummary = {\n    \"accuracy\": float(acc),\n    \"f1\": float(f1),\n    \"classification_report\": str(report)\n}\n\nvault.append_record(\"distilbert_no_special_tokens_mean_cosine_mrpc_summary\", summary,\n                    input_items = {\n                        \"glue_mrpc_validation\": [0, len(ds)],\n                        \"no_special_cosine_mrpc_similarity_prediction\": [0, len(ds)]\n                    })\n\nsummary\n\ndescription = \"Summary dataset for the MRPC validation run using distilbert-base-uncased sentence embeddings. It contains aggregate evaluation results for paraphrase prediction on glue_mrpc_validation, where sentence1 and sentence2 are encoded separately, token embeddings are mean-pooled while excluding special tokens ([CLS], [SEP]), cosine similarity is computed between the two sentence embeddings, and a fixed threshold of 0.85 is used to produce binary paraphrase predictions.\\n\\nStructure: one record with fields accuracy (float), f1 (float), and classification_report (string). The record is linked to the full glue_mrpc_validation input range and to the no_special_cosine_mrpc_similarity_prediction dataset that stores per-example predictions and cosine scores.\\n\\nRole in workflow: this dataset is the experiment-level evaluation summary, used to capture the overall performance of the no-special-token mean-pooled cosine-similarity baseline on MRPC validation.\"\nembedding = get_embeddings(description)\nvault.create_description(\"distilbert_no_special_tokens_mean_cosine_mrpc_summary\", description, embedding)\n\nproperties = {\"artifact_type\":\"evaluation summary\",\"task\":\"paraphrase detection\",\"source\":\"glue/mrpc\",\"split\":\"validation\",\"size\":\"408\",\"model\":\"distilbert-base-uncased\",\"input_type\":\"sentence pairs\",\"label_type\":\"binary\",\"embedding_pooling\":\"mean excluding special tokens\",\"similarity_metric\":\"cosine similarity\",\"decision_rule\":\"threshold >= 0.85\",\"upstream_prediction_dataset\":\"no_special_cosine_mrpc_similarity_prediction\"} #e.g. task: paraphrase detection\n\nfor prop, cat in properties.items():\n    embedding = get_embeddings(prop)\n    vault.create_description(\"distilbert_no_special_tokens_mean_cosine_mrpc_summary\", cat, embedding, prop)\n\n",
+          "description = \"This notebook evaluates a simple paraphrase detection baseline on the GLUE MRPC validation set using DistilBERT sentence embeddings. It loads the distilbert-base-uncased model, encodes each sentence in a pair, mean-pools token embeddings while excluding special tokens such as [CLS] and [SEP], L2-normalizes the pooled vectors, and computes cosine similarity between the two sentence embeddings. A fixed similarity threshold of 0.85 is used to predict whether each pair is a paraphrase. The notebook then measures accuracy, F1, and a full classification report, inspects example predictions and errors, and stores per-example predictions, cosine scores, summary metrics, and notebook/process metadata in TableVault with embedding-based descriptions for later retrieval and documentation.\" # description of whole notebook\nembedding = get_embeddings(description)\nvault.create_description(\"distilbert_no_special_tokens_mean_cosine_mrpc\", description, embedding)\n\nproperties = {\"task\": \"paraphrase detection\", \"method\": \"sentence embedding similarity classification\", \"model\": \"distilbert-base-uncased\", \"dataset\": \"glue/mrpc validation\", \"text_representation\": \"mean pooling over token embeddings excluding [CLS] and [SEP]\", \"similarity_metric\": \"cosine similarity\", \"decision_rule\": \"threshold-based binary classification\", \"threshold\": \"0.85\", \"framework\": \"PyTorch Transformers\", \"evaluation\": \"accuracy, f1-score, classification report\", \"output_artifacts\": \"per-example similarity predictions and summary metrics\", \"metadata_embedding_model\": \"openai text-embedding-3-large\", \"tracking\": \"TableVault with ArangoDB\"} #e.g. model: distilbert-base-uncased-MRPC\n\nfor prop, cat in properties.items():\n    embedding = get_embeddings(prop)\n    vault.create_description(\"distilbert_no_special_tokens_mean_cosine_mrpc\", cat, embedding, prop)"
+        ]
+      },
+      "metrics": {
+        "input_tokens": 9959,
+        "output_tokens": 28,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 8227,
+        "api_latency_s": 1.1762,
+        "exec_latency_s": 0.0097
+      },
+      "error": null
+    },
+    {
+      "turn": 6,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_COESmq0u8zjHpBwNfW2vTYye",
+            "output": "{\"ok\": true, \"result\": [\"def get_embeddings(text):\\n    return client.embeddings.create(\\n            input=text,\\n            model=\\\"text-embedding-3-large\\\"\\n        ).data[0].embedding\", \"import torch\\nimport torch.nn.functional as F\\nimport numpy as np\\nfrom datasets import Dataset\\nfrom transformers import AutoTokenizer, AutoModel\\nfrom sklearn.metrics import accuracy_score, f1_score, classification_report\\nfrom tqdm.auto import tqdm\\n\", \"device = torch.device(\\\"mps\\\" if torch.backends.mps.is_available() else \\\"cpu\\\")\\nprint(\\\"device:\\\", device)\\n\", \"model_name = \\\"distilbert-base-uncased\\\"\\n\\ntokenizer = AutoTokenizer.from_pretrained(model_name)\\nmodel = AutoModel.from_pretrained(model_name).to(device)\\nmodel.eval()\\n\\nprint(model_name)\\nprint(\\\"cls_token_id:\\\", tokenizer.cls_token_id)\\nprint(\\\"sep_token_id:\\\", tokenizer.sep_token_id)\\n\", \"ds = vault.query_item_content(\\\"glue_mrpc_validation\\\")\\nds = Dataset.from_list(ds)\\nprint(ds)\\nprint(ds[0])\\n\\nsent1 = ds[\\\"sentence1\\\"]\\nsent2 = ds[\\\"sentence2\\\"]\\ny_true = np.array(ds[\\\"label\\\"])\\n\\nprint(\\\"num_examples:\\\", len(y_true))\\nprint(\\\"positive_rate:\\\", float(y_true.mean()))\\n\", \"def mean_pool_excluding_special(last_hidden_state, attention_mask, input_ids):\\n    mask = attention_mask.clone().bool()\\n    if tokenizer.cls_token_id is not None:\\n        mask &= input_ids != tokenizer.cls_token_id\\n    if tokenizer.sep_token_id is not None:\\n        mask &= input_ids != tokenizer.sep_token_id\\n\\n    mask_f = mask.unsqueeze(-1).to(last_hidden_state.dtype)\\n    summed = (last_hidden_state * mask_f).sum(dim=1)\\n    counts = mask_f.sum(dim=1).clamp(min=1.0)\\n    pooled = summed / counts\\n    pooled = F.normalize(pooled, p=2, dim=-1, eps=1e-12)\\n    return pooled\\n\\ndef encode_texts(texts, batch_size=128, max_length=128):\\n    all_embeddings = []\\n    with torch.no_grad():\\n        for i in tqdm(range(0, len(texts), batch_size)):\\n            batch_texts = texts[i:i + batch_size]\\n            enc = tokenizer(\\n                batch_texts,\\n                padding=True,\\n                truncation=True,\\n                max_length=max_length,\\n                return_tensors=\\\"pt\\\",\\n            )\\n            enc = {k: v.to(device) for k, v in enc.items()}\\n            outputs = model(**enc)\\n            pooled = mean_pool_excluding_special(\\n                outputs.last_hidden_state,\\n                enc[\\\"attention_mask\\\"],\\n                enc[\\\"input_ids\\\"],\\n            )\\n            all_embeddings.append(pooled.cpu())\\n    return torch.cat(all_embeddings, dim=0).numpy()\\n\", \"emb1 = encode_texts(sent1, batch_size=128, max_length=128)\\nprint(\\\"emb1 shape:\\\", emb1.shape)\\n\", \"emb2 = encode_texts(sent2, batch_size=128, max_length=128)\\nprint(\\\"emb2 shape:\\\", emb2.shape)\\n\", \"cosine_scores = (emb1 * emb2).sum(axis=1)\\nthreshold = 0.85\\ny_pred = (cosine_scores >= threshold).astype(int)\\n\\nacc = accuracy_score(y_true, y_pred)\\nf1 = f1_score(y_true, y_pred)\\nreport = classification_report(y_true, y_pred, target_names=[\\\"not_paraphrase\\\", \\\"paraphrase\\\"])\\n\\nprint({\\\"accuracy\\\": acc, \\\"f1\\\": f1, \\\"threshold\\\": threshold})\\nprint(classification_report(y_true, y_pred, target_names=[\\\"not_paraphrase\\\", \\\"paraphrase\\\"]))\\n\", \"\\nvault.create_record_list(\\\"no_special_cosine_mrpc_similarity_prediction\\\", column_names=[\\\"prediction\\\", \\\"cosine_scores\\\"])\\n\\nfor i in range(len(y_pred)):\\n    vault.append_record(\\\"no_special_cosine_mrpc_similarity_prediction\\\", \\n                        {\\n                            \\\"prediction\\\": int(y_pred[i]),\\n                            \\\"cosine_scores\\\": float(cosine_scores[i]),\\n                        },\\n                       input_items = {\\n                           \\\"glue_mrpc_validation\\\": [i, i + 1],\\n                       }\\n                       )\\n\\ndescription = \\\"Per-example prediction dataset for the GLUE MRPC validation split. Each record corresponds to one sentence pair from glue_mrpc_validation and stores the model output from this notebook\\\\u2019s similarity-based paraphrase detection pipeline using distilbert-base-uncased embeddings. The fields are: prediction (binary label, 1 if the cosine similarity between the two sentence embeddings is at least 0.85, otherwise 0) and cosine_scores (the raw cosine similarity score as a float). The embeddings are produced by mean-pooling DistilBERT token representations while excluding special tokens such as [CLS] and [SEP], followed by L2 normalization. In this workflow, this dataset serves as the detailed per-row inference output that links back to the original MRPC validation examples and is then used to compute and document overall evaluation metrics in the summary dataset.\\\"\\nembedding = get_embeddings(description)\\nvault.create_description(\\\"no_special_cosine_mrpc_similarity_prediction\\\", description, embedding)\\n\\nproperties = {\\\"task\\\": \\\"paraphrase detection\\\", \\\"dataset_type\\\": \\\"model predictions\\\", \\\"source\\\": \\\"glue/mrpc\\\", \\\"split\\\": \\\"validation\\\", \\\"size\\\": \\\"408\\\", \\\"model\\\": \\\"distilbert-base-uncased\\\", \\\"embedding_pooling\\\": \\\"mean pooling excluding [CLS] and [SEP]\\\", \\\"similarity_metric\\\": \\\"cosine similarity\\\", \\\"threshold\\\": \\\"0.85\\\", \\\"text_fields\\\": \\\"sentence1,sentence2\\\", \\\"label_field\\\": \\\"label\\\", \\\"output_fields\\\": \\\"prediction,cosine_scores\\\", \\\"token_truncation_max_length\\\": \\\"128\\\"} #e.g. task: paraphrase detection\\n\\nfor prop, cat in properties.items():\\n    embedding = get_embeddings(prop)\\n    vault.create_description(\\\"no_special_cosine_mrpc_similarity_prediction\\\", cat, embedding, prop)\", \"for i in range(5):\\n    print(\\\"=\\\" * 80)\\n    print(\\\"sentence1:\\\", sent1[i])\\n    print(\\\"sentence2:\\\", sent2[i])\\n    print(\\\"score:\\\", float(cosine_scores[i]))\\n    print(\\\"true:\\\", int(y_true[i]), \\\"pred:\\\", int(y_pred[i]))\\n\", \"mistakes = np.where(y_true != y_pred)[0][:10]\\nprint(\\\"num_errors:\\\", int((y_true != y_pred).sum()))\\n\\nfor i in mistakes:\\n    print(\\\"=\\\" * 80)\\n    print(\\\"idx:\\\", int(i))\\n    print(\\\"sentence1:\\\", sent1[i])\\n    print(\\\"sentence2:\\\", sent2[i])\\n    print(\\\"score:\\\", float(cosine_scores[i]))\\n    print(\\\"true:\\\", int(y_true[i]), \\\"pred:\\\", int(y_pred[i]))\\n\", \"vault.create_record_list(\\\"distilbert_no_special_tokens_mean_cosine_mrpc_summary\\\", column_names=[\\\"accuracy\\\", \\\"f1\\\", \\\"classification_report\\\"])\\n\\n\\nsummary = {\\n    \\\"accuracy\\\": float(acc),\\n    \\\"f1\\\": float(f1),\\n    \\\"classification_report\\\": str(report)\\n}\\n\\nvault.append_record(\\\"distilbert_no_special_tokens_mean_cosine_mrpc_summary\\\", summary,\\n                    input_items = {\\n                        \\\"glue_mrpc_validation\\\": [0, len(ds)],\\n                        \\\"no_special_cosine_mrpc_similarity_prediction\\\": [0, len(ds)]\\n                    })\\n\\nsummary\\n\\ndescription = \\\"Summary dataset for the MRPC validation run using distilbert-base-uncased sentence embeddings. It contains aggregate evaluation results for paraphrase prediction on glue_mrpc_validation, where sentence1 and sentence2 are encoded separately, token embeddings are mean-pooled while excluding special tokens ([CLS], [SEP]), cosine similarity is computed between the two sentence embeddings, and a fixed threshold of 0.85 is used to produce binary paraphrase predictions.\\\\n\\\\nStructure: one record with fields accuracy (float), f1 (float), and classification_report (string). The record is linked to the full glue_mrpc_validation input range and to the no_special_cosine_mrpc_similarity_prediction dataset that stores per-example predictions and cosine scores.\\\\n\\\\nRole in workflow: this dataset is the experiment-level evaluation summary, used to capture the overall performance of the no-special-token mean-pooled cosine-similarity baseline on MRPC validation.\\\"\\nembedding = get_embeddings(description)\\nvault.create_description(\\\"distilbert_no_special_tokens_mean_cosine_mrpc_summary\\\", description, embedding)\\n\\nproperties = {\\\"artifact_type\\\":\\\"evaluation summary\\\",\\\"task\\\":\\\"paraphrase detection\\\",\\\"source\\\":\\\"glue/mrpc\\\",\\\"split\\\":\\\"validation\\\",\\\"size\\\":\\\"408\\\",\\\"model\\\":\\\"distilbert-base-uncased\\\",\\\"input_type\\\":\\\"sentence pairs\\\",\\\"label_type\\\":\\\"binary\\\",\\\"embedding_pooling\\\":\\\"mean excluding special tokens\\\",\\\"similarity_metric\\\":\\\"cosine similarity\\\",\\\"decision_rule\\\":\\\"threshold >= 0.85\\\",\\\"upstream_prediction_dataset\\\":\\\"no_special_cosine_mrpc_similarity_prediction\\\"} #e.g. task: paraphrase detection\\n\\nfor prop, cat in properties.items():\\n    embedding = get_embeddings(prop)\\n    vault.create_description(\\\"distilbert_no_special_tokens_mean_cosine_mrpc_summary\\\", cat, embedding, prop)\\n\\n\", \"description = \\\"This notebook evaluates a simple paraphrase detection baseline on the GLUE MRPC validation set using DistilBERT sentence embeddings. It loads the distilbert-base-uncased model, encodes each sentence in a pair, mean-pools token embeddings while excluding special tokens such as [CLS] and [SEP], L2-normalizes the pooled vectors, and computes cosine similarity between the two sentence embeddings. A fixed similarity threshold of 0.85 is used to predict whether each pair is a paraphrase. The notebook then measures accuracy, F1, and a full classification report, inspects example predictions and errors, and stores per-example predictions, cosine scores, summary metrics, and notebook/process metadata in TableVault with embedding-based descriptions for later retrieval and documentation.\\\" # description of whole notebook\\nembedding = get_embeddings(description)\\nvault.create_description(\\\"distilbert_no_special_tokens_mean_cosine_mrpc\\\", description, embedding)\\n\\nproperties = {\\\"task\\\": \\\"paraphrase detection\\\", \\\"method\\\": \\\"sentence embedding similarity classification\\\", \\\"model\\\": \\\"distilbert-base-uncased\\\", \\\"dataset\\\": \\\"glue/mrpc validation\\\", \\\"text_representation\\\": \\\"mean pooling over token embeddings excluding [CLS] and [SEP]\\\", \\\"similarity_metric\\\": \\\"cosine similarity\\\", \\\"decision_rule\\\": \\\"threshold-based binary classification\\\", \\\"threshold\\\": \\\"0.85\\\", \\\"framework\\\": \\\"PyTorch Transformers\\\", \\\"evaluation\\\": \\\"accuracy, f1-score, classification report\\\", \\\"output_artifacts\\\": \\\"per-example similarity predictions and summary metrics\\\", \\\"metadata_embedding_model\\\": \\\"openai text-embedding-3-large\\\", \\\"tracking\\\": \\\"TableVault with ArangoDB\\\"} #e.g. model: distilbert-base-uncased-MRPC\\n\\nfor prop, cat in properties.items():\\n    embedding = get_embeddings(prop)\\n    vault.create_description(\\\"distilbert_no_special_tokens_mean_cosine_mrpc\\\", cat, embedding, prop)\"]}"
+          }
+        ],
+        "previous_response_id": "resp_01808cde76376bbf0069da4fb719288195affb7fd71f347ee5"
+      },
+      "model_output": {
+        "response_id": "resp_01808cde76376bbf0069da4fb719288195affb7fd71f347ee5",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "code_description_search",
+            "call_id": "call_5xmX18gci6av7hvL6E5xvslt",
+            "arguments": {
+              "description_text": "DistilBERT MRPC sentence embeddings pooling cosine summary cls mean max"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "code_description_search",
+        "call_id": "call_5xmX18gci6av7hvL6E5xvslt",
+        "arguments": {
+          "description_text": "DistilBERT MRPC sentence embeddings pooling cosine summary cls mean max"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": []
+      },
+      "metrics": {
+        "input_tokens": 12507,
+        "output_tokens": 61,
+        "reasoning_tokens": 26,
+        "conversation_tokens": 10775,
+        "api_latency_s": 3.1902,
+        "exec_latency_s": 0.0489
+      },
+      "error": null
+    },
+    {
+      "turn": 7,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_5xmX18gci6av7hvL6E5xvslt",
+            "output": "{\"ok\": true, \"result\": []}"
+          }
+        ],
+        "previous_response_id": "resp_01808cde76376bbf0069da4fba58e48195aaab5b091e7e6f99"
+      },
+      "model_output": {
+        "response_id": "resp_01808cde76376bbf0069da4fba58e48195aaab5b091e7e6f99",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "code_description_search",
+            "call_id": "call_J6hdjwlGWDhfmeGJTIrBMAAS",
+            "arguments": {
+              "description_text": "DistilBERT sentence embeddings paraphrase detection MRPC validation set"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "code_description_search",
+        "call_id": "call_J6hdjwlGWDhfmeGJTIrBMAAS",
+        "arguments": {
+          "description_text": "DistilBERT sentence embeddings paraphrase detection MRPC validation set"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          [
+            "BASE",
+            "This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using the typeform/distilbert-base-uncased-mnli natural language inference model. For each sentence pair, it runs inference in both directions (sentence1\u2192sentence2 and sentence2\u2192sentence1), computes an entailment-versus-contradiction margin for each direction, averages the two margins, and predicts paraphrase only when neither direction is classified as contradiction and the average margin is positive. The notebook stores per-example predictions, directional margins, and gate decisions in TableVault, computes accuracy, F1, and a classification report against the MRPC labels, logs error analysis examples, and saves dataset-, prediction-, summary-, and notebook-level metadata and embeddings for later retrieval and documentation.",
+            "consensus_then_avg_margin_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook evaluates a simple paraphrase detection workflow on the GLUE MRPC validation set using DistilBERT sentence representations and cosine similarity. It loads sentence pairs and labels from TableVault, encodes each sentence with distilbert-base-uncased, uses the first-token ([CLS]-style) hidden state as a normalized embedding, computes cosine similarity between the two sentence embeddings, and applies a fixed threshold of 0.85 to predict whether the pair is a paraphrase. The notebook then measures performance with accuracy, F1, and a classification report, prints example predictions and errors for inspection, and stores per-example scores, summary metrics, and semantic descriptions back into TableVault for experiment tracking and retrieval.",
+            "distilbert_cls_cosine_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook evaluates a simple semantic-similarity baseline for paraphrase detection on the GLUE MRPC validation set. It uses distilbert-base-uncased to encode each sentence, averages the last four hidden layers, applies mean pooling over tokens, and L2-normalizes the resulting sentence embeddings. For each sentence pair, it computes cosine similarity between the two embeddings and converts similarity scores into binary paraphrase predictions using a fixed threshold of 0.85. The workflow loads MRPC examples from TableVault, generates pairwise predictions and similarity scores, computes evaluation metrics including accuracy, F1, and a classification report, inspects example predictions and errors, and stores both per-example outputs and summary results back into TableVault with descriptive metadata.",
+            "distilbert_last4_mean_cosine_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook evaluates a simple paraphrase detection pipeline on the GLUE MRPC validation set using DistilBERT sentence embeddings. It loads sentence pairs and labels from TableVault, encodes each sentence with distilbert-base-uncased, applies masked max pooling over token embeddings, L2-normalizes the pooled vectors, and computes cosine similarity between the two sentence embeddings. A fixed cosine threshold is used to convert similarity scores into binary paraphrase predictions, and the notebook reports accuracy, F1, a full classification report, and example errors. It also records per-example predictions, summary metrics, and workflow metadata back into TableVault, with OpenAI-generated description embeddings for searchable experiment documentation.",
+            "distilbert_max_pool_cosine_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook runs a simple unsupervised paraphrase detection experiment on the GLUE MRPC validation set using distilbert-base-uncased sentence embeddings. It loads sentence pairs and labels from TableVault, encodes each sentence with DistilBERT, applies attention-mask mean pooling and L2 normalization, computes cosine similarity between the two sentence embeddings, and converts similarity scores into binary paraphrase predictions using the median similarity as the decision threshold. It then evaluates performance with accuracy, F1, and a classification report, inspects sample predictions and errors, and stores per-example predictions, cosine scores, summary metrics, and notebook-level metadata/descriptions in TableVault with OpenAI-generated description embeddings for documentation and retrieval.",
+            "distilbert_mean_cosine_median_threshold_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook evaluates a simple paraphrase detection baseline on the GLUE MRPC validation set using DistilBERT sentence embeddings. It loads the distilbert-base-uncased model, encodes each sentence in a pair, mean-pools token embeddings while excluding special tokens such as [CLS] and [SEP], L2-normalizes the pooled vectors, and computes cosine similarity between the two sentence embeddings. A fixed similarity threshold of 0.85 is used to predict whether each pair is a paraphrase. The notebook then measures accuracy, F1, and a full classification report, inspects example predictions and errors, and stores per-example predictions, cosine scores, summary metrics, and notebook/process metadata in TableVault with embedding-based descriptions for later retrieval and documentation.",
+            "distilbert_no_special_tokens_mean_cosine_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using an NLI model. It loads sentence pairs and labels from TableVault, applies the typeform/distilbert-base-uncased-mnli sequence classification model, and treats paraphrase detection as entailment scoring: for each pair, it computes the log-probability difference between entailment and contradiction for both sentence orders (sentence1\u2192sentence2 and sentence2\u2192sentence1), averages the two directional scores, and predicts paraphrase when the averaged score is positive. The notebook stores per-example predictions and directional entailment log-odds in TableVault, computes evaluation metrics including accuracy, F1, and a classification report, inspects sample predictions and errors, and saves both dataset-level summaries and notebook-level metadata/descriptions with OpenAI embeddings for documentation and retrieval.",
+            "entailment_logprob_odds_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook evaluates a Hugging Face paraphrase detection pipeline on the GLUE MRPC validation set using the textattack/distilbert-base-uncased-MRPC sequence classification model. It loads sentence pairs from TableVault, runs inference in both the original and swapped sentence order, extracts the paraphrase-class probabilities, and averages the two scores to reduce sensitivity to input order before generating final binary predictions. The workflow stores per-example prediction outputs and a summary of accuracy, F1, and the full classification report in TableVault, along with notebook, dataset, and result metadata embeddings for later retrieval and documentation.",
+            "hf_pipeline_mrpc_bidirectional_order_average",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook runs a paraphrase detection evaluation workflow on the GLUE MRPC validation set using the Hugging Face model textattack/distilbert-base-uncased-MRPC. It loads sentence pairs from TableVault, scores each pair with a DistilBERT sequence classification pipeline, and converts class probabilities into predictions with a custom margin rule: predict paraphrase only when score_pos - score_neg exceeds 0.15. The notebook stores per-example predictions, positive and negative scores, and lineage back to the source dataset in TableVault, then computes summary metrics including accuracy, F1, and a classification report. It also logs descriptions and embeddings for the generated prediction table, summary table, and the overall notebook process to support later discovery and documentation.",
+            "hf_pipeline_mrpc_margin_rule",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook runs a Hugging Face inference workflow for the GLUE MRPC validation set to evaluate paraphrase detection. It loads the textattack/distilbert-base-uncased-MRPC sequence classification model and tokenizer, performs batched prediction on sentence pairs using the transformers text-classification pipeline with raw model outputs (logits), converts those logits to probabilities with a stable softmax, and derives predicted labels and paraphrase probabilities. The notebook then compares predictions against the ground-truth MRPC labels, computes evaluation metrics including accuracy, F1, and a classification report, inspects example predictions and errors, and stores both per-example outputs and aggregate summary results in TableVault. It also creates semantic descriptions and property metadata using OpenAI text embeddings so the generated artifacts and the overall notebook process can be indexed and discovered later.",
+            "hf_pipeline_mrpc_raw_logits_softmax",
+            "process_list"
+          ]
+        ]
+      },
+      "metrics": {
+        "input_tokens": 12590,
+        "output_tokens": 72,
+        "reasoning_tokens": 38,
+        "conversation_tokens": 10858,
+        "api_latency_s": 4.692,
+        "exec_latency_s": 0.0527
+      },
+      "error": null
+    },
+    {
+      "turn": 8,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_J6hdjwlGWDhfmeGJTIrBMAAS",
+            "output": "{\"ok\": true, \"result\": [[\"BASE\", \"This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using the typeform/distilbert-base-uncased-mnli natural language inference model. For each sentence pair, it runs inference in both directions (sentence1\\u2192sentence2 and sentence2\\u2192sentence1), computes an entailment-versus-contradiction margin for each direction, averages the two margins, and predicts paraphrase only when neither direction is classified as contradiction and the average margin is positive. The notebook stores per-example predictions, directional margins, and gate decisions in TableVault, computes accuracy, F1, and a classification report against the MRPC labels, logs error analysis examples, and saves dataset-, prediction-, summary-, and notebook-level metadata and embeddings for later retrieval and documentation.\", \"consensus_then_avg_margin_mrpc\", \"process_list\"], [\"BASE\", \"This notebook evaluates a simple paraphrase detection workflow on the GLUE MRPC validation set using DistilBERT sentence representations and cosine similarity. It loads sentence pairs and labels from TableVault, encodes each sentence with distilbert-base-uncased, uses the first-token ([CLS]-style) hidden state as a normalized embedding, computes cosine similarity between the two sentence embeddings, and applies a fixed threshold of 0.85 to predict whether the pair is a paraphrase. The notebook then measures performance with accuracy, F1, and a classification report, prints example predictions and errors for inspection, and stores per-example scores, summary metrics, and semantic descriptions back into TableVault for experiment tracking and retrieval.\", \"distilbert_cls_cosine_mrpc\", \"process_list\"], [\"BASE\", \"This notebook evaluates a simple semantic-similarity baseline for paraphrase detection on the GLUE MRPC validation set. It uses distilbert-base-uncased to encode each sentence, averages the last four hidden layers, applies mean pooling over tokens, and L2-normalizes the resulting sentence embeddings. For each sentence pair, it computes cosine similarity between the two embeddings and converts similarity scores into binary paraphrase predictions using a fixed threshold of 0.85. The workflow loads MRPC examples from TableVault, generates pairwise predictions and similarity scores, computes evaluation metrics including accuracy, F1, and a classification report, inspects example predictions and errors, and stores both per-example outputs and summary results back into TableVault with descriptive metadata.\", \"distilbert_last4_mean_cosine_mrpc\", \"process_list\"], [\"BASE\", \"This notebook evaluates a simple paraphrase detection pipeline on the GLUE MRPC validation set using DistilBERT sentence embeddings. It loads sentence pairs and labels from TableVault, encodes each sentence with distilbert-base-uncased, applies masked max pooling over token embeddings, L2-normalizes the pooled vectors, and computes cosine similarity between the two sentence embeddings. A fixed cosine threshold is used to convert similarity scores into binary paraphrase predictions, and the notebook reports accuracy, F1, a full classification report, and example errors. It also records per-example predictions, summary metrics, and workflow metadata back into TableVault, with OpenAI-generated description embeddings for searchable experiment documentation.\", \"distilbert_max_pool_cosine_mrpc\", \"process_list\"], [\"BASE\", \"This notebook runs a simple unsupervised paraphrase detection experiment on the GLUE MRPC validation set using distilbert-base-uncased sentence embeddings. It loads sentence pairs and labels from TableVault, encodes each sentence with DistilBERT, applies attention-mask mean pooling and L2 normalization, computes cosine similarity between the two sentence embeddings, and converts similarity scores into binary paraphrase predictions using the median similarity as the decision threshold. It then evaluates performance with accuracy, F1, and a classification report, inspects sample predictions and errors, and stores per-example predictions, cosine scores, summary metrics, and notebook-level metadata/descriptions in TableVault with OpenAI-generated description embeddings for documentation and retrieval.\", \"distilbert_mean_cosine_median_threshold_mrpc\", \"process_list\"], [\"BASE\", \"This notebook evaluates a simple paraphrase detection baseline on the GLUE MRPC validation set using DistilBERT sentence embeddings. It loads the distilbert-base-uncased model, encodes each sentence in a pair, mean-pools token embeddings while excluding special tokens such as [CLS] and [SEP], L2-normalizes the pooled vectors, and computes cosine similarity between the two sentence embeddings. A fixed similarity threshold of 0.85 is used to predict whether each pair is a paraphrase. The notebook then measures accuracy, F1, and a full classification report, inspects example predictions and errors, and stores per-example predictions, cosine scores, summary metrics, and notebook/process metadata in TableVault with embedding-based descriptions for later retrieval and documentation.\", \"distilbert_no_special_tokens_mean_cosine_mrpc\", \"process_list\"], [\"BASE\", \"This notebook evaluates a zero-shot paraphrase detection workflow on the GLUE MRPC validation set using an NLI model. It loads sentence pairs and labels from TableVault, applies the typeform/distilbert-base-uncased-mnli sequence classification model, and treats paraphrase detection as entailment scoring: for each pair, it computes the log-probability difference between entailment and contradiction for both sentence orders (sentence1\\u2192sentence2 and sentence2\\u2192sentence1), averages the two directional scores, and predicts paraphrase when the averaged score is positive. The notebook stores per-example predictions and directional entailment log-odds in TableVault, computes evaluation metrics including accuracy, F1, and a classification report, inspects sample predictions and errors, and saves both dataset-level summaries and notebook-level metadata/descriptions with OpenAI embeddings for documentation and retrieval.\", \"entailment_logprob_odds_mrpc\", \"process_list\"], [\"BASE\", \"This notebook evaluates a Hugging Face paraphrase detection pipeline on the GLUE MRPC validation set using the textattack/distilbert-base-uncased-MRPC sequence classification model. It loads sentence pairs from TableVault, runs inference in both the original and swapped sentence order, extracts the paraphrase-class probabilities, and averages the two scores to reduce sensitivity to input order before generating final binary predictions. The workflow stores per-example prediction outputs and a summary of accuracy, F1, and the full classification report in TableVault, along with notebook, dataset, and result metadata embeddings for later retrieval and documentation.\", \"hf_pipeline_mrpc_bidirectional_order_average\", \"process_list\"], [\"BASE\", \"This notebook runs a paraphrase detection evaluation workflow on the GLUE MRPC validation set using the Hugging Face model textattack/distilbert-base-uncased-MRPC. It loads sentence pairs from TableVault, scores each pair with a DistilBERT sequence classification pipeline, and converts class probabilities into predictions with a custom margin rule: predict paraphrase only when score_pos - score_neg exceeds 0.15. The notebook stores per-example predictions, positive and negative scores, and lineage back to the source dataset in TableVault, then computes summary metrics including accuracy, F1, and a classification report. It also logs descriptions and embeddings for the generated prediction table, summary table, and the overall notebook process to support later discovery and documentation.\", \"hf_pipeline_mrpc_margin_rule\", \"process_list\"], [\"BASE\", \"This notebook runs a Hugging Face inference workflow for the GLUE MRPC validation set to evaluate paraphrase detection. It loads the textattack/distilbert-base-uncased-MRPC sequence classification model and tokenizer, performs batched prediction on sentence pairs using the transformers text-classification pipeline with raw model outputs (logits), converts those logits to probabilities with a stable softmax, and derives predicted labels and paraphrase probabilities. The notebook then compares predictions against the ground-truth MRPC labels, computes evaluation metrics including accuracy, F1, and a classification report, inspects example predictions and errors, and stores both per-example outputs and aggregate summary results in TableVault. It also creates semantic descriptions and property metadata using OpenAI text embeddings so the generated artifacts and the overall notebook process can be indexed and discovered later.\", \"hf_pipeline_mrpc_raw_logits_softmax\", \"process_list\"]]}"
+          }
+        ],
+        "previous_response_id": "resp_01808cde76376bbf0069da4fbf1658819597d1b05cbb606b37"
+      },
+      "model_output": {
+        "response_id": "resp_01808cde76376bbf0069da4fbf1658819597d1b05cbb606b37",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_code",
+            "call_id": "call_alQCUruGBIuS8m35wL0MpLU8",
+            "arguments": {
+              "name": "distilbert_cls_cosine_mrpc"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_code",
+        "call_id": "call_alQCUruGBIuS8m35wL0MpLU8",
+        "arguments": {
+          "name": "distilbert_cls_cosine_mrpc"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          "def get_embeddings(text):\n    return client.embeddings.create(\n            input=text,\n            model=\"text-embedding-3-large\"\n        ).data[0].embedding",
+          "import torch\nimport numpy as np\nfrom datasets import Dataset\nfrom transformers import AutoTokenizer, AutoModel\nfrom sklearn.metrics import accuracy_score, f1_score, classification_report\nfrom tqdm.auto import tqdm\n\ndevice = torch.device(\"mps\" if torch.backends.mps.is_available() else \"cpu\")\nprint(\"device:\", device)\n",
+          "model_name = \"distilbert-base-uncased\"\n\ntokenizer = AutoTokenizer.from_pretrained(model_name)\nmodel = AutoModel.from_pretrained(model_name).to(device)\nmodel.eval()\n\nprint(model_name)\nprint(\"hidden_size:\", model.config.hidden_size)\n",
+          "ds = vault.query_item_content(\"glue_mrpc_validation\")\nds = Dataset.from_list(ds)\nprint(ds)\nprint(ds[0])\n\nsent1 = ds[\"sentence1\"]\nsent2 = ds[\"sentence2\"]\ny_true = np.array(ds[\"label\"])\n\nprint(\"num_examples:\", len(y_true))\nprint(\"positive_rate:\", y_true.mean())\n",
+          "def pool_first_token(hidden_state):\n    pooled = hidden_state[:, 0, :]\n    pooled = torch.nn.functional.normalize(pooled, p=2, dim=-1)\n    return pooled\n\n@torch.no_grad()\ndef encode_sentences(texts, batch_size=128, max_length=128):\n    all_embeddings = []\n    for i in tqdm(range(0, len(texts), batch_size)):\n        batch_texts = texts[i:i + batch_size]\n        enc = tokenizer(\n            batch_texts,\n            padding=True,\n            truncation=True,\n            max_length=max_length,\n            return_tensors=\"pt\",\n        )\n        enc = {k: v.to(device) for k, v in enc.items()}\n        outputs = model(**enc)\n        pooled = pool_first_token(outputs.last_hidden_state)\n        all_embeddings.append(pooled.cpu())\n    return torch.cat(all_embeddings, dim=0).numpy()\n",
+          "emb1 = encode_sentences(sent1)\nemb2 = encode_sentences(sent2)\n\nscores = np.sum(emb1 * emb2, axis=1)\nthreshold = 0.85\ny_pred = (scores >= threshold).astype(int)\n\nprint(\"emb1 shape:\", emb1.shape)\nprint(\"emb2 shape:\", emb2.shape)\nprint(\"score range:\", float(scores.min()), float(scores.max()))\nprint(\"done\")\n",
+          "\nvault.create_record_list(\"cosine_mrpc_threshold_score\", column_names=[\"prediction\", \"score\"])\n\nfor i in range(len(y_pred)):\n    vault.append_record(\"cosine_mrpc_threshold_score\", \n                        {\n                            \"prediction\": int(y_pred[i]),\n                            \"score\": float(scores[i]),\n                        },\n                       input_items = {\n                           \"glue_mrpc_validation\": [i, i + 1],\n                       }\n                       )\n\ndescription = \"Per-example prediction dataset for the GLUE MRPC validation split. Each record corresponds to one sentence pair from glue_mrpc_validation and stores the output of a simple paraphrase classifier built from DistilBERT sentence embeddings. The dataset has two fields: prediction, a binary label where 1 means paraphrase and 0 means not paraphrase, produced by thresholding the cosine similarity at 0.85; and score, the raw cosine similarity between the L2-normalized first-token embeddings of sentence1 and sentence2 from distilbert-base-uncased. In this workflow, this dataset is the main record of model inference results, used for error analysis, inspection of individual examples, and as input to the downstream summary dataset distilbert_cls_cosine_mrpc_summary.\"\nembedding = get_embeddings(description)\nvault.create_description(\"cosine_mrpc_threshold_score\", description, embedding)\n\nproperties = {\"task\": \"paraphrase detection\", \"dataset_role\": \"model predictions\", \"prediction_type\": \"binary classification with cosine similarity score\", \"source\": \"glue/mrpc\", \"split\": \"validation\", \"size\": \"408\", \"model\": \"distilbert-base-uncased\", \"embedding_representation\": \"first-token CLS-like embedding\", \"similarity_metric\": \"cosine similarity\", \"decision_rule\": \"threshold >= 0.85\", \"input_fields\": \"sentence1,sentence2\", \"output_fields\": \"prediction,score\", \"label_space\": \"0=not_paraphrase,1=paraphrase\", \"framework\": \"transformers+pytorch\", \"upstream_item\": \"glue_mrpc_validation\", \"process\": \"distilbert_cls_cosine_mrpc\"} #e.g. task: paraphrase detection\n\nfor prop, cat in properties.items():\n    embedding = get_embeddings(prop)\n    vault.create_description(\"cosine_mrpc_threshold_score\", cat, embedding, prop)",
+          "acc = accuracy_score(y_true, y_pred)\nf1 = f1_score(y_true, y_pred)\nreport = classification_report(y_true, y_pred, target_names=[\"not_paraphrase\", \"paraphrase\"])\nprint({\"accuracy\": acc, \"f1\": f1})\nprint(classification_report(y_true, y_pred, target_names=[\"not_paraphrase\", \"paraphrase\"]))\n",
+          "for i in range(5):\n    print(\"=\" * 80)\n    print(\"idx:\", i)\n    print(\"sentence1:\", sent1[i])\n    print(\"sentence2:\", sent2[i])\n    print(\"cosine_score:\", float(scores[i]))\n    print(\"true:\", int(y_true[i]), \"pred:\", int(y_pred[i]))\n\nmistakes = np.where(y_true != y_pred)[0][:10]\nprint(\"num_errors:\", int((y_true != y_pred).sum()))\n\nfor i in mistakes:\n    print(\"=\" * 80)\n    print(\"idx:\", int(i))\n    print(\"sentence1:\", sent1[i])\n    print(\"sentence2:\", sent2[i])\n    print(\"cosine_score:\", float(scores[i]))\n    print(\"true:\", int(y_true[i]), \"pred:\", int(y_pred[i]))\n",
+          "vault.create_record_list(\"distilbert_cls_cosine_mrpc_summary\", column_names=[\"accuracy\", \"f1\", \"classification_report\"])\n\n\nsummary = {\n    \"accuracy\": float(acc),\n    \"f1\": float(f1),\n    \"classification_report\": str(report)\n}\n\nvault.append_record(\"distilbert_cls_cosine_mrpc_summary\", summary,\n                    input_items = {\n                        \"glue_mrpc_validation\": [0, len(ds)],\n                        \"cosine_mrpc_threshold_score\": [0, len(ds)]\n                    })\n\nsummary\n\ndescription = \"Summary dataset for the DistilBERT CLS cosine-similarity evaluation on the GLUE MRPC validation split. It contains aggregate evaluation results computed by comparing thresholded cosine-similarity predictions from sentence-pair embeddings against the ground-truth MRPC labels. The record list has three fields: accuracy (float), f1 (float), and classification_report (string with per-class precision/recall/F1 and support). In this workflow, it serves as the experiment-level evaluation artifact: a compact summary of model performance derived from the glue_mrpc_validation inputs and the per-example predictions stored in cosine_mrpc_threshold_score.\"\nembedding = get_embeddings(description)\nvault.create_description(\"distilbert_cls_cosine_mrpc_summary\", description, embedding)\n\nproperties = {\"task\": \"paraphrase detection\", \"dataset_type\": \"evaluation summary\", \"source\": \"glue/mrpc\", \"split\": \"validation\", \"size\": \"408\", \"model\": \"distilbert-base-uncased\", \"representation\": \"cls first-token embedding\", \"similarity_metric\": \"cosine similarity\", \"decision_rule\": \"threshold\", \"threshold\": \"0.85\", \"framework\": \"transformers\", \"metrics\": \"accuracy,f1,classification_report\", \"input\": \"sentence pairs\", \"labels\": \"binary paraphrase/non-paraphrase\", \"upstream_record_list\": \"cosine_mrpc_threshold_score\", \"process\": \"distilbert_cls_cosine_mrpc\"} #e.g. task: paraphrase detection\n\nfor prop, cat in properties.items():\n    embedding = get_embeddings(prop)\n    vault.create_description(\"distilbert_cls_cosine_mrpc_summary\", cat, embedding, prop)\n\n",
+          "description = \"This notebook evaluates a simple paraphrase detection workflow on the GLUE MRPC validation set using DistilBERT sentence representations and cosine similarity. It loads sentence pairs and labels from TableVault, encodes each sentence with distilbert-base-uncased, uses the first-token ([CLS]-style) hidden state as a normalized embedding, computes cosine similarity between the two sentence embeddings, and applies a fixed threshold of 0.85 to predict whether the pair is a paraphrase. The notebook then measures performance with accuracy, F1, and a classification report, prints example predictions and errors for inspection, and stores per-example scores, summary metrics, and semantic descriptions back into TableVault for experiment tracking and retrieval.\" # description of whole notebook\nembedding = get_embeddings(description)\nvault.create_description(\"distilbert_cls_cosine_mrpc\", description, embedding)\n\nproperties = {\"task\": \"paraphrase detection\", \"method\": \"sentence pair classification via cosine similarity\", \"model\": \"distilbert-base-uncased\", \"representation\": \"CLS first-token embedding\", \"similarity_metric\": \"cosine similarity\", \"decision_rule\": \"fixed threshold 0.85\", \"dataset\": \"glue/mrpc validation\", \"split\": \"validation\", \"framework\": \"PyTorch, Hugging Face Transformers\", \"evaluation\": \"accuracy, f1-score, classification report\", \"tracking\": \"TableVault with ArangoDB\", \"metadata_embedding_model\": \"text-embedding-3-large\"} #e.g. model: distilbert-base-uncased-MRPC\n\nfor prop, cat in properties.items():\n    embedding = get_embeddings(prop)\n    vault.create_description(\"distilbert_cls_cosine_mrpc\", cat, embedding, prop)"
+        ]
+      },
+      "metrics": {
+        "input_tokens": 14363,
+        "output_tokens": 50,
+        "reasoning_tokens": 23,
+        "conversation_tokens": 12631,
+        "api_latency_s": 3.398,
+        "exec_latency_s": 0.0125
+      },
+      "error": null
+    },
+    {
+      "turn": 9,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_alQCUruGBIuS8m35wL0MpLU8",
+            "output": "{\"ok\": true, \"result\": [\"def get_embeddings(text):\\n    return client.embeddings.create(\\n            input=text,\\n            model=\\\"text-embedding-3-large\\\"\\n        ).data[0].embedding\", \"import torch\\nimport numpy as np\\nfrom datasets import Dataset\\nfrom transformers import AutoTokenizer, AutoModel\\nfrom sklearn.metrics import accuracy_score, f1_score, classification_report\\nfrom tqdm.auto import tqdm\\n\\ndevice = torch.device(\\\"mps\\\" if torch.backends.mps.is_available() else \\\"cpu\\\")\\nprint(\\\"device:\\\", device)\\n\", \"model_name = \\\"distilbert-base-uncased\\\"\\n\\ntokenizer = AutoTokenizer.from_pretrained(model_name)\\nmodel = AutoModel.from_pretrained(model_name).to(device)\\nmodel.eval()\\n\\nprint(model_name)\\nprint(\\\"hidden_size:\\\", model.config.hidden_size)\\n\", \"ds = vault.query_item_content(\\\"glue_mrpc_validation\\\")\\nds = Dataset.from_list(ds)\\nprint(ds)\\nprint(ds[0])\\n\\nsent1 = ds[\\\"sentence1\\\"]\\nsent2 = ds[\\\"sentence2\\\"]\\ny_true = np.array(ds[\\\"label\\\"])\\n\\nprint(\\\"num_examples:\\\", len(y_true))\\nprint(\\\"positive_rate:\\\", y_true.mean())\\n\", \"def pool_first_token(hidden_state):\\n    pooled = hidden_state[:, 0, :]\\n    pooled = torch.nn.functional.normalize(pooled, p=2, dim=-1)\\n    return pooled\\n\\n@torch.no_grad()\\ndef encode_sentences(texts, batch_size=128, max_length=128):\\n    all_embeddings = []\\n    for i in tqdm(range(0, len(texts), batch_size)):\\n        batch_texts = texts[i:i + batch_size]\\n        enc = tokenizer(\\n            batch_texts,\\n            padding=True,\\n            truncation=True,\\n            max_length=max_length,\\n            return_tensors=\\\"pt\\\",\\n        )\\n        enc = {k: v.to(device) for k, v in enc.items()}\\n        outputs = model(**enc)\\n        pooled = pool_first_token(outputs.last_hidden_state)\\n        all_embeddings.append(pooled.cpu())\\n    return torch.cat(all_embeddings, dim=0).numpy()\\n\", \"emb1 = encode_sentences(sent1)\\nemb2 = encode_sentences(sent2)\\n\\nscores = np.sum(emb1 * emb2, axis=1)\\nthreshold = 0.85\\ny_pred = (scores >= threshold).astype(int)\\n\\nprint(\\\"emb1 shape:\\\", emb1.shape)\\nprint(\\\"emb2 shape:\\\", emb2.shape)\\nprint(\\\"score range:\\\", float(scores.min()), float(scores.max()))\\nprint(\\\"done\\\")\\n\", \"\\nvault.create_record_list(\\\"cosine_mrpc_threshold_score\\\", column_names=[\\\"prediction\\\", \\\"score\\\"])\\n\\nfor i in range(len(y_pred)):\\n    vault.append_record(\\\"cosine_mrpc_threshold_score\\\", \\n                        {\\n                            \\\"prediction\\\": int(y_pred[i]),\\n                            \\\"score\\\": float(scores[i]),\\n                        },\\n                       input_items = {\\n                           \\\"glue_mrpc_validation\\\": [i, i + 1],\\n                       }\\n                       )\\n\\ndescription = \\\"Per-example prediction dataset for the GLUE MRPC validation split. Each record corresponds to one sentence pair from glue_mrpc_validation and stores the output of a simple paraphrase classifier built from DistilBERT sentence embeddings. The dataset has two fields: prediction, a binary label where 1 means paraphrase and 0 means not paraphrase, produced by thresholding the cosine similarity at 0.85; and score, the raw cosine similarity between the L2-normalized first-token embeddings of sentence1 and sentence2 from distilbert-base-uncased. In this workflow, this dataset is the main record of model inference results, used for error analysis, inspection of individual examples, and as input to the downstream summary dataset distilbert_cls_cosine_mrpc_summary.\\\"\\nembedding = get_embeddings(description)\\nvault.create_description(\\\"cosine_mrpc_threshold_score\\\", description, embedding)\\n\\nproperties = {\\\"task\\\": \\\"paraphrase detection\\\", \\\"dataset_role\\\": \\\"model predictions\\\", \\\"prediction_type\\\": \\\"binary classification with cosine similarity score\\\", \\\"source\\\": \\\"glue/mrpc\\\", \\\"split\\\": \\\"validation\\\", \\\"size\\\": \\\"408\\\", \\\"model\\\": \\\"distilbert-base-uncased\\\", \\\"embedding_representation\\\": \\\"first-token CLS-like embedding\\\", \\\"similarity_metric\\\": \\\"cosine similarity\\\", \\\"decision_rule\\\": \\\"threshold >= 0.85\\\", \\\"input_fields\\\": \\\"sentence1,sentence2\\\", \\\"output_fields\\\": \\\"prediction,score\\\", \\\"label_space\\\": \\\"0=not_paraphrase,1=paraphrase\\\", \\\"framework\\\": \\\"transformers+pytorch\\\", \\\"upstream_item\\\": \\\"glue_mrpc_validation\\\", \\\"process\\\": \\\"distilbert_cls_cosine_mrpc\\\"} #e.g. task: paraphrase detection\\n\\nfor prop, cat in properties.items():\\n    embedding = get_embeddings(prop)\\n    vault.create_description(\\\"cosine_mrpc_threshold_score\\\", cat, embedding, prop)\", \"acc = accuracy_score(y_true, y_pred)\\nf1 = f1_score(y_true, y_pred)\\nreport = classification_report(y_true, y_pred, target_names=[\\\"not_paraphrase\\\", \\\"paraphrase\\\"])\\nprint({\\\"accuracy\\\": acc, \\\"f1\\\": f1})\\nprint(classification_report(y_true, y_pred, target_names=[\\\"not_paraphrase\\\", \\\"paraphrase\\\"]))\\n\", \"for i in range(5):\\n    print(\\\"=\\\" * 80)\\n    print(\\\"idx:\\\", i)\\n    print(\\\"sentence1:\\\", sent1[i])\\n    print(\\\"sentence2:\\\", sent2[i])\\n    print(\\\"cosine_score:\\\", float(scores[i]))\\n    print(\\\"true:\\\", int(y_true[i]), \\\"pred:\\\", int(y_pred[i]))\\n\\nmistakes = np.where(y_true != y_pred)[0][:10]\\nprint(\\\"num_errors:\\\", int((y_true != y_pred).sum()))\\n\\nfor i in mistakes:\\n    print(\\\"=\\\" * 80)\\n    print(\\\"idx:\\\", int(i))\\n    print(\\\"sentence1:\\\", sent1[i])\\n    print(\\\"sentence2:\\\", sent2[i])\\n    print(\\\"cosine_score:\\\", float(scores[i]))\\n    print(\\\"true:\\\", int(y_true[i]), \\\"pred:\\\", int(y_pred[i]))\\n\", \"vault.create_record_list(\\\"distilbert_cls_cosine_mrpc_summary\\\", column_names=[\\\"accuracy\\\", \\\"f1\\\", \\\"classification_report\\\"])\\n\\n\\nsummary = {\\n    \\\"accuracy\\\": float(acc),\\n    \\\"f1\\\": float(f1),\\n    \\\"classification_report\\\": str(report)\\n}\\n\\nvault.append_record(\\\"distilbert_cls_cosine_mrpc_summary\\\", summary,\\n                    input_items = {\\n                        \\\"glue_mrpc_validation\\\": [0, len(ds)],\\n                        \\\"cosine_mrpc_threshold_score\\\": [0, len(ds)]\\n                    })\\n\\nsummary\\n\\ndescription = \\\"Summary dataset for the DistilBERT CLS cosine-similarity evaluation on the GLUE MRPC validation split. It contains aggregate evaluation results computed by comparing thresholded cosine-similarity predictions from sentence-pair embeddings against the ground-truth MRPC labels. The record list has three fields: accuracy (float), f1 (float), and classification_report (string with per-class precision/recall/F1 and support). In this workflow, it serves as the experiment-level evaluation artifact: a compact summary of model performance derived from the glue_mrpc_validation inputs and the per-example predictions stored in cosine_mrpc_threshold_score.\\\"\\nembedding = get_embeddings(description)\\nvault.create_description(\\\"distilbert_cls_cosine_mrpc_summary\\\", description, embedding)\\n\\nproperties = {\\\"task\\\": \\\"paraphrase detection\\\", \\\"dataset_type\\\": \\\"evaluation summary\\\", \\\"source\\\": \\\"glue/mrpc\\\", \\\"split\\\": \\\"validation\\\", \\\"size\\\": \\\"408\\\", \\\"model\\\": \\\"distilbert-base-uncased\\\", \\\"representation\\\": \\\"cls first-token embedding\\\", \\\"similarity_metric\\\": \\\"cosine similarity\\\", \\\"decision_rule\\\": \\\"threshold\\\", \\\"threshold\\\": \\\"0.85\\\", \\\"framework\\\": \\\"transformers\\\", \\\"metrics\\\": \\\"accuracy,f1,classification_report\\\", \\\"input\\\": \\\"sentence pairs\\\", \\\"labels\\\": \\\"binary paraphrase/non-paraphrase\\\", \\\"upstream_record_list\\\": \\\"cosine_mrpc_threshold_score\\\", \\\"process\\\": \\\"distilbert_cls_cosine_mrpc\\\"} #e.g. task: paraphrase detection\\n\\nfor prop, cat in properties.items():\\n    embedding = get_embeddings(prop)\\n    vault.create_description(\\\"distilbert_cls_cosine_mrpc_summary\\\", cat, embedding, prop)\\n\\n\", \"description = \\\"This notebook evaluates a simple paraphrase detection workflow on the GLUE MRPC validation set using DistilBERT sentence representations and cosine similarity. It loads sentence pairs and labels from TableVault, encodes each sentence with distilbert-base-uncased, uses the first-token ([CLS]-style) hidden state as a normalized embedding, computes cosine similarity between the two sentence embeddings, and applies a fixed threshold of 0.85 to predict whether the pair is a paraphrase. The notebook then measures performance with accuracy, F1, and a classification report, prints example predictions and errors for inspection, and stores per-example scores, summary metrics, and semantic descriptions back into TableVault for experiment tracking and retrieval.\\\" # description of whole notebook\\nembedding = get_embeddings(description)\\nvault.create_description(\\\"distilbert_cls_cosine_mrpc\\\", description, embedding)\\n\\nproperties = {\\\"task\\\": \\\"paraphrase detection\\\", \\\"method\\\": \\\"sentence pair classification via cosine similarity\\\", \\\"model\\\": \\\"distilbert-base-uncased\\\", \\\"representation\\\": \\\"CLS first-token embedding\\\", \\\"similarity_metric\\\": \\\"cosine similarity\\\", \\\"decision_rule\\\": \\\"fixed threshold 0.85\\\", \\\"dataset\\\": \\\"glue/mrpc validation\\\", \\\"split\\\": \\\"validation\\\", \\\"framework\\\": \\\"PyTorch, Hugging Face Transformers\\\", \\\"evaluation\\\": \\\"accuracy, f1-score, classification report\\\", \\\"tracking\\\": \\\"TableVault with ArangoDB\\\", \\\"metadata_embedding_model\\\": \\\"text-embedding-3-large\\\"} #e.g. model: distilbert-base-uncased-MRPC\\n\\nfor prop, cat in properties.items():\\n    embedding = get_embeddings(prop)\\n    vault.create_description(\\\"distilbert_cls_cosine_mrpc\\\", cat, embedding, prop)\"]}"
+          }
+        ],
+        "previous_response_id": "resp_01808cde76376bbf0069da4fc2831481959850892037e1b6d3"
+      },
+      "model_output": {
+        "response_id": "resp_01808cde76376bbf0069da4fc2831481959850892037e1b6d3",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_fYmxOsfSFaxjHtrqLNjEvgRb",
+            "arguments": {
+              "item_name": "distilbert_cls_cosine_mrpc_summary",
+              "start_position": 0,
+              "end_position": 5
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_fYmxOsfSFaxjHtrqLNjEvgRb",
+        "arguments": {
+          "item_name": "distilbert_cls_cosine_mrpc_summary",
+          "start_position": 0,
+          "end_position": 5
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.6862745098039216,
+            "f1": 0.8134110787172012,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       1.00      0.01      0.02       129\n    paraphrase       0.69      1.00      0.81       279\n\n      accuracy                           0.69       408\n     macro avg       0.84      0.50      0.41       408\n  weighted avg       0.78      0.69      0.56       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 16715,
+        "output_tokens": 61,
+        "reasoning_tokens": 22,
+        "conversation_tokens": 14983,
+        "api_latency_s": 2.1545,
+        "exec_latency_s": 0.0055
+      },
+      "error": null
+    },
+    {
+      "turn": 10,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_fYmxOsfSFaxjHtrqLNjEvgRb",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.6862745098039216, \"f1\": 0.8134110787172012, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       1.00      0.01      0.02       129\\n    paraphrase       0.69      1.00      0.81       279\\n\\n      accuracy                           0.69       408\\n     macro avg       0.84      0.50      0.41       408\\n  weighted avg       0.78      0.69      0.56       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_01808cde76376bbf0069da4fc4aba48195b1c0ed2eb3811a2e"
+      },
+      "model_output": {
+        "response_id": "resp_01808cde76376bbf0069da4fc4aba48195b1c0ed2eb3811a2e",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_XqpZtTr7kd5jt54ZxkE13QPB",
+            "arguments": {
+              "item_name": "distilbert_max_pool_cosine_mrpc_summary",
+              "start_position": 0,
+              "end_position": 5
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_XqpZtTr7kd5jt54ZxkE13QPB",
+        "arguments": {
+          "item_name": "distilbert_max_pool_cosine_mrpc_summary",
+          "start_position": 0,
+          "end_position": 5
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.6838235294117647,
+            "f1": 0.8122270742358079,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.00      0.00      0.00       129\n    paraphrase       0.68      1.00      0.81       279\n\n      accuracy                           0.68       408\n     macro avg       0.34      0.50      0.41       408\n  weighted avg       0.47      0.68      0.56       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 16942,
+        "output_tokens": 38,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 15210,
+        "api_latency_s": 1.4118,
+        "exec_latency_s": 0.0115
+      },
+      "error": null
+    },
+    {
+      "turn": 11,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_XqpZtTr7kd5jt54ZxkE13QPB",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.6838235294117647, \"f1\": 0.8122270742358079, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.00      0.00      0.00       129\\n    paraphrase       0.68      1.00      0.81       279\\n\\n      accuracy                           0.68       408\\n     macro avg       0.34      0.50      0.41       408\\n  weighted avg       0.47      0.68      0.56       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_01808cde76376bbf0069da4fc614b88195b7d692afaaf82cf8"
+      },
+      "model_output": {
+        "response_id": "resp_01808cde76376bbf0069da4fc614b88195b7d692afaaf82cf8",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_mP40lzZUvsLnOlcYw2kAURT7",
+            "arguments": {
+              "item_name": "distilbert_last4_mean_cosine_mrpc_summary",
+              "start_position": 0,
+              "end_position": 5
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_mP40lzZUvsLnOlcYw2kAURT7",
+        "arguments": {
+          "item_name": "distilbert_last4_mean_cosine_mrpc_summary",
+          "start_position": 0,
+          "end_position": 5
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.6838235294117647,
+            "f1": 0.8122270742358079,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.00      0.00      0.00       129\n    paraphrase       0.68      1.00      0.81       279\n\n      accuracy                           0.68       408\n     macro avg       0.34      0.50      0.41       408\n  weighted avg       0.47      0.68      0.56       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 17146,
+        "output_tokens": 39,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 15414,
+        "api_latency_s": 1.6314,
+        "exec_latency_s": 0.0127
+      },
+      "error": null
+    },
+    {
+      "turn": 12,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_mP40lzZUvsLnOlcYw2kAURT7",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.6838235294117647, \"f1\": 0.8122270742358079, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.00      0.00      0.00       129\\n    paraphrase       0.68      1.00      0.81       279\\n\\n      accuracy                           0.68       408\\n     macro avg       0.34      0.50      0.41       408\\n  weighted avg       0.47      0.68      0.56       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_01808cde76376bbf0069da4fc7bb208195bd57be924cb2c2e5"
+      },
+      "model_output": {
+        "response_id": "resp_01808cde76376bbf0069da4fc7bb208195bd57be924cb2c2e5",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_sAkSlOgI3ER2GVWWswwCG4Sh",
+            "arguments": {
+              "item_name": "distilbert_mean_cosine_median_threshold_mrpc_summary",
+              "start_position": 0,
+              "end_position": 5
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_sAkSlOgI3ER2GVWWswwCG4Sh",
+        "arguments": {
+          "item_name": "distilbert_mean_cosine_median_threshold_mrpc_summary",
+          "start_position": 0,
+          "end_position": 5
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.6495098039215687,
+            "f1": 0.7039337474120083,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.47      0.74      0.57       129\n    paraphrase       0.83      0.61      0.70       279\n\n      accuracy                           0.65       408\n     macro avg       0.65      0.67      0.64       408\n  weighted avg       0.72      0.65      0.66       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 17351,
+        "output_tokens": 40,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 15619,
+        "api_latency_s": 2.9512,
+        "exec_latency_s": 0.0121
+      },
+      "error": null
+    },
+    {
+      "turn": 13,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_sAkSlOgI3ER2GVWWswwCG4Sh",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.6495098039215687, \"f1\": 0.7039337474120083, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.47      0.74      0.57       129\\n    paraphrase       0.83      0.61      0.70       279\\n\\n      accuracy                           0.65       408\\n     macro avg       0.65      0.67      0.64       408\\n  weighted avg       0.72      0.65      0.66       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_01808cde76376bbf0069da4fcab1208195954cd04e69fe8768"
+      },
+      "model_output": {
+        "response_id": "resp_01808cde76376bbf0069da4fcab1208195954cd04e69fe8768",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_VcCylu8SVqP9k8foA0cowDhi",
+            "arguments": {
+              "item_name": "distilbert_no_special_tokens_mean_cosine_mrpc_summary",
+              "start_position": 0,
+              "end_position": 5
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_VcCylu8SVqP9k8foA0cowDhi",
+        "arguments": {
+          "item_name": "distilbert_no_special_tokens_mean_cosine_mrpc_summary",
+          "start_position": 0,
+          "end_position": 5
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.7034313725490197,
+            "f1": 0.8212703101920237,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.90      0.07      0.13       129\n    paraphrase       0.70      1.00      0.82       279\n\n      accuracy                           0.70       408\n     macro avg       0.80      0.53      0.48       408\n  weighted avg       0.76      0.70      0.60       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 17557,
+        "output_tokens": 40,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 15825,
+        "api_latency_s": 1.9359,
+        "exec_latency_s": 0.0182
+      },
+      "error": null
+    },
+    {
+      "turn": 14,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_VcCylu8SVqP9k8foA0cowDhi",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.7034313725490197, \"f1\": 0.8212703101920237, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.90      0.07      0.13       129\\n    paraphrase       0.70      1.00      0.82       279\\n\\n      accuracy                           0.70       408\\n     macro avg       0.80      0.53      0.48       408\\n  weighted avg       0.76      0.70      0.60       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_01808cde76376bbf0069da4fcca66881958ed1e0c1bf51a531"
+      },
+      "model_output": {
+        "response_id": "resp_01808cde76376bbf0069da4fcca66881958ed1e0c1bf51a531",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "code_description_search",
+            "call_id": "call_ayxp8zSycM6FF6R8uj6eGgx8",
+            "arguments": {
+              "description_text": "mean pooling fixed threshold 0.85 distilbert MRPC cosine similarity"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "code_description_search",
+        "call_id": "call_ayxp8zSycM6FF6R8uj6eGgx8",
+        "arguments": {
+          "description_text": "mean pooling fixed threshold 0.85 distilbert MRPC cosine similarity"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          [
+            "BASE",
+            "This notebook evaluates a simple semantic-similarity baseline for paraphrase detection on the GLUE MRPC validation set. It uses distilbert-base-uncased to encode each sentence, averages the last four hidden layers, applies mean pooling over tokens, and L2-normalizes the resulting sentence embeddings. For each sentence pair, it computes cosine similarity between the two embeddings and converts similarity scores into binary paraphrase predictions using a fixed threshold of 0.85. The workflow loads MRPC examples from TableVault, generates pairwise predictions and similarity scores, computes evaluation metrics including accuracy, F1, and a classification report, inspects example predictions and errors, and stores both per-example outputs and summary results back into TableVault with descriptive metadata.",
+            "distilbert_last4_mean_cosine_mrpc",
+            "process_list"
+          ],
+          [
+            "BASE",
+            "This notebook evaluates a simple paraphrase detection baseline on the GLUE MRPC validation set using DistilBERT sentence embeddings. It loads the distilbert-base-uncased model, encodes each sentence in a pair, mean-pools token embeddings while excluding special tokens such as [CLS] and [SEP], L2-normalizes the pooled vectors, and computes cosine similarity between the two sentence embeddings. A fixed similarity threshold of 0.85 is used to predict whether each pair is a paraphrase. The notebook then measures accuracy, F1, and a full classification report, inspects example predictions and errors, and stores per-example predictions, cosine scores, summary metrics, and notebook/process metadata in TableVault with embedding-based descriptions for later retrieval and documentation.",
+            "distilbert_no_special_tokens_mean_cosine_mrpc",
+            "process_list"
+          ]
+        ]
+      },
+      "metrics": {
+        "input_tokens": 17763,
+        "output_tokens": 126,
+        "reasoning_tokens": 90,
+        "conversation_tokens": 16031,
+        "api_latency_s": 3.3645,
+        "exec_latency_s": 0.0468
+      },
+      "error": null
+    },
+    {
+      "turn": 15,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_ayxp8zSycM6FF6R8uj6eGgx8",
+            "output": "{\"ok\": true, \"result\": [[\"BASE\", \"This notebook evaluates a simple semantic-similarity baseline for paraphrase detection on the GLUE MRPC validation set. It uses distilbert-base-uncased to encode each sentence, averages the last four hidden layers, applies mean pooling over tokens, and L2-normalizes the resulting sentence embeddings. For each sentence pair, it computes cosine similarity between the two embeddings and converts similarity scores into binary paraphrase predictions using a fixed threshold of 0.85. The workflow loads MRPC examples from TableVault, generates pairwise predictions and similarity scores, computes evaluation metrics including accuracy, F1, and a classification report, inspects example predictions and errors, and stores both per-example outputs and summary results back into TableVault with descriptive metadata.\", \"distilbert_last4_mean_cosine_mrpc\", \"process_list\"], [\"BASE\", \"This notebook evaluates a simple paraphrase detection baseline on the GLUE MRPC validation set using DistilBERT sentence embeddings. It loads the distilbert-base-uncased model, encodes each sentence in a pair, mean-pools token embeddings while excluding special tokens such as [CLS] and [SEP], L2-normalizes the pooled vectors, and computes cosine similarity between the two sentence embeddings. A fixed similarity threshold of 0.85 is used to predict whether each pair is a paraphrase. The notebook then measures accuracy, F1, and a full classification report, inspects example predictions and errors, and stores per-example predictions, cosine scores, summary metrics, and notebook/process metadata in TableVault with embedding-based descriptions for later retrieval and documentation.\", \"distilbert_no_special_tokens_mean_cosine_mrpc\", \"process_list\"]]}"
+          }
+        ],
+        "previous_response_id": "resp_01808cde76376bbf0069da4fd00f6c81958e96b175dcafe0e1"
+      },
+      "model_output": {
+        "response_id": "resp_01808cde76376bbf0069da4fd00f6c81958e96b175dcafe0e1",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_EqpsoSyxrbrmW96fu1c5tHrl",
+            "arguments": {
+              "item_name": "glue_mrpc_validation",
+              "start_position": 0,
+              "end_position": 3
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_EqpsoSyxrbrmW96fu1c5tHrl",
+        "arguments": {
+          "item_name": "glue_mrpc_validation",
+          "start_position": 0,
+          "end_position": 3
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "sentence1": "He said the foodservice pie business doesn 't fit the company 's long-term growth strategy .",
+            "sentence2": "\" The foodservice pie business does not fit our long-term growth strategy .",
+            "label": 1,
+            "idx": 9
+          },
+          {
+            "sentence1": "Magnarelli said Racicot hated the Iraqi regime and looked forward to using his long years of training in the war .",
+            "sentence2": "His wife said he was \" 100 percent behind George Bush \" and looked forward to using his years of training in the war .",
+            "label": 0,
+            "idx": 18
+          },
+          {
+            "sentence1": "The dollar was at 116.92 yen against the yen , flat on the session , and at 1.2891 against the Swiss franc , also flat .",
+            "sentence2": "The dollar was at 116.78 yen JPY = , virtually flat on the session , and at 1.2871 against the Swiss franc CHF = , down 0.1 percent .",
+            "label": 0,
+            "idx": 25
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 18252,
+        "output_tokens": 261,
+        "reasoning_tokens": 226,
+        "conversation_tokens": 16520,
+        "api_latency_s": 5.6815,
+        "exec_latency_s": 0.0129
+      },
+      "error": null
+    },
+    {
+      "turn": 16,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_EqpsoSyxrbrmW96fu1c5tHrl",
+            "output": "{\"ok\": true, \"result\": [{\"sentence1\": \"He said the foodservice pie business doesn 't fit the company 's long-term growth strategy .\", \"sentence2\": \"\\\" The foodservice pie business does not fit our long-term growth strategy .\", \"label\": 1, \"idx\": 9}, {\"sentence1\": \"Magnarelli said Racicot hated the Iraqi regime and looked forward to using his long years of training in the war .\", \"sentence2\": \"His wife said he was \\\" 100 percent behind George Bush \\\" and looked forward to using his years of training in the war .\", \"label\": 0, \"idx\": 18}, {\"sentence1\": \"The dollar was at 116.92 yen against the yen , flat on the session , and at 1.2891 against the Swiss franc , also flat .\", \"sentence2\": \"The dollar was at 116.78 yen JPY = , virtually flat on the session , and at 1.2871 against the Swiss franc CHF = , down 0.1 percent .\", \"label\": 0, \"idx\": 25}]}"
+          }
+        ],
+        "previous_response_id": "resp_01808cde76376bbf0069da4fd5c0ec8195aa9559d934cec12b"
+      },
+      "model_output": {
+        "response_id": "resp_01808cde76376bbf0069da4fd5c0ec8195aa9559d934cec12b",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "finalize_result",
+            "call_id": "call_sVdvSyOiyKbpuZdGPfiQCFlB",
+            "arguments": {
+              "summary": "{\"rows\":[{\"workflow\":\"distilbert_no_special_tokens_mean_cosine_mrpc\",\"pooling_strategy\":\"mean pooling over last hidden state, excluding [CLS]/[SEP]\",\"decision_rule\":\"fixed cosine threshold 0.85\",\"accuracy\":0.7034313725490197,\"f1\":0.8212703101920237,\"non_paraphrase_recall\":0.07,\"paraphrase_recall\":1.0},{\"workflow\":\"distilbert_cls_cosine_mrpc\",\"pooling_strategy\":\"first-token ([CLS]-style) representation\",\"decision_rule\":\"fixed cosine threshold 0.85\",\"accuracy\":0.6862745098039216,\"f1\":0.8134110787172012,\"non_paraphrase_recall\":0.01,\"paraphrase_recall\":1.0},{\"workflow\":\"distilbert_max_pool_cosine_mrpc\",\"pooling_strategy\":\"masked max pooling over last hidden state\",\"decision_rule\":\"fixed cosine threshold 0.85\",\"accuracy\":0.6838235294117647,\"f1\":0.8122270742358079,\"non_paraphrase_recall\":0.0,\"paraphrase_recall\":1.0},{\"workflow\":\"distilbert_last4_mean_cosine_mrpc\",\"pooling_strategy\":\"average last 4 layers, then mean pool tokens\",\"decision_rule\":\"fixed cosine threshold 0.85\",\"accuracy\":0.6838235294117647,\"f1\":0.8122270742358079,\"non_paraphrase_recall\":0.0,\"paraphrase_recall\":1.0},{\"workflow\":\"distilbert_mean_cosine_median_threshold_mrpc\",\"pooling_strategy\":\"mean pooling over last hidden state\",\"decision_rule\":\"median cosine threshold (not directly comparable to fixed-threshold runs)\",\"accuracy\":0.6495098039215687,\"f1\":0.7039337474120083,\"non_paraphrase_recall\":0.74,\"paraphrase_recall\":0.61}],\"summary\":\"Repository evidence from DistilBERT cosine-similarity experiments on the GLUE MRPC validation split shows that pooling changes accuracy only modestly when the decision rule is held fixed. Among the directly comparable runs that all use a 0.85 cosine threshold, mean pooling that excludes special tokens performs best (accuracy 0.703), followed by the first-token/CLS-style representation (0.686), while masked max pooling and last-4-layer mean pooling tie at 0.684. The spread between best and worst fixed-threshold pooling variants is therefore about 2.0 percentage points, suggesting that pooling matters, but only moderately in this unsupervised setup. Importantly, the two worst fixed-threshold variants have accuracy exactly equal to the MRPC paraphrase prevalence (279/408 = 0.684) and non-paraphrase recall of 0.00, indicating that they effectively collapse to predicting the majority paraphrase class. CLS pooling is only slightly better, recovering 0.01 non-paraphrase recall. Excluding special tokens before mean pooling is the only fixed-threshold strategy that materially improves on this majority-class behavior, though it still has very weak non-paraphrase recall (0.07). A separate mean-pooling run with a median similarity threshold reaches lower overall accuracy (0.650), but it is much more balanced across classes (non-paraphrase recall 0.74 versus paraphrase recall 0.61), showing that threshold calibration may affect results more strongly than pooling alone. Thus, the evidence suggests that for DistilBERT sentence-embedding paraphrase detection on MRPC, pooling choice has a small but real effect on headline accuracy, with mean pooling excluding special tokens being best among fixed-threshold variants; however, much of the observed behavior is dominated by class imbalance and thresholding, so these results should be interpreted as evidence about the combined embedding-plus-decision pipeline rather than pooling in complete isolation. Limitations: one variant changes both layer aggregation and pooling (last-4-layer mean), and the repository does not contain a pure last-hidden-state mean-pooling run with the same fixed 0.85 threshold for a perfectly controlled comparison.\"}"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "finalize_result",
+        "call_id": "call_sVdvSyOiyKbpuZdGPfiQCFlB",
+        "arguments": {
+          "summary": "{\"rows\":[{\"workflow\":\"distilbert_no_special_tokens_mean_cosine_mrpc\",\"pooling_strategy\":\"mean pooling over last hidden state, excluding [CLS]/[SEP]\",\"decision_rule\":\"fixed cosine threshold 0.85\",\"accuracy\":0.7034313725490197,\"f1\":0.8212703101920237,\"non_paraphrase_recall\":0.07,\"paraphrase_recall\":1.0},{\"workflow\":\"distilbert_cls_cosine_mrpc\",\"pooling_strategy\":\"first-token ([CLS]-style) representation\",\"decision_rule\":\"fixed cosine threshold 0.85\",\"accuracy\":0.6862745098039216,\"f1\":0.8134110787172012,\"non_paraphrase_recall\":0.01,\"paraphrase_recall\":1.0},{\"workflow\":\"distilbert_max_pool_cosine_mrpc\",\"pooling_strategy\":\"masked max pooling over last hidden state\",\"decision_rule\":\"fixed cosine threshold 0.85\",\"accuracy\":0.6838235294117647,\"f1\":0.8122270742358079,\"non_paraphrase_recall\":0.0,\"paraphrase_recall\":1.0},{\"workflow\":\"distilbert_last4_mean_cosine_mrpc\",\"pooling_strategy\":\"average last 4 layers, then mean pool tokens\",\"decision_rule\":\"fixed cosine threshold 0.85\",\"accuracy\":0.6838235294117647,\"f1\":0.8122270742358079,\"non_paraphrase_recall\":0.0,\"paraphrase_recall\":1.0},{\"workflow\":\"distilbert_mean_cosine_median_threshold_mrpc\",\"pooling_strategy\":\"mean pooling over last hidden state\",\"decision_rule\":\"median cosine threshold (not directly comparable to fixed-threshold runs)\",\"accuracy\":0.6495098039215687,\"f1\":0.7039337474120083,\"non_paraphrase_recall\":0.74,\"paraphrase_recall\":0.61}],\"summary\":\"Repository evidence from DistilBERT cosine-similarity experiments on the GLUE MRPC validation split shows that pooling changes accuracy only modestly when the decision rule is held fixed. Among the directly comparable runs that all use a 0.85 cosine threshold, mean pooling that excludes special tokens performs best (accuracy 0.703), followed by the first-token/CLS-style representation (0.686), while masked max pooling and last-4-layer mean pooling tie at 0.684. The spread between best and worst fixed-threshold pooling variants is therefore about 2.0 percentage points, suggesting that pooling matters, but only moderately in this unsupervised setup. Importantly, the two worst fixed-threshold variants have accuracy exactly equal to the MRPC paraphrase prevalence (279/408 = 0.684) and non-paraphrase recall of 0.00, indicating that they effectively collapse to predicting the majority paraphrase class. CLS pooling is only slightly better, recovering 0.01 non-paraphrase recall. Excluding special tokens before mean pooling is the only fixed-threshold strategy that materially improves on this majority-class behavior, though it still has very weak non-paraphrase recall (0.07). A separate mean-pooling run with a median similarity threshold reaches lower overall accuracy (0.650), but it is much more balanced across classes (non-paraphrase recall 0.74 versus paraphrase recall 0.61), showing that threshold calibration may affect results more strongly than pooling alone. Thus, the evidence suggests that for DistilBERT sentence-embedding paraphrase detection on MRPC, pooling choice has a small but real effect on headline accuracy, with mean pooling excluding special tokens being best among fixed-threshold variants; however, much of the observed behavior is dominated by class imbalance and thresholding, so these results should be interpreted as evidence about the combined embedding-plus-decision pipeline rather than pooling in complete isolation. Limitations: one variant changes both layer aggregation and pooling (last-4-layer mean), and the repository does not contain a pure last-hidden-state mean-pooling run with the same fixed 0.85 threshold for a perfectly controlled comparison.\"}"
+        }
+      },
+      "tool_output": {
+        "summary": "{\"rows\":[{\"workflow\":\"distilbert_no_special_tokens_mean_cosine_mrpc\",\"pooling_strategy\":\"mean pooling over last hidden state, excluding [CLS]/[SEP]\",\"decision_rule\":\"fixed cosine threshold 0.85\",\"accuracy\":0.7034313725490197,\"f1\":0.8212703101920237,\"non_paraphrase_recall\":0.07,\"paraphrase_recall\":1.0},{\"workflow\":\"distilbert_cls_cosine_mrpc\",\"pooling_strategy\":\"first-token ([CLS]-style) representation\",\"decision_rule\":\"fixed cosine threshold 0.85\",\"accuracy\":0.6862745098039216,\"f1\":0.8134110787172012,\"non_paraphrase_recall\":0.01,\"paraphrase_recall\":1.0},{\"workflow\":\"distilbert_max_pool_cosine_mrpc\",\"pooling_strategy\":\"masked max pooling over last hidden state\",\"decision_rule\":\"fixed cosine threshold 0.85\",\"accuracy\":0.6838235294117647,\"f1\":0.8122270742358079,\"non_paraphrase_recall\":0.0,\"paraphrase_recall\":1.0},{\"workflow\":\"distilbert_last4_mean_cosine_mrpc\",\"pooling_strategy\":\"average last 4 layers, then mean pool tokens\",\"decision_rule\":\"fixed cosine threshold 0.85\",\"accuracy\":0.6838235294117647,\"f1\":0.8122270742358079,\"non_paraphrase_recall\":0.0,\"paraphrase_recall\":1.0},{\"workflow\":\"distilbert_mean_cosine_median_threshold_mrpc\",\"pooling_strategy\":\"mean pooling over last hidden state\",\"decision_rule\":\"median cosine threshold (not directly comparable to fixed-threshold runs)\",\"accuracy\":0.6495098039215687,\"f1\":0.7039337474120083,\"non_paraphrase_recall\":0.74,\"paraphrase_recall\":0.61}],\"summary\":\"Repository evidence from DistilBERT cosine-similarity experiments on the GLUE MRPC validation split shows that pooling changes accuracy only modestly when the decision rule is held fixed. Among the directly comparable runs that all use a 0.85 cosine threshold, mean pooling that excludes special tokens performs best (accuracy 0.703), followed by the first-token/CLS-style representation (0.686), while masked max pooling and last-4-layer mean pooling tie at 0.684. The spread between best and worst fixed-threshold pooling variants is therefore about 2.0 percentage points, suggesting that pooling matters, but only moderately in this unsupervised setup. Importantly, the two worst fixed-threshold variants have accuracy exactly equal to the MRPC paraphrase prevalence (279/408 = 0.684) and non-paraphrase recall of 0.00, indicating that they effectively collapse to predicting the majority paraphrase class. CLS pooling is only slightly better, recovering 0.01 non-paraphrase recall. Excluding special tokens before mean pooling is the only fixed-threshold strategy that materially improves on this majority-class behavior, though it still has very weak non-paraphrase recall (0.07). A separate mean-pooling run with a median similarity threshold reaches lower overall accuracy (0.650), but it is much more balanced across classes (non-paraphrase recall 0.74 versus paraphrase recall 0.61), showing that threshold calibration may affect results more strongly than pooling alone. Thus, the evidence suggests that for DistilBERT sentence-embedding paraphrase detection on MRPC, pooling choice has a small but real effect on headline accuracy, with mean pooling excluding special tokens being best among fixed-threshold variants; however, much of the observed behavior is dominated by class imbalance and thresholding, so these results should be interpreted as evidence about the combined embedding-plus-decision pipeline rather than pooling in complete isolation. Limitations: one variant changes both layer aggregation and pooling (last-4-layer mean), and the repository does not contain a pure last-hidden-state mean-pooling run with the same fixed 0.85 threshold for a perfectly controlled comparison.\"}"
+      },
+      "metrics": {
+        "input_tokens": 18762,
+        "output_tokens": 3375,
+        "reasoning_tokens": 2484,
+        "conversation_tokens": 17030,
+        "api_latency_s": 50.3456,
+        "exec_latency_s": 0.0
+      },
+      "error": null
+    }
+  ],
+  "final_result": {
+    "summary": "{\"rows\":[{\"workflow\":\"distilbert_no_special_tokens_mean_cosine_mrpc\",\"pooling_strategy\":\"mean pooling over last hidden state, excluding [CLS]/[SEP]\",\"decision_rule\":\"fixed cosine threshold 0.85\",\"accuracy\":0.7034313725490197,\"f1\":0.8212703101920237,\"non_paraphrase_recall\":0.07,\"paraphrase_recall\":1.0},{\"workflow\":\"distilbert_cls_cosine_mrpc\",\"pooling_strategy\":\"first-token ([CLS]-style) representation\",\"decision_rule\":\"fixed cosine threshold 0.85\",\"accuracy\":0.6862745098039216,\"f1\":0.8134110787172012,\"non_paraphrase_recall\":0.01,\"paraphrase_recall\":1.0},{\"workflow\":\"distilbert_max_pool_cosine_mrpc\",\"pooling_strategy\":\"masked max pooling over last hidden state\",\"decision_rule\":\"fixed cosine threshold 0.85\",\"accuracy\":0.6838235294117647,\"f1\":0.8122270742358079,\"non_paraphrase_recall\":0.0,\"paraphrase_recall\":1.0},{\"workflow\":\"distilbert_last4_mean_cosine_mrpc\",\"pooling_strategy\":\"average last 4 layers, then mean pool tokens\",\"decision_rule\":\"fixed cosine threshold 0.85\",\"accuracy\":0.6838235294117647,\"f1\":0.8122270742358079,\"non_paraphrase_recall\":0.0,\"paraphrase_recall\":1.0},{\"workflow\":\"distilbert_mean_cosine_median_threshold_mrpc\",\"pooling_strategy\":\"mean pooling over last hidden state\",\"decision_rule\":\"median cosine threshold (not directly comparable to fixed-threshold runs)\",\"accuracy\":0.6495098039215687,\"f1\":0.7039337474120083,\"non_paraphrase_recall\":0.74,\"paraphrase_recall\":0.61}],\"summary\":\"Repository evidence from DistilBERT cosine-similarity experiments on the GLUE MRPC validation split shows that pooling changes accuracy only modestly when the decision rule is held fixed. Among the directly comparable runs that all use a 0.85 cosine threshold, mean pooling that excludes special tokens performs best (accuracy 0.703), followed by the first-token/CLS-style representation (0.686), while masked max pooling and last-4-layer mean pooling tie at 0.684. The spread between best and worst fixed-threshold pooling variants is therefore about 2.0 percentage points, suggesting that pooling matters, but only moderately in this unsupervised setup. Importantly, the two worst fixed-threshold variants have accuracy exactly equal to the MRPC paraphrase prevalence (279/408 = 0.684) and non-paraphrase recall of 0.00, indicating that they effectively collapse to predicting the majority paraphrase class. CLS pooling is only slightly better, recovering 0.01 non-paraphrase recall. Excluding special tokens before mean pooling is the only fixed-threshold strategy that materially improves on this majority-class behavior, though it still has very weak non-paraphrase recall (0.07). A separate mean-pooling run with a median similarity threshold reaches lower overall accuracy (0.650), but it is much more balanced across classes (non-paraphrase recall 0.74 versus paraphrase recall 0.61), showing that threshold calibration may affect results more strongly than pooling alone. Thus, the evidence suggests that for DistilBERT sentence-embedding paraphrase detection on MRPC, pooling choice has a small but real effect on headline accuracy, with mean pooling excluding special tokens being best among fixed-threshold variants; however, much of the observed behavior is dominated by class imbalance and thresholding, so these results should be interpreted as evidence about the combined embedding-plus-decision pipeline rather than pooling in complete isolation. Limitations: one variant changes both layer aggregation and pooling (last-4-layer mean), and the repository does not contain a pure last-hidden-state mean-pooling run with the same fixed 0.85 threshold for a perfectly controlled comparison.\"}"
+  },
+  "run_error": null,
+  "metrics_summary": {
+    "tokens": {
+      "input": 208201,
+      "output": 4576,
+      "reasoning": 3143,
+      "total": 212777,
+      "system_estimate": 1732,
+      "conversation": 178883
+    },
+    "code": {
+      "executions": 0,
+      "failed_executions": 0,
+      "total_lines": 0
+    },
+    "timing": {
+      "api_latency_s": 93.36,
+      "exec_latency_s": 0.41,
+      "wall_time_s": 93.77
+    },
+    "api_calls": 17,
+    "cost": null
+  }
+}

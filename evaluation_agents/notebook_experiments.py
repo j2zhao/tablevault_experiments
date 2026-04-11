@@ -33,7 +33,7 @@ from openai import OpenAI
 sys.path.insert(0, os.path.dirname(__file__))
 
 from eval_agent_functions import AgenticWorkflow, SYSTEM_PROMPT
-from api_functions import FUNCTION_EXPERIMENTS, initialization
+from api_functions import FUNCTION_EXPERIMENTS, FUNCTION_START, START_TEXT, initialization
 
 # ---------------------------------------------------------------------------
 # Task list with ground-truth metadata for evaluation
@@ -179,7 +179,7 @@ VAULT_NAME = "tv_experiment_1"
 AGENT_MODEL = "gpt-5.4"
 EVALUATOR_MODEL = "gpt-5.4"
 DEFAULT_EVALUATOR_REASONING: dict = {"effort": "high"}
-MAX_TURNS = 30
+MAX_TURNS = 50
 OUTPUT_ROOT = "experiment_results"
 
 OPENAI_KEY_FILE = "/Users/jinjinzhao/Documents/work_projects/my_keys/my_keys/openai_jinjin.key"
@@ -365,6 +365,19 @@ def _slugify(text: str, max_len: int = 40) -> str:
 # Main experiment loop
 # ---------------------------------------------------------------------------
 
+def _build_task_with_context(task: str, exp_name: str) -> str:
+    """Prepend START_TEXT and the FUNCTION_START item list for exp_name to the task."""
+    start_items = FUNCTION_START.get(exp_name, [])
+    if not start_items:
+        return task
+    lines = [START_TEXT, ""]
+    for item in start_items:
+        lines.append(f"- {item['name']} ({item['type']})")
+    lines.append("")
+    lines.append(task)
+    return "\n".join(lines)
+
+
 def run_experiments(
     tasks: list[str] = TASKS,
     task_specs: list[dict] | None = TASK_SPECS,
@@ -444,7 +457,7 @@ def run_experiments(
                     trace_filename_stem="trace",
                     reasoning={"effort": "high"},
                 )
-                output = wf.run(task)
+                output = wf.run(_build_task_with_context(task, exp_name))
                 agent_results[exp_name] = {
                     "result": output["result"],
                     "metrics": output["metrics"],

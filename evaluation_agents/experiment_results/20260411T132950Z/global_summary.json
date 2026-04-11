@@ -1,0 +1,641 @@
+{
+  "run_id": "20260411T132950Z",
+  "agent_model": "gpt-5.4",
+  "evaluator_model": "gpt-5.4",
+  "evaluator_reasoning": {
+    "effort": "high"
+  },
+  "vault_name": "tv_experiment_1",
+  "num_tasks": 3,
+  "by_experiment": {
+    "items_only": {
+      "num_tasks_completed": 3,
+      "avg_total_tokens": 345529.67,
+      "avg_num_api_function_calls": 22.33,
+      "avg_num_turns": 23.33,
+      "avg_rating": 3.67
+    },
+    "dataset_search": {
+      "num_tasks_completed": 1,
+      "avg_total_tokens": 43897.0,
+      "avg_num_api_function_calls": 10.0,
+      "avg_num_turns": 11.0,
+      "avg_rating": 1.67
+    },
+    "dataset_description": {
+      "num_tasks_completed": 3,
+      "avg_total_tokens": 294360.0,
+      "avg_num_api_function_calls": 19.33,
+      "avg_num_turns": 20.33,
+      "avg_rating": 3.33
+    },
+    "dataset_description_embedding": {
+      "num_tasks_completed": 3,
+      "avg_total_tokens": 253616.33,
+      "avg_num_api_function_calls": 17.0,
+      "avg_num_turns": 18.0,
+      "avg_rating": 3.0
+    },
+    "dataset_properties": {
+      "num_tasks_completed": 1,
+      "avg_total_tokens": 98898.0,
+      "avg_num_api_function_calls": 19.0,
+      "avg_num_turns": 20.0,
+      "avg_rating": 1.67
+    },
+    "items_and_code": {
+      "num_tasks_completed": 2,
+      "avg_total_tokens": 221200.0,
+      "avg_num_api_function_calls": 19.5,
+      "avg_num_turns": 20.5,
+      "avg_rating": 2.67
+    },
+    "items_and_lineage": {
+      "num_tasks_completed": 2,
+      "avg_total_tokens": 341358.0,
+      "avg_num_api_function_calls": 27.5,
+      "avg_num_turns": 28.5,
+      "avg_rating": 2.67
+    },
+    "code_search": {
+      "num_tasks_completed": 1,
+      "avg_total_tokens": 149547.0,
+      "avg_num_api_function_calls": 14.0,
+      "avg_num_turns": 15.0,
+      "avg_rating": 1.67
+    },
+    "code_description": {
+      "num_tasks_completed": 1,
+      "avg_total_tokens": 212777.0,
+      "avg_num_api_function_calls": 16.0,
+      "avg_num_turns": 17.0,
+      "avg_rating": 1.67
+    },
+    "code_description_embedding": {
+      "num_tasks_completed": 2,
+      "avg_total_tokens": 255599.0,
+      "avg_num_api_function_calls": 16.0,
+      "avg_num_turns": 17.0,
+      "avg_rating": 2.0
+    },
+    "code_properties": {
+      "num_tasks_completed": 2,
+      "avg_total_tokens": 334630.0,
+      "avg_num_api_function_calls": 22.5,
+      "avg_num_turns": 23.5,
+      "avg_rating": 2.67
+    },
+    "all_functions": {
+      "num_tasks_completed": 1,
+      "avg_total_tokens": 188809.0,
+      "avg_num_api_function_calls": 23.0,
+      "avg_num_turns": 24.0,
+      "avg_rating": 2.0
+    }
+  },
+  "per_task": [
+    {
+      "task_idx": 0,
+      "task": "How does the pooling strategy used to extract sentence representations from DistilBERT affect paraphrase detection accuracy on MRPC?",
+      "difficulty": "easy",
+      "expected_notebooks": [
+        "distilbert_feature_extraction_cosine_mrpc",
+        "distilbert_cls_cosine_mrpc",
+        "distilbert_max_pool_cosine_mrpc",
+        "distilbert_no_special_tokens_mean_cosine_mrpc",
+        "distilbert_last4_mean_cosine_mrpc",
+        "distilbert_mean_cosine_median_threshold_mrpc"
+      ],
+      "min_notebooks_expected": 5,
+      "key_finding": "Last-layer mean pooling (with or without special tokens) marginally outperforms CLS-token and max-pool extraction, but differences are small (accuracy ~0.696\u20130.703 vs ~0.684\u20130.686 at threshold=0.85). Averaging the last four hidden layers before mean-pooling does not improve over single-layer mean pooling and performs on par with CLS and max-pool. Note: distilbert_mean_cosine_median_threshold_mrpc uses a data-driven median threshold rather than 0.85 and shows substantially lower performance (accuracy ~0.65, F1 ~0.70) \u2014 this reflects threshold sensitivity, not pooling quality, and should not be interpreted as a pooling result. The agent should report accuracy and F1 per pooling variant at a fixed threshold and note that the overall spread across strategies is narrow.",
+      "experiments": {
+        "items_only": {
+          "error": null,
+          "stats": {
+            "total_tokens": 52361,
+            "input_tokens": 46939,
+            "output_tokens": 5422,
+            "reasoning_tokens": 4225,
+            "num_turns": 14,
+            "num_api_function_calls": 13,
+            "wall_time_s": 92.719
+          },
+          "rating": {
+            "score": 4,
+            "notebook_coverage": "5 of 6 expected notebooks cited",
+            "rationale": "Cites cls, max-pool, no-special-token mean, last4-mean, and median-threshold mean, and correctly reports that no-special-token mean is best while last4-mean and max-pool tie below it. Good analytical depth on class imbalance and threshold confounding, but it misses the fixed-threshold distilbert_feature_extraction_cosine_mrpc run, so the mean-pooling comparison is incomplete."
+          }
+        },
+        "dataset_search": {
+          "error": null,
+          "stats": {
+            "total_tokens": 43897,
+            "input_tokens": 39994,
+            "output_tokens": 3903,
+            "reasoning_tokens": 2850,
+            "num_turns": 11,
+            "num_api_function_calls": 10,
+            "wall_time_s": 68.918
+          },
+          "rating": {
+            "score": 3,
+            "notebook_coverage": "5 of 6 expected notebooks identified",
+            "rationale": "It covers most variants in descriptive form and notes that no-special-token mean is highest, with last4-mean offering no gain over max-pool. However, it omits distilbert_feature_extraction_cosine_mrpc and overemphasizes the median-threshold mean result as a balanced pooling alternative rather than primarily a threshold-sensitivity result, so the key finding is only partially captured."
+          }
+        },
+        "dataset_description": {
+          "error": null,
+          "stats": {
+            "total_tokens": 184451,
+            "input_tokens": 180724,
+            "output_tokens": 3727,
+            "reasoning_tokens": 2292,
+            "num_turns": 19,
+            "num_api_function_calls": 18,
+            "wall_time_s": 80.203
+          },
+          "rating": {
+            "score": 4,
+            "notebook_coverage": "5 of 6 expected notebooks cited",
+            "rationale": "Strong summary: it correctly frames the fixed-threshold comparison as narrow in spread, with no-special-token mean best, CLS slightly behind, and last4-mean no better than max-pool. It also properly treats the median-threshold mean run as not directly comparable, but it still misses the fixed-threshold distilbert_feature_extraction_cosine_mrpc notebook."
+          }
+        },
+        "dataset_description_embedding": {
+          "error": null,
+          "stats": {
+            "total_tokens": 90144,
+            "input_tokens": 84958,
+            "output_tokens": 5186,
+            "reasoning_tokens": 3934,
+            "num_turns": 13,
+            "num_api_function_calls": 12,
+            "wall_time_s": 89.54
+          },
+          "rating": {
+            "score": 4,
+            "notebook_coverage": "5 of 6 expected notebooks cited",
+            "rationale": "Correctly reports the small fixed-threshold differences, identifies no-special-token mean as best, and notes that last4-mean does not improve over simpler pooling. Good caveat that the median-threshold run reflects threshold effects, but the missing distilbert_feature_extraction_cosine_mrpc notebook leaves the core mean-pooling comparison incomplete."
+          }
+        },
+        "dataset_properties": {
+          "error": null,
+          "stats": {
+            "total_tokens": 98898,
+            "input_tokens": 94981,
+            "output_tokens": 3917,
+            "reasoning_tokens": 2673,
+            "num_turns": 20,
+            "num_api_function_calls": 19,
+            "wall_time_s": 86.396
+          },
+          "rating": {
+            "score": 3,
+            "notebook_coverage": "4 of 6 expected notebooks cited",
+            "rationale": "Below the minimum coverage threshold, so it cannot score above 3. The discussion of confounding from thresholding and class imbalance is useful, but it misses both the CLS notebook and the fixed-threshold distilbert_feature_extraction_cosine_mrpc run."
+          }
+        },
+        "items_and_code": {
+          "error": null,
+          "stats": {
+            "total_tokens": 126894,
+            "input_tokens": 122338,
+            "output_tokens": 4556,
+            "reasoning_tokens": 3124,
+            "num_turns": 16,
+            "num_api_function_calls": 15,
+            "wall_time_s": 83.209
+          },
+          "rating": {
+            "score": 4,
+            "notebook_coverage": "5 of 6 expected notebooks cited",
+            "rationale": "Good coverage and solid interpretation: it correctly shows no-special-token mean leading the cited fixed-threshold runs and last4-mean matching max-pool. It also flags the median-threshold mean run as a confounded comparison, but the absent distilbert_feature_extraction_cosine_mrpc notebook prevents a full fixed-threshold mean-pooling conclusion."
+          }
+        },
+        "items_and_lineage": {
+          "error": null,
+          "stats": {
+            "total_tokens": 223115,
+            "input_tokens": 218023,
+            "output_tokens": 5092,
+            "reasoning_tokens": 3325,
+            "num_turns": 29,
+            "num_api_function_calls": 28,
+            "wall_time_s": 128.074
+          },
+          "rating": {
+            "score": 4,
+            "notebook_coverage": "5 of 6 expected notebooks cited",
+            "rationale": "Accurately captures the main pattern among the retrieved notebooks: small accuracy spread, no-special-token mean best, and last4-mean offering no benefit over max-pool. The threshold-sensitivity caveat is well handled, but it still misses distilbert_feature_extraction_cosine_mrpc."
+          }
+        },
+        "code_search": {
+          "error": null,
+          "stats": {
+            "total_tokens": 149547,
+            "input_tokens": 144711,
+            "output_tokens": 4836,
+            "reasoning_tokens": 3530,
+            "num_turns": 15,
+            "num_api_function_calls": 14,
+            "wall_time_s": 102.323
+          },
+          "rating": {
+            "score": 3,
+            "notebook_coverage": "4 of 6 expected notebooks cited",
+            "rationale": "Below minimum notebook coverage, missing both the CLS notebook and distilbert_feature_extraction_cosine_mrpc. The confusion-matrix analysis is insightful, but the result is too under-covered to fully answer the pooling question."
+          }
+        },
+        "code_description": {
+          "error": null,
+          "stats": {
+            "total_tokens": 212777,
+            "input_tokens": 208201,
+            "output_tokens": 4576,
+            "reasoning_tokens": 3143,
+            "num_turns": 17,
+            "num_api_function_calls": 16,
+            "wall_time_s": 93.77
+          },
+          "rating": {
+            "score": 3,
+            "notebook_coverage": "5 of 6 expected notebooks cited",
+            "rationale": "It summarizes the retrieved variants well and notes the narrow spread and threshold confound, but it explicitly claims the repository lacks a fixed-threshold last-hidden-state mean-pooling run, which contradicts the expected distilbert_feature_extraction_cosine_mrpc notebook. That factual error weakens the central finding enough to keep this at 3."
+          }
+        },
+        "code_description_embedding": {
+          "error": null,
+          "stats": {
+            "total_tokens": 171227,
+            "input_tokens": 167039,
+            "output_tokens": 4188,
+            "reasoning_tokens": 3106,
+            "num_turns": 14,
+            "num_api_function_calls": 13,
+            "wall_time_s": 90.322
+          },
+          "rating": {
+            "score": 3,
+            "notebook_coverage": "4 of 6 expected notebooks cited",
+            "rationale": "Below minimum coverage, omitting both last4-mean and the fixed-threshold distilbert_feature_extraction_cosine_mrpc notebook. What it says about the retrieved runs is mostly correct, including the threshold caveat, but the answer is materially incomplete."
+          }
+        },
+        "code_properties": {
+          "error": null,
+          "stats": {
+            "total_tokens": 203352,
+            "input_tokens": 197444,
+            "output_tokens": 5908,
+            "reasoning_tokens": 4548,
+            "num_turns": 17,
+            "num_api_function_calls": 16,
+            "wall_time_s": 119.439
+          },
+          "rating": {
+            "score": 4,
+            "notebook_coverage": "5 of 6 expected notebooks cited",
+            "rationale": "Accurate on the key pattern for the cited runs: no-special-token mean is best, CLS is slightly lower, and last4-mean does not beat max-pool. It also correctly warns that the median-threshold mean result is confounded by thresholding, though it still misses distilbert_feature_extraction_cosine_mrpc."
+          }
+        },
+        "all_functions": {
+          "error": null,
+          "stats": {
+            "total_tokens": 188809,
+            "input_tokens": 182816,
+            "output_tokens": 5993,
+            "reasoning_tokens": 4492,
+            "num_turns": 24,
+            "num_api_function_calls": 23,
+            "wall_time_s": 120.515
+          },
+          "rating": {
+            "score": 4,
+            "notebook_coverage": "5 of 6 expected notebooks cited",
+            "rationale": "Best-rounded summary among the 5-of-6 agents: clear ranking, good use of majority-baseline context, and correct treatment of the median-threshold run as a thresholding issue rather than a pure pooling result. Still incomplete because distilbert_feature_extraction_cosine_mrpc is not retrieved."
+          }
+        }
+      }
+    },
+    {
+      "task_idx": 1,
+      "task": "How sensitive are similarity-based paraphrase classifiers to the choice of decision threshold, and does this vary across model families?",
+      "difficulty": "medium",
+      "expected_notebooks": [
+        "sentence_transformers_bi_encoder_cosine_mrpc",
+        "st_paraphrase_minilm_l6_cosine_threshold_mrpc",
+        "st_paraphrase_minilm_l3_cosine_threshold_mrpc",
+        "st_all_minilm_l6_l2_distance_threshold_mrpc",
+        "st_all_distilroberta_v1_cosine_threshold_mrpc",
+        "distilbert_mean_cosine_median_threshold_mrpc",
+        "hf_pipeline_mrpc_threshold_070",
+        "quora_cross_encoder_softmax_threshold_065_mrpc",
+        "paraphrase_score_threshold_zero_shot_mrpc"
+      ],
+      "min_notebooks_expected": 6,
+      "key_finding": "Threshold choice significantly shifts the precision/recall trade-off. The fine-tuned HF pipeline at threshold=0.70 (acc ~0.848, F1 ~0.890) stays close to its argmax baseline, while bi-encoder cosine models (paraphrase-MiniLM-L6 at 0.78: acc ~0.701, F1 ~0.771; all-distilroberta-v1 at 0.72: acc ~0.723, F1 ~0.806) and the cross-encoder (quora-distilroberta at 0.65: acc ~0.679, F1 ~0.758) degrade more sharply at non-optimal thresholds. Zero-shot NLI models are especially sensitive: applying a threshold of 0.55 (paraphrase_score_threshold_zero_shot_mrpc) yields acc ~0.578, F1 ~0.674. The agent should identify notebooks from multiple families that vary the threshold, report how accuracy and F1 change, and note that the optimal threshold and sensitivity to its choice differ substantially by model family and similarity metric.",
+      "experiments": {
+        "items_only": {
+          "error": null,
+          "stats": {
+            "total_tokens": 826015,
+            "input_tokens": 812408,
+            "output_tokens": 13607,
+            "reasoning_tokens": 11334,
+            "num_turns": 29,
+            "num_api_function_calls": 28,
+            "wall_time_s": 237.761
+          },
+          "rating": {
+            "score": 3,
+            "notebook_coverage": "4 of 9 expected notebooks cited",
+            "rationale": "Cites distilbert_mean_cosine_median_threshold_mrpc, st_paraphrase_minilm_l6_cosine_threshold_mrpc, st_all_minilm_l6_l2_distance_threshold_mrpc, and st_all_distilroberta_v1_cosine_threshold_mrpc. The summary correctly says threshold choice changes the operating point and varies by family, with good discussion of class-wise recall and limitations, but it misses the HF pipeline, cross-encoder, zero-shot, and MiniLM-L3 evidence from the reference set."
+          }
+        },
+        "dataset_search": {
+          "error": "Max turns reached before finalize_result.",
+          "rating": {
+            "score": 1,
+            "notebook_coverage": "0 of 9 expected notebooks cited",
+            "rationale": "No finalized result was produced, so there is no notebook coverage, finding, or analysis to assess."
+          }
+        },
+        "dataset_description": {
+          "error": null,
+          "stats": {
+            "total_tokens": 331883,
+            "input_tokens": 321469,
+            "output_tokens": 10414,
+            "reasoning_tokens": 8360,
+            "num_turns": 20,
+            "num_api_function_calls": 19,
+            "wall_time_s": 180.739
+          },
+          "rating": {
+            "score": 3,
+            "notebook_coverage": "4 of 9 expected notebooks cited",
+            "rationale": "Finds distilbert_mean_cosine_median_threshold_mrpc plus MiniLM-L3, MiniLM-L6, and all-distilroberta threshold notebooks. It correctly identifies threshold sensitivity and discusses family differences and MRPC imbalance, but coverage is below the 6-notebook minimum and it omits the HF pipeline, cross-encoder, zero-shot, and expected L2-distance notebook."
+          }
+        },
+        "dataset_description_embedding": {
+          "error": null,
+          "stats": {
+            "total_tokens": 373742,
+            "input_tokens": 364865,
+            "output_tokens": 8877,
+            "reasoning_tokens": 7030,
+            "num_turns": 21,
+            "num_api_function_calls": 20,
+            "wall_time_s": 165.242
+          },
+          "rating": {
+            "score": 3,
+            "notebook_coverage": "4 of 9 expected notebooks cited",
+            "rationale": "Uses four expected notebooks and gives a solid interpretation with macro-F1 and recall balance, so the qualitative point about threshold sensitivity is reasonable. Still, it falls short of minimum coverage and misses the key reference contrast that the HF pipeline is relatively robust while zero-shot models are especially sensitive."
+          }
+        },
+        "dataset_properties": {
+          "error": "Max turns reached before finalize_result.",
+          "rating": {
+            "score": 1,
+            "notebook_coverage": "0 of 9 expected notebooks cited",
+            "rationale": "No finalized result was produced, so it does not address the task."
+          }
+        },
+        "items_and_code": {
+          "error": "Max turns reached before finalize_result.",
+          "rating": {
+            "score": 1,
+            "notebook_coverage": "0 of 9 expected notebooks cited",
+            "rationale": "No finalized result was produced, so there is no usable evidence or summary."
+          }
+        },
+        "items_and_lineage": {
+          "error": null,
+          "stats": {
+            "total_tokens": 459601,
+            "input_tokens": 448970,
+            "output_tokens": 10631,
+            "reasoning_tokens": 8244,
+            "num_turns": 28,
+            "num_api_function_calls": 27,
+            "wall_time_s": 191.237
+          },
+          "rating": {
+            "score": 3,
+            "notebook_coverage": "5 of 9 expected notebooks cited",
+            "rationale": "This is one of the strongest non-error submissions, citing MiniLM-L3, MiniLM-L6, all-distilroberta, the all-MiniLM L2-distance notebook, and distilbert_mean_cosine_median_threshold_mrpc. The analysis is thoughtful and notes score geometry and limitations, but it is still below the 6-notebook minimum and misses the HF pipeline, cross-encoder, and zero-shot notebooks central to the reference finding."
+          }
+        },
+        "code_search": {
+          "error": "Max turns reached before finalize_result.",
+          "rating": {
+            "score": 1,
+            "notebook_coverage": "0 of 9 expected notebooks cited",
+            "rationale": "No finalized result was produced."
+          }
+        },
+        "code_description": {
+          "error": "Max turns reached before finalize_result.",
+          "rating": {
+            "score": 1,
+            "notebook_coverage": "0 of 9 expected notebooks cited",
+            "rationale": "No finalized result was produced."
+          }
+        },
+        "code_description_embedding": {
+          "error": "Max turns reached before finalize_result.",
+          "rating": {
+            "score": 1,
+            "notebook_coverage": "0 of 9 expected notebooks cited",
+            "rationale": "No finalized result was produced."
+          }
+        },
+        "code_properties": {
+          "error": null,
+          "stats": {
+            "total_tokens": 465908,
+            "input_tokens": 454254,
+            "output_tokens": 11654,
+            "reasoning_tokens": 9392,
+            "num_turns": 30,
+            "num_api_function_calls": 29,
+            "wall_time_s": 206.933
+          },
+          "rating": {
+            "score": 3,
+            "notebook_coverage": "5 of 9 expected notebooks cited",
+            "rationale": "Cites distilbert_mean_cosine_median_threshold_mrpc, MiniLM-L3, MiniLM-L6, all-distilroberta, and quora_cross_encoder_softmax_threshold_065_mrpc. It correctly emphasizes threshold sensitivity, family-specific score scales, and the danger of relying on positive-class F1 alone, but it misses the HF pipeline, zero-shot, and expected all-MiniLM L2-distance notebook, so it remains below minimum coverage."
+          }
+        },
+        "all_functions": {
+          "error": "Max turns reached before finalize_result.",
+          "rating": {
+            "score": 1,
+            "notebook_coverage": "0 of 9 expected notebooks cited",
+            "rationale": "No finalized result was produced, so it cannot be credited with coverage or correctness."
+          }
+        }
+      }
+    },
+    {
+      "task_idx": 2,
+      "task": "How do different strategies for enforcing prediction symmetry affect accuracy when using NLI-based and zero-shot models for paraphrase detection on MRPC?",
+      "difficulty": "hard",
+      "expected_notebooks": [
+        "direct_nli_entailment_mrpc",
+        "min_direction_margin_mrpc",
+        "consensus_then_avg_margin_mrpc",
+        "neutral_penalized_margin_mrpc",
+        "softmax_gap_mean_mrpc",
+        "bidirectional_averaged_zero_shot_mrpc",
+        "hf_pipeline_mrpc_bidirectional_order_average",
+        "quora_cross_encoder_symmetric_average_mrpc",
+        "flan_t5_symmetric_prompt_average_mrpc"
+      ],
+      "min_notebooks_expected": 6,
+      "key_finding": "The effect of bidirectional symmetry enforcement is highly model-family dependent and does not uniformly improve accuracy. For zero-shot NLI pipelines, bidirectional averaging slightly hurts performance relative to single-direction scoring (acc ~0.613 vs ~0.630). For the fine-tuned HF pipeline, the effect is negligible (acc ~0.850 vs ~0.858). Only for the cross-encoder does bidirectional averaging provide a modest gain (acc ~0.699 vs ~0.679). Among aggregation strategies, average-margin outperforms min-direction by a large margin (acc ~0.703 vs ~0.586 for direct NLI); min-direction is overly conservative and collapses recall. The agent should compare aggregation strategies within each family and note that improvements from bidirectionality are more pronounced for cross-encoders than for NLI or zero-shot models. Flan-T5 (flan_t5_symmetric_prompt_average_mrpc) uses a generative symmetry strategy (averaging yes/no logits for both prompt orderings) and achieves acc ~0.738, F1 ~0.807, representing a distinct symmetry approach outside the NLI/pipeline families.",
+      "experiments": {
+        "items_only": {
+          "error": null,
+          "stats": {
+            "total_tokens": 158213,
+            "input_tokens": 149164,
+            "output_tokens": 9049,
+            "reasoning_tokens": 7165,
+            "num_turns": 27,
+            "num_api_function_calls": 26,
+            "wall_time_s": 154.753
+          },
+          "rating": {
+            "score": 4,
+            "notebook_coverage": "6 of 9 expected notebooks cited",
+            "rationale": "Only agent to meet the minimum coverage, explicitly citing hf_pipeline_mrpc_bidirectional_order_average, softmax_gap_mean_mrpc, consensus_then_avg_margin_mrpc, min_direction_margin_mrpc, neutral_penalized_margin_mrpc, and flan_t5_symmetric_prompt_average_mrpc. Correctly reports that HF bidirectional averaging is nearly neutral/slightly worse and that min-direction style symmetry is overly conservative and harms recall. However, it misses direct_nli_entailment_mrpc, bidirectional_averaged_zero_shot_mrpc, and quora_cross_encoder_symmetric_average_mrpc, so it does not fully recover the model-family-dependent picture, and it somewhat conflates fine-tuned HF and direct-NLI results."
+          }
+        },
+        "dataset_search": {
+          "error": "Max turns reached before finalize_result.",
+          "rating": {
+            "score": 1,
+            "notebook_coverage": "0 of 9 expected notebooks cited",
+            "rationale": "No finalized result was produced; max turns were reached before answering."
+          }
+        },
+        "dataset_description": {
+          "error": null,
+          "stats": {
+            "total_tokens": 366746,
+            "input_tokens": 359084,
+            "output_tokens": 7662,
+            "reasoning_tokens": 5811,
+            "num_turns": 22,
+            "num_api_function_calls": 21,
+            "wall_time_s": 135.878
+          },
+          "rating": {
+            "score": 3,
+            "notebook_coverage": "5 of 9 expected notebooks cited",
+            "rationale": "Provides close variants for several direct-NLI symmetry notebooks and flan_t5_symmetric_prompt_average_mrpc, and it correctly notes that min-direction and neutral-penalized rules collapse paraphrase recall. But it omits the HF pipeline, zero-shot NLI bidirectional notebook, and cross-encoder, so coverage is below the minimum and the summary overstates that soft symmetry is broadly best rather than family-dependent."
+          }
+        },
+        "dataset_description_embedding": {
+          "error": null,
+          "stats": {
+            "total_tokens": 296963,
+            "input_tokens": 290585,
+            "output_tokens": 6378,
+            "reasoning_tokens": 4376,
+            "num_turns": 20,
+            "num_api_function_calls": 19,
+            "wall_time_s": 115.875
+          },
+          "rating": {
+            "score": 2,
+            "notebook_coverage": "5 of 9 expected notebooks cited",
+            "rationale": "Recovers much of the direct-NLI/Flan evidence and correctly identifies min-direction as too conservative, but misses the HF pipeline, zero-shot NLI pipeline, and cross-encoder notebooks. Its headline conclusion that symmetric averaging is helpful across both families conflicts with the expected finding that gains are not uniform and are clearest only for the cross-encoder (with HF nearly unchanged and zero-shot NLI slightly worse)."
+          }
+        },
+        "dataset_properties": {
+          "error": "Max turns reached before finalize_result.",
+          "rating": {
+            "score": 1,
+            "notebook_coverage": "0 of 9 expected notebooks cited",
+            "rationale": "No finalized result was produced; max turns were reached before answering."
+          }
+        },
+        "items_and_code": {
+          "error": null,
+          "stats": {
+            "total_tokens": 315506,
+            "input_tokens": 303987,
+            "output_tokens": 11519,
+            "reasoning_tokens": 9660,
+            "num_turns": 25,
+            "num_api_function_calls": 24,
+            "wall_time_s": 182.354
+          },
+          "rating": {
+            "score": 3,
+            "notebook_coverage": "5 of 9 expected notebooks cited",
+            "rationale": "Covers the main direct-NLI aggregation strategies plus Flan-T5 symmetry and gives useful recall-based interpretation and limitations. But it is still below minimum coverage because it omits direct_nli_entailment_mrpc, hf_pipeline_mrpc_bidirectional_order_average, bidirectional_averaged_zero_shot_mrpc, and quora_cross_encoder_symmetric_average_mrpc, and it generalizes that soft bidirectional averaging is usually best instead of emphasizing the family-dependent effects."
+          }
+        },
+        "items_and_lineage": {
+          "error": "Max turns reached before finalize_result.",
+          "rating": {
+            "score": 1,
+            "notebook_coverage": "0 of 9 expected notebooks cited",
+            "rationale": "No finalized result was produced; max turns were reached before answering."
+          }
+        },
+        "code_search": {
+          "error": "Max turns reached before finalize_result.",
+          "rating": {
+            "score": 1,
+            "notebook_coverage": "0 of 9 expected notebooks cited",
+            "rationale": "No finalized result was produced; max turns were reached before answering."
+          }
+        },
+        "code_description": {
+          "error": "Max turns reached before finalize_result.",
+          "rating": {
+            "score": 1,
+            "notebook_coverage": "0 of 9 expected notebooks cited",
+            "rationale": "No finalized result was produced; max turns were reached before answering."
+          }
+        },
+        "code_description_embedding": {
+          "error": null,
+          "stats": {
+            "total_tokens": 339971,
+            "input_tokens": 331869,
+            "output_tokens": 8102,
+            "reasoning_tokens": 6358,
+            "num_turns": 20,
+            "num_api_function_calls": 19,
+            "wall_time_s": 160.181
+          },
+          "rating": {
+            "score": 2,
+            "notebook_coverage": "5 of 9 expected notebooks cited",
+            "rationale": "Finds several direct-NLI symmetry strategies and the Flan-T5 symmetric prompt notebook, and its discussion of recall collapse under hard symmetry is valid. Still, it undercovers the expected set by missing the HF pipeline, zero-shot NLI pipeline, and cross-encoder notebooks, and it draws the misleading broader conclusion that symmetry helps in both families rather than noting the expected mixed, family-specific effects."
+          }
+        },
+        "code_properties": {
+          "error": "Max turns reached before finalize_result.",
+          "rating": {
+            "score": 1,
+            "notebook_coverage": "0 of 9 expected notebooks cited",
+            "rationale": "No finalized result was produced; max turns were reached before answering."
+          }
+        },
+        "all_functions": {
+          "error": "Max turns reached before finalize_result.",
+          "rating": {
+            "score": 1,
+            "notebook_coverage": "0 of 9 expected notebooks cited",
+            "rationale": "No finalized result was produced; max turns were reached before answering."
+          }
+        }
+      }
+    }
+  ]
+}

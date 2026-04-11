@@ -1,0 +1,161 @@
+{
+  "task_idx": 2,
+  "task": "How do different strategies for enforcing prediction symmetry affect accuracy when using NLI-based and zero-shot models for paraphrase detection on MRPC?",
+  "difficulty": "hard",
+  "expected_notebooks": [
+    "direct_nli_entailment_mrpc",
+    "min_direction_margin_mrpc",
+    "consensus_then_avg_margin_mrpc",
+    "neutral_penalized_margin_mrpc",
+    "softmax_gap_mean_mrpc",
+    "bidirectional_averaged_zero_shot_mrpc",
+    "hf_pipeline_mrpc_bidirectional_order_average",
+    "quora_cross_encoder_symmetric_average_mrpc",
+    "flan_t5_symmetric_prompt_average_mrpc"
+  ],
+  "min_notebooks_expected": 6,
+  "key_finding": "The effect of bidirectional symmetry enforcement is highly model-family dependent and does not uniformly improve accuracy. For zero-shot NLI pipelines, bidirectional averaging slightly hurts performance relative to single-direction scoring (acc ~0.613 vs ~0.630). For the fine-tuned HF pipeline, the effect is negligible (acc ~0.850 vs ~0.858). Only for the cross-encoder does bidirectional averaging provide a modest gain (acc ~0.699 vs ~0.679). Among aggregation strategies, average-margin outperforms min-direction by a large margin (acc ~0.703 vs ~0.586 for direct NLI); min-direction is overly conservative and collapses recall. The agent should compare aggregation strategies within each family and note that improvements from bidirectionality are more pronounced for cross-encoders than for NLI or zero-shot models. Flan-T5 (flan_t5_symmetric_prompt_average_mrpc) uses a generative symmetry strategy (averaging yes/no logits for both prompt orderings) and achieves acc ~0.738, F1 ~0.807, representing a distinct symmetry approach outside the NLI/pipeline families.",
+  "experiments": {
+    "items_only": {
+      "error": null,
+      "stats": {
+        "total_tokens": 158213,
+        "input_tokens": 149164,
+        "output_tokens": 9049,
+        "reasoning_tokens": 7165,
+        "num_turns": 27,
+        "num_api_function_calls": 26,
+        "wall_time_s": 154.753
+      },
+      "rating": {
+        "score": 4,
+        "notebook_coverage": "6 of 9 expected notebooks cited",
+        "rationale": "Only agent to meet the minimum coverage, explicitly citing hf_pipeline_mrpc_bidirectional_order_average, softmax_gap_mean_mrpc, consensus_then_avg_margin_mrpc, min_direction_margin_mrpc, neutral_penalized_margin_mrpc, and flan_t5_symmetric_prompt_average_mrpc. Correctly reports that HF bidirectional averaging is nearly neutral/slightly worse and that min-direction style symmetry is overly conservative and harms recall. However, it misses direct_nli_entailment_mrpc, bidirectional_averaged_zero_shot_mrpc, and quora_cross_encoder_symmetric_average_mrpc, so it does not fully recover the model-family-dependent picture, and it somewhat conflates fine-tuned HF and direct-NLI results."
+      }
+    },
+    "dataset_search": {
+      "error": "Max turns reached before finalize_result.",
+      "rating": {
+        "score": 1,
+        "notebook_coverage": "0 of 9 expected notebooks cited",
+        "rationale": "No finalized result was produced; max turns were reached before answering."
+      }
+    },
+    "dataset_description": {
+      "error": null,
+      "stats": {
+        "total_tokens": 366746,
+        "input_tokens": 359084,
+        "output_tokens": 7662,
+        "reasoning_tokens": 5811,
+        "num_turns": 22,
+        "num_api_function_calls": 21,
+        "wall_time_s": 135.878
+      },
+      "rating": {
+        "score": 3,
+        "notebook_coverage": "5 of 9 expected notebooks cited",
+        "rationale": "Provides close variants for several direct-NLI symmetry notebooks and flan_t5_symmetric_prompt_average_mrpc, and it correctly notes that min-direction and neutral-penalized rules collapse paraphrase recall. But it omits the HF pipeline, zero-shot NLI bidirectional notebook, and cross-encoder, so coverage is below the minimum and the summary overstates that soft symmetry is broadly best rather than family-dependent."
+      }
+    },
+    "dataset_description_embedding": {
+      "error": null,
+      "stats": {
+        "total_tokens": 296963,
+        "input_tokens": 290585,
+        "output_tokens": 6378,
+        "reasoning_tokens": 4376,
+        "num_turns": 20,
+        "num_api_function_calls": 19,
+        "wall_time_s": 115.875
+      },
+      "rating": {
+        "score": 2,
+        "notebook_coverage": "5 of 9 expected notebooks cited",
+        "rationale": "Recovers much of the direct-NLI/Flan evidence and correctly identifies min-direction as too conservative, but misses the HF pipeline, zero-shot NLI pipeline, and cross-encoder notebooks. Its headline conclusion that symmetric averaging is helpful across both families conflicts with the expected finding that gains are not uniform and are clearest only for the cross-encoder (with HF nearly unchanged and zero-shot NLI slightly worse)."
+      }
+    },
+    "dataset_properties": {
+      "error": "Max turns reached before finalize_result.",
+      "rating": {
+        "score": 1,
+        "notebook_coverage": "0 of 9 expected notebooks cited",
+        "rationale": "No finalized result was produced; max turns were reached before answering."
+      }
+    },
+    "items_and_code": {
+      "error": null,
+      "stats": {
+        "total_tokens": 315506,
+        "input_tokens": 303987,
+        "output_tokens": 11519,
+        "reasoning_tokens": 9660,
+        "num_turns": 25,
+        "num_api_function_calls": 24,
+        "wall_time_s": 182.354
+      },
+      "rating": {
+        "score": 3,
+        "notebook_coverage": "5 of 9 expected notebooks cited",
+        "rationale": "Covers the main direct-NLI aggregation strategies plus Flan-T5 symmetry and gives useful recall-based interpretation and limitations. But it is still below minimum coverage because it omits direct_nli_entailment_mrpc, hf_pipeline_mrpc_bidirectional_order_average, bidirectional_averaged_zero_shot_mrpc, and quora_cross_encoder_symmetric_average_mrpc, and it generalizes that soft bidirectional averaging is usually best instead of emphasizing the family-dependent effects."
+      }
+    },
+    "items_and_lineage": {
+      "error": "Max turns reached before finalize_result.",
+      "rating": {
+        "score": 1,
+        "notebook_coverage": "0 of 9 expected notebooks cited",
+        "rationale": "No finalized result was produced; max turns were reached before answering."
+      }
+    },
+    "code_search": {
+      "error": "Max turns reached before finalize_result.",
+      "rating": {
+        "score": 1,
+        "notebook_coverage": "0 of 9 expected notebooks cited",
+        "rationale": "No finalized result was produced; max turns were reached before answering."
+      }
+    },
+    "code_description": {
+      "error": "Max turns reached before finalize_result.",
+      "rating": {
+        "score": 1,
+        "notebook_coverage": "0 of 9 expected notebooks cited",
+        "rationale": "No finalized result was produced; max turns were reached before answering."
+      }
+    },
+    "code_description_embedding": {
+      "error": null,
+      "stats": {
+        "total_tokens": 339971,
+        "input_tokens": 331869,
+        "output_tokens": 8102,
+        "reasoning_tokens": 6358,
+        "num_turns": 20,
+        "num_api_function_calls": 19,
+        "wall_time_s": 160.181
+      },
+      "rating": {
+        "score": 2,
+        "notebook_coverage": "5 of 9 expected notebooks cited",
+        "rationale": "Finds several direct-NLI symmetry strategies and the Flan-T5 symmetric prompt notebook, and its discussion of recall collapse under hard symmetry is valid. Still, it undercovers the expected set by missing the HF pipeline, zero-shot NLI pipeline, and cross-encoder notebooks, and it draws the misleading broader conclusion that symmetry helps in both families rather than noting the expected mixed, family-specific effects."
+      }
+    },
+    "code_properties": {
+      "error": "Max turns reached before finalize_result.",
+      "rating": {
+        "score": 1,
+        "notebook_coverage": "0 of 9 expected notebooks cited",
+        "rationale": "No finalized result was produced; max turns were reached before answering."
+      }
+    },
+    "all_functions": {
+      "error": "Max turns reached before finalize_result.",
+      "rating": {
+        "score": 1,
+        "notebook_coverage": "0 of 9 expected notebooks cited",
+        "rationale": "No finalized result was produced; max turns were reached before answering."
+      }
+    }
+  }
+}

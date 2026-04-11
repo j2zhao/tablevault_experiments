@@ -1,0 +1,2407 @@
+{
+  "run_id": "20260411T142251Z",
+  "timestamp": "2026-04-11T14:22:51.626924+00:00",
+  "model": "gpt-5.4",
+  "task": "How do different strategies for enforcing prediction symmetry affect accuracy when using NLI-based and zero-shot models for paraphrase detection on MRPC?",
+  "system_prompt": "You are a data analyst assistant with access to a TableVault repository.\n\nYour goal is to investigate the repository and extract **structured evidence**\nrelevant to the user task.\n\nThe final output should summarize the evidence stored in the TableVault\nrepository in the form of:\n\n1. a **results table** (structured rows), and\n2. a **scientific-style summary** interpreting that evidence.\n\nThe results table should represent **summary evidence extracted from the\nrepository**. Each row corresponds to a piece of evidence such as an experiment\nresult, dataset observation, workflow output, or other structured record.\n\nExample result table schemas:\n\nExample 1 \u2014 workflow evaluation evidence\n\n[\n  {\n    \"workflow\": \"baseline_xgboost\",\n    \"model\": \"xgboost\",\n    \"running_time\": 132.4,\n    \"accuracy\": 0.91\n  },\n  {\n    \"workflow\": \"llm_augmented_pipeline\",\n    \"model\": \"gpt-4o-mini\",\n    \"running_time\": 245.8,\n    \"accuracy\": 0.94\n  }\n]\n\nExample 2 \u2014 sample-level classification evidence\n\n[\n  {\n    \"data_sample\": \"sample_001\",\n    \"true_label\": \"sports\",\n    \"predicted_label\": \"sports\",\n    \"reasoning_strategy\": \"few-shot classification\"\n  },\n  {\n    \"data_sample\": \"sample_002\",\n    \"true_label\": \"business\",\n    \"predicted_label\": \"technology\",\n    \"reasoning_strategy\": \"two-step reasoning + classification\"\n  }\n]\n\nThe columns depend on what evidence exists in the repository. Choose columns\nthat best summarize the relevant structured evidence. Don't include unnecessary columns.\n\n------------------------------------------------------------\n\n## What is TableVault?\n\nTableVault is a centralized data repository (backed by ArangoDB) that stores\n**item lists** \u2014 ordered collections of data items. Every item list has a\nunique name and belongs to one of four types:\n\n| Type          | Stores                                         |\n|---------------|------------------------------------------------|\n| **file**      | References (paths) to external files           |\n| **document**  | Text strings (paragraphs, logs, notes, etc.)   |\n| **embedding** | Fixed-dimension float vectors                  |\n| **record**    | Structured rows (dict with predefined columns) |\n\n------------------------------------------------------------\n\n## How data gets into TableVault\n\nData is ingested by Python processes. A Python script or notebook initialises\na `Vault` object, and then calls `append_*` helpers to add items to the\nrelevant lists.\n\nThere may also be additional context about the lists stored in the repository.\nThe available tool functions expose what context is accessible.\n\n------------------------------------------------------------\n\n## Tools\n\nCall the available TableVault query functions directly as tool calls \u2014 you do\nnot need to write Python code. Use `finalize_result` to return the final answer.\n\n------------------------------------------------------------\n\n## Rules\n\n- Always act via tool calls \u2014 never just describe what you would do.\n- On errors, read the error message and retry with corrected arguments.\n- **Do not make direct HuggingFace model calls** \u2014 all model inference results\n  are pre-computed and stored in the TableVault repository. Retrieve them there.\n- **Minimize token usage**: gather enough evidence to answer the question well,\n  then stop. More specific queries and filters reduce the number of calls needed \u2014\n  prefer targeted searches over broad scans. Stop as soon as you have sufficient\n  evidence to give a confident, well-supported answer.\n\n------------------------------------------------------------\n\n## Your output\n\nWhen you have enough information, call `finalize_result` with exactly this shape:\n\n{\n  \"rows\": [\n    {\"column1\": \"value1\", \"column2\": \"value2\"}\n  ],\n  \"summary\": \"Scientific-style description of the evidence and interpretation.\"\n}\n\n------------------------------------------------------------\n\n## Summary expectations\n\nThe **summary** should interpret the evidence in a research-style description.\nIt should explain:\n\n\u2022 what the repository evidence suggests about the user's task\n\u2022 key findings or patterns in the retrieved data\n\u2022 notable issues, biases, or inconsistencies in existing workflows or results\n\u2022 limitations or gaps in the available evidence\n\u2022 how the returned table should be interpreted\n\nThe summary should read like a short analytical explanation of the evidence,\nnot just a description of the table.\n\n------------------------------------------------------------\n",
+  "turns": [
+    {
+      "turn": 0,
+      "model_input": {
+        "pending_messages": [
+          {
+            "role": "user",
+            "content": "How do different strategies for enforcing prediction symmetry affect accuracy when using NLI-based and zero-shot models for paraphrase detection on MRPC?"
+          }
+        ],
+        "previous_response_id": "resp_0c5952182110d6240069da593bb578819b87b2b7062c5b26b8"
+      },
+      "model_output": {
+        "response_id": "resp_0c5952182110d6240069da593bb578819b87b2b7062c5b26b8",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item_names",
+            "call_id": "call_LHMJ8GnHAyKSRLSPdJN1sF9N",
+            "arguments": {
+              "item_type": "record_list"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item_names",
+        "call_id": "call_LHMJ8GnHAyKSRLSPdJN1sF9N",
+        "arguments": {
+          "item_type": "record_list"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          "consensus_then_avg_margin_mrpc_summary",
+          "cosine_mrpc_max_pool_similarity_prediction",
+          "cosine_mrpc_mean_similarity_prediction",
+          "cosine_mrpc_threshold_score",
+          "distilbert_cls_cosine_mrpc_summary",
+          "distilbert_cross_text_prediction",
+          "distilbert_cross_text_prediction_cutoff",
+          "distilbert_last4_mean_cosine_mrpc_summary",
+          "distilbert_margin_score_prediction_values",
+          "distilbert_max_pool_cosine_mrpc_summary",
+          "distilbert_mean_cosine_median_threshold_mrpc_summary",
+          "distilbert_no_special_tokens_mean_cosine_mrpc_summary",
+          "distilbert_quora_softmax_prediction",
+          "distilbert_swap_prediction_values",
+          "distilbert_symmetric_average_prediction",
+          "distilbert-normalized-text-prediction",
+          "entailment_logprob_odds_mrpc_summary",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_logit_calibrated",
+          "flan_prediction_scored",
+          "flan_t5_answer_prefix_yes_no_mrpcc_summary",
+          "flan_t5_contextual_calibrated_yes_no_mrpc_summary",
+          "flan_t5_full_answer_logprob_mrpc_summary",
+          "flan_t5_symmetric_prompt_average_mrpc_summary",
+          "flan_t5_true_false_first_step_mrpc_summary",
+          "glue_mrpc_validation",
+          "google_flan_prediction_and_logits",
+          "google_flan_prediction_swapped",
+          "hf_pipeline_mrpc_bidirectional_order_average_summary",
+          "hf_pipeline_mrpc_margin_rule_summary",
+          "hf_pipeline_mrpc_raw_logits_softmax_summary",
+          "hf_pipeline_mrpc_short_maxlen_64_summary",
+          "hf_pipeline_mrpc_threshold_070_summary",
+          "min_direction_margin_mrpc_summary",
+          "minilm_cosine_threshold_prediction",
+          "mrpc_distilbert_predictions",
+          "mrpc_entailment_prediction",
+          "mrpc_gate_margin_prediction",
+          "mrpc_mean_gap_prediction",
+          "mrpc_min_margin_prediction",
+          "mrpc_neutral_penalty_prediction",
+          "mrpc_paraphrase_inference_distilbert_mistakes",
+          "mrpc_paraphrase_inference_distilbert_output",
+          "neutral_penalized_margin_mrpc_summary",
+          "no_special_cosine_mrpc_similarity_prediction",
+          "pipeline_distilbert_shortened",
+          "pipeline_distilbert_softmax_probs",
+          "pipeline_distilbert_threshold",
+          "quora_cross_encoder_max_length_64_mrpc_summary",
+          "quora_cross_encoder_prefixed_sentence_tags_mrpc_summary",
+          "quora_cross_encoder_softmax_threshold_065_mrpc_summary",
+          "quora_cross_encoder_symmetric_average_mrpc_summary",
+          "quora_cross_encoder_text_normalized_mrpc_summary",
+          "sentence_transformers_mrpc_prediction_distance",
+          "sentence_transformers_mrpc_prediction_max64",
+          "sentence_transformers_mrpc_prediction_threshold",
+          "sentence_transformers_mrpc_prediction_threshold_2",
+          "softmax_gap_mean_mrpc_summary",
+          "st_all_distilroberta_v1_cosine_threshold_mrpc_summary",
+          "st_all_minilm_l6_l2_distance_threshold_mrpc_summary",
+          "st_all_minilm_l6_max_seq_len_64_cosine_mrpc_summary",
+          "st_paraphrase_minilm_l3_cosine_threshold_mrpc_summary",
+          "st_paraphrase_minilm_l6_cosine_threshold_mrpc_summary",
+          "threshold_cosine_mrpc_similarity_prediction"
+        ]
+      },
+      "metrics": {
+        "input_tokens": 1878,
+        "output_tokens": 103,
+        "reasoning_tokens": 80,
+        "conversation_tokens": 0,
+        "api_latency_s": 1.9585,
+        "exec_latency_s": 0.016
+      },
+      "error": null
+    },
+    {
+      "turn": 1,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_LHMJ8GnHAyKSRLSPdJN1sF9N",
+            "output": "{\"ok\": true, \"result\": [\"consensus_then_avg_margin_mrpc_summary\", \"cosine_mrpc_max_pool_similarity_prediction\", \"cosine_mrpc_mean_similarity_prediction\", \"cosine_mrpc_threshold_score\", \"distilbert_cls_cosine_mrpc_summary\", \"distilbert_cross_text_prediction\", \"distilbert_cross_text_prediction_cutoff\", \"distilbert_last4_mean_cosine_mrpc_summary\", \"distilbert_margin_score_prediction_values\", \"distilbert_max_pool_cosine_mrpc_summary\", \"distilbert_mean_cosine_median_threshold_mrpc_summary\", \"distilbert_no_special_tokens_mean_cosine_mrpc_summary\", \"distilbert_quora_softmax_prediction\", \"distilbert_swap_prediction_values\", \"distilbert_symmetric_average_prediction\", \"distilbert-normalized-text-prediction\", \"entailment_logprob_odds_mrpc_summary\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_logit_calibrated\", \"flan_prediction_scored\", \"flan_t5_answer_prefix_yes_no_mrpcc_summary\", \"flan_t5_contextual_calibrated_yes_no_mrpc_summary\", \"flan_t5_full_answer_logprob_mrpc_summary\", \"flan_t5_symmetric_prompt_average_mrpc_summary\", \"flan_t5_true_false_first_step_mrpc_summary\", \"glue_mrpc_validation\", \"google_flan_prediction_and_logits\", \"google_flan_prediction_swapped\", \"hf_pipeline_mrpc_bidirectional_order_average_summary\", \"hf_pipeline_mrpc_margin_rule_summary\", \"hf_pipeline_mrpc_raw_logits_softmax_summary\", \"hf_pipeline_mrpc_short_maxlen_64_summary\", \"hf_pipeline_mrpc_threshold_070_summary\", \"min_direction_margin_mrpc_summary\", \"minilm_cosine_threshold_prediction\", \"mrpc_distilbert_predictions\", \"mrpc_entailment_prediction\", \"mrpc_gate_margin_prediction\", \"mrpc_mean_gap_prediction\", \"mrpc_min_margin_prediction\", \"mrpc_neutral_penalty_prediction\", \"mrpc_paraphrase_inference_distilbert_mistakes\", \"mrpc_paraphrase_inference_distilbert_output\", \"neutral_penalized_margin_mrpc_summary\", \"no_special_cosine_mrpc_similarity_prediction\", \"pipeline_distilbert_shortened\", \"pipeline_distilbert_softmax_probs\", \"pipeline_distilbert_threshold\", \"quora_cross_encoder_max_length_64_mrpc_summary\", \"quora_cross_encoder_prefixed_sentence_tags_mrpc_summary\", \"quora_cross_encoder_softmax_threshold_065_mrpc_summary\", \"quora_cross_encoder_symmetric_average_mrpc_summary\", \"quora_cross_encoder_text_normalized_mrpc_summary\", \"sentence_transformers_mrpc_prediction_distance\", \"sentence_transformers_mrpc_prediction_max64\", \"sentence_transformers_mrpc_prediction_threshold\", \"sentence_transformers_mrpc_prediction_threshold_2\", \"softmax_gap_mean_mrpc_summary\", \"st_all_distilroberta_v1_cosine_threshold_mrpc_summary\", \"st_all_minilm_l6_l2_distance_threshold_mrpc_summary\", \"st_all_minilm_l6_max_seq_len_64_cosine_mrpc_summary\", \"st_paraphrase_minilm_l3_cosine_threshold_mrpc_summary\", \"st_paraphrase_minilm_l6_cosine_threshold_mrpc_summary\", \"threshold_cosine_mrpc_similarity_prediction\"]}"
+          }
+        ],
+        "previous_response_id": "resp_0c5952182110d6240069da593dabec819b84631afc001bd407"
+      },
+      "model_output": {
+        "response_id": "resp_0c5952182110d6240069da593dabec819b84631afc001bd407",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item_names",
+            "call_id": "call_VEtYr3b2e3nuLHp24JHbYML0",
+            "arguments": {
+              "item_type": "document_list"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item_names",
+        "call_id": "call_VEtYr3b2e3nuLHp24JHbYML0",
+        "arguments": {
+          "item_type": "document_list"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": []
+      },
+      "metrics": {
+        "input_tokens": 2686,
+        "output_tokens": 138,
+        "reasoning_tokens": 115,
+        "conversation_tokens": 616,
+        "api_latency_s": 2.8904,
+        "exec_latency_s": 0.0248
+      },
+      "error": null
+    },
+    {
+      "turn": 2,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_VEtYr3b2e3nuLHp24JHbYML0",
+            "output": "{\"ok\": true, \"result\": []}"
+          }
+        ],
+        "previous_response_id": "resp_0c5952182110d6240069da59409d14819bacb567af76923165"
+      },
+      "model_output": {
+        "response_id": "resp_0c5952182110d6240069da59409d14819bacb567af76923165",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_hceMukou91tdjNduin5ayB3e",
+            "arguments": {
+              "item_name": "hf_pipeline_mrpc_raw_logits_softmax_summary",
+              "start_position": 0,
+              "end_position": 10
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_hceMukou91tdjNduin5ayB3e",
+        "arguments": {
+          "item_name": "hf_pipeline_mrpc_raw_logits_softmax_summary",
+          "start_position": 0,
+          "end_position": 10
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.8578431372549019,
+            "f1": 0.9026845637583892,
+            "classification_report": "              precision    recall  f1-score   support\n\n     LABEL_0       0.89      0.63      0.74       129\n     LABEL_1       0.85      0.96      0.90       279\n\n    accuracy                           0.86       408\n   macro avg       0.87      0.80      0.82       408\nweighted avg       0.86      0.86      0.85       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 2846,
+        "output_tokens": 90,
+        "reasoning_tokens": 51,
+        "conversation_tokens": 776,
+        "api_latency_s": 2.0113,
+        "exec_latency_s": 0.0238
+      },
+      "error": null
+    },
+    {
+      "turn": 3,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_hceMukou91tdjNduin5ayB3e",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.8578431372549019, \"f1\": 0.9026845637583892, \"classification_report\": \"              precision    recall  f1-score   support\\n\\n     LABEL_0       0.89      0.63      0.74       129\\n     LABEL_1       0.85      0.96      0.90       279\\n\\n    accuracy                           0.86       408\\n   macro avg       0.87      0.80      0.82       408\\nweighted avg       0.86      0.86      0.85       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_0c5952182110d6240069da59429ed8819b8cffb6909b1c4be8"
+      },
+      "model_output": {
+        "response_id": "resp_0c5952182110d6240069da59429ed8819b8cffb6909b1c4be8",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_jQU7HSYKzBMjcUKMPtD6G9JY",
+            "arguments": {
+              "item_name": "hf_pipeline_mrpc_bidirectional_order_average_summary",
+              "start_position": 0,
+              "end_position": 10
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_jQU7HSYKzBMjcUKMPtD6G9JY",
+        "arguments": {
+          "item_name": "hf_pipeline_mrpc_bidirectional_order_average_summary",
+          "start_position": 0,
+          "end_position": 10
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.8504901960784313,
+            "f1": 0.897822445561139,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.88      0.61      0.72       129\n    paraphrase       0.84      0.96      0.90       279\n\n      accuracy                           0.85       408\n     macro avg       0.86      0.79      0.81       408\n  weighted avg       0.85      0.85      0.84       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 3102,
+        "output_tokens": 52,
+        "reasoning_tokens": 13,
+        "conversation_tokens": 1032,
+        "api_latency_s": 2.5447,
+        "exec_latency_s": 0.0085
+      },
+      "error": null
+    },
+    {
+      "turn": 4,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_jQU7HSYKzBMjcUKMPtD6G9JY",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.8504901960784313, \"f1\": 0.897822445561139, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.88      0.61      0.72       129\\n    paraphrase       0.84      0.96      0.90       279\\n\\n      accuracy                           0.85       408\\n     macro avg       0.86      0.79      0.81       408\\n  weighted avg       0.85      0.85      0.84       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_0c5952182110d6240069da59452c00819b91e273707dbdbe22"
+      },
+      "model_output": {
+        "response_id": "resp_0c5952182110d6240069da59452c00819b91e273707dbdbe22",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_y06YU0QEguCWRLPRvAvkYsKp",
+            "arguments": {
+              "item_name": "hf_pipeline_mrpc_margin_rule_summary",
+              "start_position": 0,
+              "end_position": 10
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_y06YU0QEguCWRLPRvAvkYsKp",
+        "arguments": {
+          "item_name": "hf_pipeline_mrpc_margin_rule_summary",
+          "start_position": 0,
+          "end_position": 10
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.8627450980392157,
+            "f1": 0.9044368600682594,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.86      0.67      0.76       129\n    paraphrase       0.86      0.95      0.90       279\n\n      accuracy                           0.86       408\n     macro avg       0.86      0.81      0.83       408\n  weighted avg       0.86      0.86      0.86       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 3319,
+        "output_tokens": 62,
+        "reasoning_tokens": 25,
+        "conversation_tokens": 1249,
+        "api_latency_s": 1.838,
+        "exec_latency_s": 0.0234
+      },
+      "error": null
+    },
+    {
+      "turn": 5,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_y06YU0QEguCWRLPRvAvkYsKp",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.8627450980392157, \"f1\": 0.9044368600682594, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.86      0.67      0.76       129\\n    paraphrase       0.86      0.95      0.90       279\\n\\n      accuracy                           0.86       408\\n     macro avg       0.86      0.81      0.83       408\\n  weighted avg       0.86      0.86      0.86       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_0c5952182110d6240069da594709d0819b971ab30ce86ff5f2"
+      },
+      "model_output": {
+        "response_id": "resp_0c5952182110d6240069da594709d0819b971ab30ce86ff5f2",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_9KfuWdh9R8m620tLyVGPAn68",
+            "arguments": {
+              "item_name": "hf_pipeline_mrpc_threshold_070_summary",
+              "start_position": 0,
+              "end_position": 10
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_9KfuWdh9R8m620tLyVGPAn68",
+        "arguments": {
+          "item_name": "hf_pipeline_mrpc_threshold_070_summary",
+          "start_position": 0,
+          "end_position": 10
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.8480392156862745,
+            "f1": 0.8896797153024911,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase     0.7680    0.7442    0.7559       129\n    paraphrase     0.8834    0.8961    0.8897       279\n\n      accuracy                         0.8480       408\n     macro avg     0.8257    0.8201    0.8228       408\n  weighted avg     0.8469    0.8480    0.8474       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 3547,
+        "output_tokens": 49,
+        "reasoning_tokens": 11,
+        "conversation_tokens": 1477,
+        "api_latency_s": 1.6141,
+        "exec_latency_s": 0.0232
+      },
+      "error": null
+    },
+    {
+      "turn": 6,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_9KfuWdh9R8m620tLyVGPAn68",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.8480392156862745, \"f1\": 0.8896797153024911, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase     0.7680    0.7442    0.7559       129\\n    paraphrase     0.8834    0.8961    0.8897       279\\n\\n      accuracy                         0.8480       408\\n     macro avg     0.8257    0.8201    0.8228       408\\n  weighted avg     0.8469    0.8480    0.8474       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_0c5952182110d6240069da5948b2b8819bb0a9dd288c2ad3f7"
+      },
+      "model_output": {
+        "response_id": "resp_0c5952182110d6240069da5948b2b8819bb0a9dd288c2ad3f7",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_m3winLurzZbajYgsxfkntCyg",
+            "arguments": {
+              "item_name": "flan_t5_answer_prefix_yes_no_mrpcc_summary",
+              "start_position": 0,
+              "end_position": 10
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_m3winLurzZbajYgsxfkntCyg",
+        "arguments": {
+          "item_name": "flan_t5_answer_prefix_yes_no_mrpcc_summary",
+          "start_position": 0,
+          "end_position": 10
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.6372549019607843,
+            "f1": 0.6877637130801688,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.46      0.75      0.57       129\n    paraphrase       0.84      0.58      0.69       279\n\n      accuracy                           0.64       408\n     macro avg       0.65      0.67      0.63       408\n  weighted avg       0.72      0.64      0.65       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 3775,
+        "output_tokens": 66,
+        "reasoning_tokens": 24,
+        "conversation_tokens": 1705,
+        "api_latency_s": 1.8191,
+        "exec_latency_s": 0.0121
+      },
+      "error": null
+    },
+    {
+      "turn": 7,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_m3winLurzZbajYgsxfkntCyg",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.6372549019607843, \"f1\": 0.6877637130801688, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.46      0.75      0.57       129\\n    paraphrase       0.84      0.58      0.69       279\\n\\n      accuracy                           0.64       408\\n     macro avg       0.65      0.67      0.63       408\\n  weighted avg       0.72      0.64      0.65       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_0c5952182110d6240069da594a8374819b9bbdb1b4a53d09bd"
+      },
+      "model_output": {
+        "response_id": "resp_0c5952182110d6240069da594a8374819b9bbdb1b4a53d09bd",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_O0o3Vclr13acc5TUblS9lWwy",
+            "arguments": {
+              "item_name": "flan_t5_symmetric_prompt_average_mrpc_summary",
+              "start_position": 0,
+              "end_position": 10
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_O0o3Vclr13acc5TUblS9lWwy",
+        "arguments": {
+          "item_name": "flan_t5_symmetric_prompt_average_mrpc_summary",
+          "start_position": 0,
+          "end_position": 10
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.7377450980392157,
+            "f1": 0.8065099457504521,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.58      0.60      0.59       129\n    paraphrase       0.81      0.80      0.81       279\n\n      accuracy                           0.74       408\n     macro avg       0.70      0.70      0.70       408\n  weighted avg       0.74      0.74      0.74       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 4007,
+        "output_tokens": 39,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 1937,
+        "api_latency_s": 1.9022,
+        "exec_latency_s": 0.0209
+      },
+      "error": null
+    },
+    {
+      "turn": 8,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_O0o3Vclr13acc5TUblS9lWwy",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.7377450980392157, \"f1\": 0.8065099457504521, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.58      0.60      0.59       129\\n    paraphrase       0.81      0.80      0.81       279\\n\\n      accuracy                           0.74       408\\n     macro avg       0.70      0.70      0.70       408\\n  weighted avg       0.74      0.74      0.74       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_0c5952182110d6240069da594c7794819ba4a5acaa4ac90139"
+      },
+      "model_output": {
+        "response_id": "resp_0c5952182110d6240069da594c7794819ba4a5acaa4ac90139",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_c17gh0Nhz4FIgZIgYOegiEQV",
+            "arguments": {
+              "item_name": "google_flan_prediction_and_logits",
+              "start_position": 0,
+              "end_position": 3
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_c17gh0Nhz4FIgZIgYOegiEQV",
+        "arguments": {
+          "item_name": "google_flan_prediction_and_logits",
+          "start_position": 0,
+          "end_position": 3
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "prediction": 1,
+            "true_logits": -4.720203399658203,
+            "false_logits": -5.303816318511963
+          },
+          {
+            "prediction": 0,
+            "true_logits": -6.741540431976318,
+            "false_logits": -6.069624900817871
+          },
+          {
+            "prediction": 0,
+            "true_logits": -6.652932167053223,
+            "false_logits": -6.596719264984131
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 4212,
+        "output_tokens": 457,
+        "reasoning_tokens": 421,
+        "conversation_tokens": 2142,
+        "api_latency_s": 8.8176,
+        "exec_latency_s": 0.0243
+      },
+      "error": null
+    },
+    {
+      "turn": 9,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_c17gh0Nhz4FIgZIgYOegiEQV",
+            "output": "{\"ok\": true, \"result\": [{\"prediction\": 1, \"true_logits\": -4.720203399658203, \"false_logits\": -5.303816318511963}, {\"prediction\": 0, \"true_logits\": -6.741540431976318, \"false_logits\": -6.069624900817871}, {\"prediction\": 0, \"true_logits\": -6.652932167053223, \"false_logits\": -6.596719264984131}]}"
+          }
+        ],
+        "previous_response_id": "resp_0c5952182110d6240069da595545ec819bb4de73a7f7a75002"
+      },
+      "model_output": {
+        "response_id": "resp_0c5952182110d6240069da595545ec819bb4de73a7f7a75002",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_uv3qJv3TSt81VgqvqQa6c7j8",
+            "arguments": {
+              "item_name": "google_flan_prediction_swapped",
+              "start_position": 0,
+              "end_position": 3
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_uv3qJv3TSt81VgqvqQa6c7j8",
+        "arguments": {
+          "item_name": "google_flan_prediction_swapped",
+          "start_position": 0,
+          "end_position": 3
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "prediction": 0,
+            "yes_logits": -1.8353147506713867,
+            "no_logits": -1.884666919708252,
+            "swapped_yes_logits": -2.6327950954437256,
+            "swapped_no_logits": -2.5595462322235107
+          },
+          {
+            "prediction": 0,
+            "yes_logits": -2.955108404159546,
+            "no_logits": -1.9274359941482544,
+            "swapped_yes_logits": -2.923551321029663,
+            "swapped_no_logits": -1.844859004020691
+          },
+          {
+            "prediction": 0,
+            "yes_logits": -0.5490894317626953,
+            "no_logits": -0.16744214296340942,
+            "swapped_yes_logits": -0.1577763706445694,
+            "swapped_no_logits": -0.33573564887046814
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 4785,
+        "output_tokens": 34,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 2715,
+        "api_latency_s": 1.511,
+        "exec_latency_s": 0.0252
+      },
+      "error": null
+    },
+    {
+      "turn": 10,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_uv3qJv3TSt81VgqvqQa6c7j8",
+            "output": "{\"ok\": true, \"result\": [{\"prediction\": 0, \"yes_logits\": -1.8353147506713867, \"no_logits\": -1.884666919708252, \"swapped_yes_logits\": -2.6327950954437256, \"swapped_no_logits\": -2.5595462322235107}, {\"prediction\": 0, \"yes_logits\": -2.955108404159546, \"no_logits\": -1.9274359941482544, \"swapped_yes_logits\": -2.923551321029663, \"swapped_no_logits\": -1.844859004020691}, {\"prediction\": 0, \"yes_logits\": -0.5490894317626953, \"no_logits\": -0.16744214296340942, \"swapped_yes_logits\": -0.1577763706445694, \"swapped_no_logits\": -0.33573564887046814}]}"
+          }
+        ],
+        "previous_response_id": "resp_0c5952182110d6240069da5956cdf4819bb9960cf9001bd1a5"
+      },
+      "model_output": {
+        "response_id": "resp_0c5952182110d6240069da5956cdf4819bb9960cf9001bd1a5",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_lWmrZoSqS96idfdFvNAISaCR",
+            "arguments": {
+              "item_name": "entailment_logprob_odds_mrpc_summary",
+              "start_position": 0,
+              "end_position": 10
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_lWmrZoSqS96idfdFvNAISaCR",
+        "arguments": {
+          "item_name": "entailment_logprob_odds_mrpc_summary",
+          "start_position": 0,
+          "end_position": 10
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.7034313725490197,
+            "f1": 0.7729831144465291,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.53      0.63      0.57       129\n    paraphrase       0.81      0.74      0.77       279\n\n      accuracy                           0.70       408\n     macro avg       0.67      0.68      0.67       408\n  weighted avg       0.72      0.70      0.71       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 5033,
+        "output_tokens": 133,
+        "reasoning_tokens": 93,
+        "conversation_tokens": 2963,
+        "api_latency_s": 4.0686,
+        "exec_latency_s": 0.0199
+      },
+      "error": null
+    },
+    {
+      "turn": 11,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_lWmrZoSqS96idfdFvNAISaCR",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.7034313725490197, \"f1\": 0.7729831144465291, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.53      0.63      0.57       129\\n    paraphrase       0.81      0.74      0.77       279\\n\\n      accuracy                           0.70       408\\n     macro avg       0.67      0.68      0.67       408\\n  weighted avg       0.72      0.70      0.71       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_0c5952182110d6240069da595ae974819b95740721f1f32b52"
+      },
+      "model_output": {
+        "response_id": "resp_0c5952182110d6240069da595ae974819b95740721f1f32b52",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_zC3It9NE6356OxbetN3nfA8D",
+            "arguments": {
+              "item_name": "softmax_gap_mean_mrpc_summary",
+              "start_position": 0,
+              "end_position": 10
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_zC3It9NE6356OxbetN3nfA8D",
+        "arguments": {
+          "item_name": "softmax_gap_mean_mrpc_summary",
+          "start_position": 0,
+          "end_position": 10
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.7181372549019608,
+            "f1": 0.7905282331511839,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.55      0.59      0.57       129\n    paraphrase       0.80      0.78      0.79       279\n\n      accuracy                           0.72       408\n     macro avg       0.68      0.68      0.68       408\n  weighted avg       0.72      0.72      0.72       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 5332,
+        "output_tokens": 35,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 3262,
+        "api_latency_s": 1.56,
+        "exec_latency_s": 0.0223
+      },
+      "error": null
+    },
+    {
+      "turn": 12,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_zC3It9NE6356OxbetN3nfA8D",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.7181372549019608, \"f1\": 0.7905282331511839, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.55      0.59      0.57       129\\n    paraphrase       0.80      0.78      0.79       279\\n\\n      accuracy                           0.72       408\\n     macro avg       0.68      0.68      0.68       408\\n  weighted avg       0.72      0.72      0.72       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_0c5952182110d6240069da595c7c70819ba2d8eb964d28783d"
+      },
+      "model_output": {
+        "response_id": "resp_0c5952182110d6240069da595c7c70819ba2d8eb964d28783d",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_1Ky8jHNevDVg39MVecwa3E8N",
+            "arguments": {
+              "item_name": "neutral_penalized_margin_mrpc_summary",
+              "start_position": 0,
+              "end_position": 10
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_1Ky8jHNevDVg39MVecwa3E8N",
+        "arguments": {
+          "item_name": "neutral_penalized_margin_mrpc_summary",
+          "start_position": 0,
+          "end_position": 10
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.5563725490196079,
+            "f1": 0.5322997416020672,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.41      0.96      0.58       129\n    paraphrase       0.95      0.37      0.53       279\n\n      accuracy                           0.56       408\n     macro avg       0.68      0.67      0.56       408\n  weighted avg       0.78      0.56      0.55       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 5533,
+        "output_tokens": 36,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 3463,
+        "api_latency_s": 1.4754,
+        "exec_latency_s": 0.0152
+      },
+      "error": null
+    },
+    {
+      "turn": 13,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_1Ky8jHNevDVg39MVecwa3E8N",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.5563725490196079, \"f1\": 0.5322997416020672, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.41      0.96      0.58       129\\n    paraphrase       0.95      0.37      0.53       279\\n\\n      accuracy                           0.56       408\\n     macro avg       0.68      0.67      0.56       408\\n  weighted avg       0.78      0.56      0.55       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_0c5952182110d6240069da595df770819bb437c14f9a56049a"
+      },
+      "model_output": {
+        "response_id": "resp_0c5952182110d6240069da595df770819bb437c14f9a56049a",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_hhrIzOFqbV8PtBNQ51VqOZhl",
+            "arguments": {
+              "item_name": "min_direction_margin_mrpc_summary",
+              "start_position": 0,
+              "end_position": 10
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_hhrIzOFqbV8PtBNQ51VqOZhl",
+        "arguments": {
+          "item_name": "min_direction_margin_mrpc_summary",
+          "start_position": 0,
+          "end_position": 10
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.5857843137254902,
+            "f1": 0.5888077858880778,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.43      0.91      0.58       129\n    paraphrase       0.92      0.43      0.59       279\n\n      accuracy                           0.59       408\n     macro avg       0.67      0.67      0.59       408\n  weighted avg       0.76      0.59      0.59       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 5735,
+        "output_tokens": 34,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 3665,
+        "api_latency_s": 1.6148,
+        "exec_latency_s": 0.0057
+      },
+      "error": null
+    },
+    {
+      "turn": 14,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_hhrIzOFqbV8PtBNQ51VqOZhl",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.5857843137254902, \"f1\": 0.5888077858880778, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.43      0.91      0.58       129\\n    paraphrase       0.92      0.43      0.59       279\\n\\n      accuracy                           0.59       408\\n     macro avg       0.67      0.67      0.59       408\\n  weighted avg       0.76      0.59      0.59       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_0c5952182110d6240069da595f9394819b80e15d236aff83e3"
+      },
+      "model_output": {
+        "response_id": "resp_0c5952182110d6240069da595f9394819b80e15d236aff83e3",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_gv7yksa8vZyzS9OIv1A2jMMT",
+            "arguments": {
+              "item_name": "consensus_then_avg_margin_mrpc_summary",
+              "start_position": 0,
+              "end_position": 10
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_gv7yksa8vZyzS9OIv1A2jMMT",
+        "arguments": {
+          "item_name": "consensus_then_avg_margin_mrpc_summary",
+          "start_position": 0,
+          "end_position": 10
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.7009803921568627,
+            "f1": 0.769811320754717,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.52      0.64      0.57       129\n    paraphrase       0.81      0.73      0.77       279\n\n      accuracy                           0.70       408\n     macro avg       0.67      0.68      0.67       408\n  weighted avg       0.72      0.70      0.71       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 5935,
+        "output_tokens": 36,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 3865,
+        "api_latency_s": 1.8406,
+        "exec_latency_s": 0.0119
+      },
+      "error": null
+    },
+    {
+      "turn": 15,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_gv7yksa8vZyzS9OIv1A2jMMT",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.7009803921568627, \"f1\": 0.769811320754717, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.52      0.64      0.57       129\\n    paraphrase       0.81      0.73      0.77       279\\n\\n      accuracy                           0.70       408\\n     macro avg       0.67      0.68      0.67       408\\n  weighted avg       0.72      0.70      0.71       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_0c5952182110d6240069da596170e4819b8bef48fc98a062d0"
+      },
+      "model_output": {
+        "response_id": "resp_0c5952182110d6240069da596170e4819b8bef48fc98a062d0",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_owDNEo4TZXJb7JNO6CuZVQoC",
+            "arguments": {
+              "item_name": "mrpc_entailment_prediction",
+              "start_position": 0,
+              "end_position": 3
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_owDNEo4TZXJb7JNO6CuZVQoC",
+        "arguments": {
+          "item_name": "mrpc_entailment_prediction",
+          "start_position": 0,
+          "end_position": 3
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "prediction": 1,
+            "dir12": 7.967843055725098,
+            "dir21": 6.533724784851074
+          },
+          {
+            "prediction": 0,
+            "dir12": -9.776514053344727,
+            "dir21": -0.8201398849487305
+          },
+          {
+            "prediction": 1,
+            "dir12": -0.6154599189758301,
+            "dir21": 6.547325134277344
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 6136,
+        "output_tokens": 88,
+        "reasoning_tokens": 52,
+        "conversation_tokens": 4066,
+        "api_latency_s": 2.4625,
+        "exec_latency_s": 0.0246
+      },
+      "error": null
+    },
+    {
+      "turn": 16,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_owDNEo4TZXJb7JNO6CuZVQoC",
+            "output": "{\"ok\": true, \"result\": [{\"prediction\": 1, \"dir12\": 7.967843055725098, \"dir21\": 6.533724784851074}, {\"prediction\": 0, \"dir12\": -9.776514053344727, \"dir21\": -0.8201398849487305}, {\"prediction\": 1, \"dir12\": -0.6154599189758301, \"dir21\": 6.547325134277344}]}"
+          }
+        ],
+        "previous_response_id": "resp_0c5952182110d6240069da5963ede0819bbf437731bab92b55"
+      },
+      "model_output": {
+        "response_id": "resp_0c5952182110d6240069da5963ede0819bbf437731bab92b55",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item_names",
+            "call_id": "call_23SdL6uTWwoerr1aS571rtCa",
+            "arguments": {
+              "item_type": "file_list"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item_names",
+        "call_id": "call_23SdL6uTWwoerr1aS571rtCa",
+        "arguments": {
+          "item_type": "file_list"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": []
+      },
+      "metrics": {
+        "input_tokens": 6342,
+        "output_tokens": 610,
+        "reasoning_tokens": 587,
+        "conversation_tokens": 4272,
+        "api_latency_s": 9.5844,
+        "exec_latency_s": 0.0236
+      },
+      "error": null
+    },
+    {
+      "turn": 17,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_23SdL6uTWwoerr1aS571rtCa",
+            "output": "{\"ok\": true, \"result\": []}"
+          }
+        ],
+        "previous_response_id": "resp_0c5952182110d6240069da596d8e74819bb9c30def481876af"
+      },
+      "model_output": {
+        "response_id": "resp_0c5952182110d6240069da596d8e74819bb9c30def481876af",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "record_search",
+            "call_id": "call_XprFsN0FJpawj4yFIsLbcUa3",
+            "arguments": {
+              "record_text": "swapped"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "record_search",
+        "call_id": "call_XprFsN0FJpawj4yFIsLbcUa3",
+        "arguments": {
+          "record_text": "swapped"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": []
+      },
+      "metrics": {
+        "input_tokens": 6974,
+        "output_tokens": 60,
+        "reasoning_tokens": 38,
+        "conversation_tokens": 4904,
+        "api_latency_s": 2.0985,
+        "exec_latency_s": 0.0092
+      },
+      "error": null
+    },
+    {
+      "turn": 18,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_XprFsN0FJpawj4yFIsLbcUa3",
+            "output": "{\"ok\": true, \"result\": []}"
+          }
+        ],
+        "previous_response_id": "resp_0c5952182110d6240069da596fa8a0819ba81222fda5d2e6dc"
+      },
+      "model_output": {
+        "response_id": "resp_0c5952182110d6240069da596fa8a0819ba81222fda5d2e6dc",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "record_search",
+            "call_id": "call_sUF8C04wr5WMTHg8EzTPoVE5",
+            "arguments": {
+              "record_text": "yes_logits"
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "record_search",
+        "call_id": "call_sUF8C04wr5WMTHg8EzTPoVE5",
+        "arguments": {
+          "record_text": "yes_logits"
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "flan_prediction_and_logit_prefix",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped",
+          "google_flan_prediction_swapped"
+        ]
+      },
+      "metrics": {
+        "input_tokens": 7055,
+        "output_tokens": 39,
+        "reasoning_tokens": 17,
+        "conversation_tokens": 4985,
+        "api_latency_s": 1.4483,
+        "exec_latency_s": 0.0339
+      },
+      "error": null
+    },
+    {
+      "turn": 19,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_sUF8C04wr5WMTHg8EzTPoVE5",
+            "output": "{\"ok\": true, \"result\": [\"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"flan_prediction_and_logit_prefix\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\", \"google_flan_prediction_swapped\"]}"
+          }
+        ],
+        "previous_response_id": "resp_0c5952182110d6240069da597124dc819ba778fdbcc78c578c"
+      },
+      "model_output": {
+        "response_id": "resp_0c5952182110d6240069da597124dc819ba778fdbcc78c578c",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_eRld3vMhHk0gv0221CJ11m6H",
+            "arguments": {
+              "item_name": "pipeline_distilbert_softmax_probs",
+              "start_position": 0,
+              "end_position": 3
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_eRld3vMhHk0gv0221CJ11m6H",
+        "arguments": {
+          "item_name": "pipeline_distilbert_softmax_probs",
+          "start_position": 0,
+          "end_position": 3
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "prediction": 1,
+            "positive_probs": 0.983514666557312
+          },
+          {
+            "prediction": 0,
+            "positive_probs": 0.18237046897411346
+          },
+          {
+            "prediction": 0,
+            "positive_probs": 0.2533007562160492
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 11522,
+        "output_tokens": 418,
+        "reasoning_tokens": 381,
+        "conversation_tokens": 9452,
+        "api_latency_s": 7.0339,
+        "exec_latency_s": 0.0217
+      },
+      "error": null
+    },
+    {
+      "turn": 20,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_eRld3vMhHk0gv0221CJ11m6H",
+            "output": "{\"ok\": true, \"result\": [{\"prediction\": 1, \"positive_probs\": 0.983514666557312}, {\"prediction\": 0, \"positive_probs\": 0.18237046897411346}, {\"prediction\": 0, \"positive_probs\": 0.2533007562160492}]}"
+          }
+        ],
+        "previous_response_id": "resp_0c5952182110d6240069da59783170819bab118e5ac91a9fd2"
+      },
+      "model_output": {
+        "response_id": "resp_0c5952182110d6240069da59783170819bab118e5ac91a9fd2",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_SDfWrOzF0hlxwn6fx53cThL5",
+            "arguments": {
+              "item_name": "pipeline_distilbert_threshold",
+              "start_position": 0,
+              "end_position": 3
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_SDfWrOzF0hlxwn6fx53cThL5",
+        "arguments": {
+          "item_name": "pipeline_distilbert_threshold",
+          "start_position": 0,
+          "end_position": 3
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "prediction": 1,
+            "paraphrase_probs": 0.983514666557312
+          },
+          {
+            "prediction": 0,
+            "paraphrase_probs": 0.18237046897411346
+          },
+          {
+            "prediction": 0,
+            "paraphrase_probs": 0.2533007562160492
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 12019,
+        "output_tokens": 33,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 9949,
+        "api_latency_s": 1.7196,
+        "exec_latency_s": 0.0238
+      },
+      "error": null
+    },
+    {
+      "turn": 21,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_SDfWrOzF0hlxwn6fx53cThL5",
+            "output": "{\"ok\": true, \"result\": [{\"prediction\": 1, \"paraphrase_probs\": 0.983514666557312}, {\"prediction\": 0, \"paraphrase_probs\": 0.18237046897411346}, {\"prediction\": 0, \"paraphrase_probs\": 0.2533007562160492}]}"
+          }
+        ],
+        "previous_response_id": "resp_0c5952182110d6240069da5979eef0819b96ba28d62e92a359"
+      },
+      "model_output": {
+        "response_id": "resp_0c5952182110d6240069da5979eef0819b96ba28d62e92a359",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_0VfytsbiEnvgIaI6plnic8lw",
+            "arguments": {
+              "item_name": "mrpc_paraphrase_inference_distilbert_output",
+              "start_position": 0,
+              "end_position": 3
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_0VfytsbiEnvgIaI6plnic8lw",
+        "arguments": {
+          "item_name": "mrpc_paraphrase_inference_distilbert_output",
+          "start_position": 0,
+          "end_position": 3
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.8578431372549019,
+            "f1": 0.9026845637583892,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.89      0.63      0.74       129\n    paraphrase       0.85      0.96      0.90       279\n\n      accuracy                           0.86       408\n     macro avg       0.87      0.80      0.82       408\n  weighted avg       0.86      0.86      0.85       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 12137,
+        "output_tokens": 96,
+        "reasoning_tokens": 55,
+        "conversation_tokens": 10067,
+        "api_latency_s": 2.0005,
+        "exec_latency_s": 0.0194
+      },
+      "error": null
+    },
+    {
+      "turn": 22,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_0VfytsbiEnvgIaI6plnic8lw",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.8578431372549019, \"f1\": 0.9026845637583892, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.89      0.63      0.74       129\\n    paraphrase       0.85      0.96      0.90       279\\n\\n      accuracy                           0.86       408\\n     macro avg       0.87      0.80      0.82       408\\n  weighted avg       0.86      0.86      0.85       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_0c5952182110d6240069da597bf4b8819b97084536855667e4"
+      },
+      "model_output": {
+        "response_id": "resp_0c5952182110d6240069da597bf4b8819b97084536855667e4",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_XOP6qi4Yl7g6rjzUZwdc5085",
+            "arguments": {
+              "item_name": "flan_t5_contextual_calibrated_yes_no_mrpc_summary",
+              "start_position": 0,
+              "end_position": 10
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_XOP6qi4Yl7g6rjzUZwdc5085",
+        "arguments": {
+          "item_name": "flan_t5_contextual_calibrated_yes_no_mrpc_summary",
+          "start_position": 0,
+          "end_position": 10
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.40441176470588236,
+            "f1": 0.24299065420560748,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.34      0.98      0.51       129\n    paraphrase       0.93      0.14      0.24       279\n\n      accuracy                           0.40       408\n     macro avg       0.64      0.56      0.38       408\n  weighted avg       0.74      0.40      0.33       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 12399,
+        "output_tokens": 429,
+        "reasoning_tokens": 385,
+        "conversation_tokens": 10329,
+        "api_latency_s": 7.042,
+        "exec_latency_s": 0.0129
+      },
+      "error": null
+    },
+    {
+      "turn": 23,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_XOP6qi4Yl7g6rjzUZwdc5085",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.40441176470588236, \"f1\": 0.24299065420560748, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.34      0.98      0.51       129\\n    paraphrase       0.93      0.14      0.24       279\\n\\n      accuracy                           0.40       408\\n     macro avg       0.64      0.56      0.38       408\\n  weighted avg       0.74      0.40      0.33       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_0c5952182110d6240069da59830448819ba954e514699a28a8"
+      },
+      "model_output": {
+        "response_id": "resp_0c5952182110d6240069da59830448819ba954e514699a28a8",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_wHxZOk3GCInIMV7fcn2Er5uS",
+            "arguments": {
+              "item_name": "flan_t5_full_answer_logprob_mrpc_summary",
+              "start_position": 0,
+              "end_position": 10
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_wHxZOk3GCInIMV7fcn2Er5uS",
+        "arguments": {
+          "item_name": "flan_t5_full_answer_logprob_mrpc_summary",
+          "start_position": 0,
+          "end_position": 10
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.6495098039215687,
+            "f1": 0.6911447084233261,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.47      0.81      0.59       129\n    paraphrase       0.87      0.57      0.69       279\n\n      accuracy                           0.65       408\n     macro avg       0.67      0.69      0.64       408\n  weighted avg       0.74      0.65      0.66       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 12994,
+        "output_tokens": 39,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 10924,
+        "api_latency_s": 2.9296,
+        "exec_latency_s": 0.0108
+      },
+      "error": null
+    },
+    {
+      "turn": 24,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_wHxZOk3GCInIMV7fcn2Er5uS",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.6495098039215687, \"f1\": 0.6911447084233261, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.47      0.81      0.59       129\\n    paraphrase       0.87      0.57      0.69       279\\n\\n      accuracy                           0.65       408\\n     macro avg       0.67      0.69      0.64       408\\n  weighted avg       0.74      0.65      0.66       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_0c5952182110d6240069da5985f328819b9d44e0d191a659a5"
+      },
+      "model_output": {
+        "response_id": "resp_0c5952182110d6240069da5985f328819b9d44e0d191a659a5",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_WO9JLXvMIDmxvDtw9qdgp0KQ",
+            "arguments": {
+              "item_name": "flan_t5_true_false_first_step_mrpc_summary",
+              "start_position": 0,
+              "end_position": 10
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_WO9JLXvMIDmxvDtw9qdgp0KQ",
+        "arguments": {
+          "item_name": "flan_t5_true_false_first_step_mrpc_summary",
+          "start_position": 0,
+          "end_position": 10
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "accuracy": 0.5833333333333334,
+            "f1": 0.6443514644351465,
+            "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.40      0.65      0.50       129\n    paraphrase       0.77      0.55      0.64       279\n\n      accuracy                           0.58       408\n     macro avg       0.59      0.60      0.57       408\n  weighted avg       0.66      0.58      0.60       408\n"
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 13199,
+        "output_tokens": 39,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 11129,
+        "api_latency_s": 2.9156,
+        "exec_latency_s": 0.0144
+      },
+      "error": null
+    },
+    {
+      "turn": 25,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_WO9JLXvMIDmxvDtw9qdgp0KQ",
+            "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.5833333333333334, \"f1\": 0.6443514644351465, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.40      0.65      0.50       129\\n    paraphrase       0.77      0.55      0.64       279\\n\\n      accuracy                           0.58       408\\n     macro avg       0.59      0.60      0.57       408\\n  weighted avg       0.66      0.58      0.60       408\\n\"}]}"
+          }
+        ],
+        "previous_response_id": "resp_0c5952182110d6240069da5988df50819b83cefed6aa025fc4"
+      },
+      "model_output": {
+        "response_id": "resp_0c5952182110d6240069da5988df50819b83cefed6aa025fc4",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_KEG7s98YWfsL6iELlyhOp2Cu",
+            "arguments": {
+              "item_name": "glue_mrpc_validation",
+              "start_position": 0,
+              "end_position": 3
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_KEG7s98YWfsL6iELlyhOp2Cu",
+        "arguments": {
+          "item_name": "glue_mrpc_validation",
+          "start_position": 0,
+          "end_position": 3
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "sentence1": "He said the foodservice pie business doesn 't fit the company 's long-term growth strategy .",
+            "sentence2": "\" The foodservice pie business does not fit our long-term growth strategy .",
+            "label": 1,
+            "idx": 9
+          },
+          {
+            "sentence1": "Magnarelli said Racicot hated the Iraqi regime and looked forward to using his long years of training in the war .",
+            "sentence2": "His wife said he was \" 100 percent behind George Bush \" and looked forward to using his years of training in the war .",
+            "label": 0,
+            "idx": 18
+          },
+          {
+            "sentence1": "The dollar was at 116.92 yen against the yen , flat on the session , and at 1.2891 against the Swiss franc , also flat .",
+            "sentence2": "The dollar was at 116.78 yen JPY = , virtually flat on the session , and at 1.2871 against the Swiss franc CHF = , down 0.1 percent .",
+            "label": 0,
+            "idx": 25
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 13404,
+        "output_tokens": 301,
+        "reasoning_tokens": 266,
+        "conversation_tokens": 11334,
+        "api_latency_s": 5.9163,
+        "exec_latency_s": 0.0138
+      },
+      "error": null
+    },
+    {
+      "turn": 26,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_KEG7s98YWfsL6iELlyhOp2Cu",
+            "output": "{\"ok\": true, \"result\": [{\"sentence1\": \"He said the foodservice pie business doesn 't fit the company 's long-term growth strategy .\", \"sentence2\": \"\\\" The foodservice pie business does not fit our long-term growth strategy .\", \"label\": 1, \"idx\": 9}, {\"sentence1\": \"Magnarelli said Racicot hated the Iraqi regime and looked forward to using his long years of training in the war .\", \"sentence2\": \"His wife said he was \\\" 100 percent behind George Bush \\\" and looked forward to using his years of training in the war .\", \"label\": 0, \"idx\": 18}, {\"sentence1\": \"The dollar was at 116.92 yen against the yen , flat on the session , and at 1.2891 against the Swiss franc , also flat .\", \"sentence2\": \"The dollar was at 116.78 yen JPY = , virtually flat on the session , and at 1.2871 against the Swiss franc CHF = , down 0.1 percent .\", \"label\": 0, \"idx\": 25}]}"
+          }
+        ],
+        "previous_response_id": "resp_0c5952182110d6240069da598ecb44819b86341d87ac887ad8"
+      },
+      "model_output": {
+        "response_id": "resp_0c5952182110d6240069da598ecb44819b86341d87ac887ad8",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_mYePiWOwV4RYmhkNMV41RLK7",
+            "arguments": {
+              "item_name": "mrpc_gate_margin_prediction",
+              "start_position": 0,
+              "end_position": 3
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_mYePiWOwV4RYmhkNMV41RLK7",
+        "arguments": {
+          "item_name": "mrpc_gate_margin_prediction",
+          "start_position": 0,
+          "end_position": 3
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "prediction": 1,
+            "margin_12": 7.967843055725098,
+            "margin_21": 6.533724784851074,
+            "gate": 1
+          },
+          {
+            "prediction": 0,
+            "margin_12": -9.776514053344727,
+            "margin_21": -0.8201401233673096,
+            "gate": 0
+          },
+          {
+            "prediction": 1,
+            "margin_12": -0.6154601573944092,
+            "margin_21": 6.547325134277344,
+            "gate": 1
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 13954,
+        "output_tokens": 96,
+        "reasoning_tokens": 61,
+        "conversation_tokens": 11884,
+        "api_latency_s": 2.6492,
+        "exec_latency_s": 0.0158
+      },
+      "error": null
+    },
+    {
+      "turn": 27,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_mYePiWOwV4RYmhkNMV41RLK7",
+            "output": "{\"ok\": true, \"result\": [{\"prediction\": 1, \"margin_12\": 7.967843055725098, \"margin_21\": 6.533724784851074, \"gate\": 1}, {\"prediction\": 0, \"margin_12\": -9.776514053344727, \"margin_21\": -0.8201401233673096, \"gate\": 0}, {\"prediction\": 1, \"margin_12\": -0.6154601573944092, \"margin_21\": 6.547325134277344, \"gate\": 1}]}"
+          }
+        ],
+        "previous_response_id": "resp_0c5952182110d6240069da5991786c819ba2161615e014f496"
+      },
+      "model_output": {
+        "response_id": "resp_0c5952182110d6240069da5991786c819ba2161615e014f496",
+        "output_items": [
+          {
+            "type": "reasoning",
+            "summary": []
+          },
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_qnWwcFD3xZ17j7MAWDHYp8f8",
+            "arguments": {
+              "item_name": "mrpc_mean_gap_prediction",
+              "start_position": 0,
+              "end_position": 3
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_qnWwcFD3xZ17j7MAWDHYp8f8",
+        "arguments": {
+          "item_name": "mrpc_mean_gap_prediction",
+          "start_position": 0,
+          "end_position": 3
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "prediction": 1,
+            "gap_12": 0.9963528513908386,
+            "gap_21": 0.8122128844261169
+          },
+          {
+            "prediction": 0,
+            "gap_12": -0.9993698596954346,
+            "gap_21": -0.000674131908454001
+          },
+          {
+            "prediction": 1,
+            "gap_12": -0.00016976663027890027,
+            "gap_21": 0.9945570826530457
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 14192,
+        "output_tokens": 247,
+        "reasoning_tokens": 212,
+        "conversation_tokens": 12122,
+        "api_latency_s": 5.5126,
+        "exec_latency_s": 0.0102
+      },
+      "error": null
+    },
+    {
+      "turn": 28,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_qnWwcFD3xZ17j7MAWDHYp8f8",
+            "output": "{\"ok\": true, \"result\": [{\"prediction\": 1, \"gap_12\": 0.9963528513908386, \"gap_21\": 0.8122128844261169}, {\"prediction\": 0, \"gap_12\": -0.9993698596954346, \"gap_21\": -0.000674131908454001}, {\"prediction\": 1, \"gap_12\": -0.00016976663027890027, \"gap_21\": 0.9945570826530457}]}"
+          }
+        ],
+        "previous_response_id": "resp_0c5952182110d6240069da59971ba8819bb9bb12b3520e9d1e"
+      },
+      "model_output": {
+        "response_id": "resp_0c5952182110d6240069da59971ba8819bb9bb12b3520e9d1e",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_XXGbyNhcokPq5MQ5oDlYvFZ2",
+            "arguments": {
+              "item_name": "mrpc_min_margin_prediction",
+              "start_position": 0,
+              "end_position": 3
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_XXGbyNhcokPq5MQ5oDlYvFZ2",
+        "arguments": {
+          "item_name": "mrpc_min_margin_prediction",
+          "start_position": 0,
+          "end_position": 3
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "prediction": 1,
+            "min_margin": 6.533724784851074
+          },
+          {
+            "prediction": 0,
+            "min_margin": -9.776514053344727
+          },
+          {
+            "prediction": 0,
+            "min_margin": -0.6154601573944092
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 14568,
+        "output_tokens": 33,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 12498,
+        "api_latency_s": 1.4238,
+        "exec_latency_s": 0.018
+      },
+      "error": null
+    },
+    {
+      "turn": 29,
+      "model_input": {
+        "pending_messages": [
+          {
+            "type": "function_call_output",
+            "call_id": "call_XXGbyNhcokPq5MQ5oDlYvFZ2",
+            "output": "{\"ok\": true, \"result\": [{\"prediction\": 1, \"min_margin\": 6.533724784851074}, {\"prediction\": 0, \"min_margin\": -9.776514053344727}, {\"prediction\": 0, \"min_margin\": -0.6154601573944092}]}"
+          }
+        ],
+        "previous_response_id": "resp_0c5952182110d6240069da59987140819b8e162dc260868112"
+      },
+      "model_output": {
+        "response_id": "resp_0c5952182110d6240069da59987140819b8e162dc260868112",
+        "output_items": [
+          {
+            "type": "function_call",
+            "name": "get_item",
+            "call_id": "call_NnHCGO7vNxhxr4OHnS4NIHLW",
+            "arguments": {
+              "item_name": "mrpc_neutral_penalty_prediction",
+              "start_position": 0,
+              "end_position": 3
+            }
+          }
+        ]
+      },
+      "tool_call": {
+        "name": "get_item",
+        "call_id": "call_NnHCGO7vNxhxr4OHnS4NIHLW",
+        "arguments": {
+          "item_name": "mrpc_neutral_penalty_prediction",
+          "start_position": 0,
+          "end_position": 3
+        }
+      },
+      "tool_output": {
+        "ok": true,
+        "result": [
+          {
+            "prediction": 1,
+            "score_12": 5.820394039154053,
+            "score_21": 1.4785807132720947
+          },
+          {
+            "prediction": 0,
+            "score_12": -9.776514053344727,
+            "score_21": -7.540008544921875
+          },
+          {
+            "prediction": 0,
+            "score_12": -8.518594741821289,
+            "score_21": 5.9534173011779785
+          }
+        ]
+      },
+      "metrics": {
+        "input_tokens": 14679,
+        "output_tokens": 35,
+        "reasoning_tokens": 0,
+        "conversation_tokens": 12609,
+        "api_latency_s": 1.4169,
+        "exec_latency_s": 0.0153
+      },
+      "error": null
+    }
+  ],
+  "final_result": null,
+  "run_error": "Max turns reached before finalize_result.",
+  "metrics_summary": {
+    "tokens": {
+      "input": 233299,
+      "output": 3927,
+      "reasoning": 2887,
+      "total": 237226,
+      "system_estimate": 2070,
+      "conversation": 171391
+    },
+    "code": {
+      "executions": 0,
+      "failed_executions": 0,
+      "total_lines": 0
+    },
+    "timing": {
+      "api_latency_s": 93.62,
+      "exec_latency_s": 0.545,
+      "wall_time_s": 94.165
+    },
+    "api_calls": 30,
+    "cost": null
+  }
+}

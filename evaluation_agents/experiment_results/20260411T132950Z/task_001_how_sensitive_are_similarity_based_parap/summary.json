@@ -1,0 +1,161 @@
+{
+  "task_idx": 1,
+  "task": "How sensitive are similarity-based paraphrase classifiers to the choice of decision threshold, and does this vary across model families?",
+  "difficulty": "medium",
+  "expected_notebooks": [
+    "sentence_transformers_bi_encoder_cosine_mrpc",
+    "st_paraphrase_minilm_l6_cosine_threshold_mrpc",
+    "st_paraphrase_minilm_l3_cosine_threshold_mrpc",
+    "st_all_minilm_l6_l2_distance_threshold_mrpc",
+    "st_all_distilroberta_v1_cosine_threshold_mrpc",
+    "distilbert_mean_cosine_median_threshold_mrpc",
+    "hf_pipeline_mrpc_threshold_070",
+    "quora_cross_encoder_softmax_threshold_065_mrpc",
+    "paraphrase_score_threshold_zero_shot_mrpc"
+  ],
+  "min_notebooks_expected": 6,
+  "key_finding": "Threshold choice significantly shifts the precision/recall trade-off. The fine-tuned HF pipeline at threshold=0.70 (acc ~0.848, F1 ~0.890) stays close to its argmax baseline, while bi-encoder cosine models (paraphrase-MiniLM-L6 at 0.78: acc ~0.701, F1 ~0.771; all-distilroberta-v1 at 0.72: acc ~0.723, F1 ~0.806) and the cross-encoder (quora-distilroberta at 0.65: acc ~0.679, F1 ~0.758) degrade more sharply at non-optimal thresholds. Zero-shot NLI models are especially sensitive: applying a threshold of 0.55 (paraphrase_score_threshold_zero_shot_mrpc) yields acc ~0.578, F1 ~0.674. The agent should identify notebooks from multiple families that vary the threshold, report how accuracy and F1 change, and note that the optimal threshold and sensitivity to its choice differ substantially by model family and similarity metric.",
+  "experiments": {
+    "items_only": {
+      "error": null,
+      "stats": {
+        "total_tokens": 826015,
+        "input_tokens": 812408,
+        "output_tokens": 13607,
+        "reasoning_tokens": 11334,
+        "num_turns": 29,
+        "num_api_function_calls": 28,
+        "wall_time_s": 237.761
+      },
+      "rating": {
+        "score": 3,
+        "notebook_coverage": "4 of 9 expected notebooks cited",
+        "rationale": "Cites distilbert_mean_cosine_median_threshold_mrpc, st_paraphrase_minilm_l6_cosine_threshold_mrpc, st_all_minilm_l6_l2_distance_threshold_mrpc, and st_all_distilroberta_v1_cosine_threshold_mrpc. The summary correctly says threshold choice changes the operating point and varies by family, with good discussion of class-wise recall and limitations, but it misses the HF pipeline, cross-encoder, zero-shot, and MiniLM-L3 evidence from the reference set."
+      }
+    },
+    "dataset_search": {
+      "error": "Max turns reached before finalize_result.",
+      "rating": {
+        "score": 1,
+        "notebook_coverage": "0 of 9 expected notebooks cited",
+        "rationale": "No finalized result was produced, so there is no notebook coverage, finding, or analysis to assess."
+      }
+    },
+    "dataset_description": {
+      "error": null,
+      "stats": {
+        "total_tokens": 331883,
+        "input_tokens": 321469,
+        "output_tokens": 10414,
+        "reasoning_tokens": 8360,
+        "num_turns": 20,
+        "num_api_function_calls": 19,
+        "wall_time_s": 180.739
+      },
+      "rating": {
+        "score": 3,
+        "notebook_coverage": "4 of 9 expected notebooks cited",
+        "rationale": "Finds distilbert_mean_cosine_median_threshold_mrpc plus MiniLM-L3, MiniLM-L6, and all-distilroberta threshold notebooks. It correctly identifies threshold sensitivity and discusses family differences and MRPC imbalance, but coverage is below the 6-notebook minimum and it omits the HF pipeline, cross-encoder, zero-shot, and expected L2-distance notebook."
+      }
+    },
+    "dataset_description_embedding": {
+      "error": null,
+      "stats": {
+        "total_tokens": 373742,
+        "input_tokens": 364865,
+        "output_tokens": 8877,
+        "reasoning_tokens": 7030,
+        "num_turns": 21,
+        "num_api_function_calls": 20,
+        "wall_time_s": 165.242
+      },
+      "rating": {
+        "score": 3,
+        "notebook_coverage": "4 of 9 expected notebooks cited",
+        "rationale": "Uses four expected notebooks and gives a solid interpretation with macro-F1 and recall balance, so the qualitative point about threshold sensitivity is reasonable. Still, it falls short of minimum coverage and misses the key reference contrast that the HF pipeline is relatively robust while zero-shot models are especially sensitive."
+      }
+    },
+    "dataset_properties": {
+      "error": "Max turns reached before finalize_result.",
+      "rating": {
+        "score": 1,
+        "notebook_coverage": "0 of 9 expected notebooks cited",
+        "rationale": "No finalized result was produced, so it does not address the task."
+      }
+    },
+    "items_and_code": {
+      "error": "Max turns reached before finalize_result.",
+      "rating": {
+        "score": 1,
+        "notebook_coverage": "0 of 9 expected notebooks cited",
+        "rationale": "No finalized result was produced, so there is no usable evidence or summary."
+      }
+    },
+    "items_and_lineage": {
+      "error": null,
+      "stats": {
+        "total_tokens": 459601,
+        "input_tokens": 448970,
+        "output_tokens": 10631,
+        "reasoning_tokens": 8244,
+        "num_turns": 28,
+        "num_api_function_calls": 27,
+        "wall_time_s": 191.237
+      },
+      "rating": {
+        "score": 3,
+        "notebook_coverage": "5 of 9 expected notebooks cited",
+        "rationale": "This is one of the strongest non-error submissions, citing MiniLM-L3, MiniLM-L6, all-distilroberta, the all-MiniLM L2-distance notebook, and distilbert_mean_cosine_median_threshold_mrpc. The analysis is thoughtful and notes score geometry and limitations, but it is still below the 6-notebook minimum and misses the HF pipeline, cross-encoder, and zero-shot notebooks central to the reference finding."
+      }
+    },
+    "code_search": {
+      "error": "Max turns reached before finalize_result.",
+      "rating": {
+        "score": 1,
+        "notebook_coverage": "0 of 9 expected notebooks cited",
+        "rationale": "No finalized result was produced."
+      }
+    },
+    "code_description": {
+      "error": "Max turns reached before finalize_result.",
+      "rating": {
+        "score": 1,
+        "notebook_coverage": "0 of 9 expected notebooks cited",
+        "rationale": "No finalized result was produced."
+      }
+    },
+    "code_description_embedding": {
+      "error": "Max turns reached before finalize_result.",
+      "rating": {
+        "score": 1,
+        "notebook_coverage": "0 of 9 expected notebooks cited",
+        "rationale": "No finalized result was produced."
+      }
+    },
+    "code_properties": {
+      "error": null,
+      "stats": {
+        "total_tokens": 465908,
+        "input_tokens": 454254,
+        "output_tokens": 11654,
+        "reasoning_tokens": 9392,
+        "num_turns": 30,
+        "num_api_function_calls": 29,
+        "wall_time_s": 206.933
+      },
+      "rating": {
+        "score": 3,
+        "notebook_coverage": "5 of 9 expected notebooks cited",
+        "rationale": "Cites distilbert_mean_cosine_median_threshold_mrpc, MiniLM-L3, MiniLM-L6, all-distilroberta, and quora_cross_encoder_softmax_threshold_065_mrpc. It correctly emphasizes threshold sensitivity, family-specific score scales, and the danger of relying on positive-class F1 alone, but it misses the HF pipeline, zero-shot, and expected all-MiniLM L2-distance notebook, so it remains below minimum coverage."
+      }
+    },
+    "all_functions": {
+      "error": "Max turns reached before finalize_result.",
+      "rating": {
+        "score": 1,
+        "notebook_coverage": "0 of 9 expected notebooks cited",
+        "rationale": "No finalized result was produced, so it cannot be credited with coverage or correctness."
+      }
+    }
+  }
+}

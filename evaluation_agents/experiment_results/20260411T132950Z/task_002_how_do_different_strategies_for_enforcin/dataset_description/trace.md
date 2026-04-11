@@ -1,0 +1,2120 @@
+# Agent Trace — 20260411T142425Z
+
+**Model:** `gpt-5.4`  
+**Timestamp:** 2026-04-11T14:24:25.809025+00:00  
+**Task:** How do different strategies for enforcing prediction symmetry affect accuracy when using NLI-based and zero-shot models for paraphrase detection on MRPC?
+
+**System Prompt:**
+```
+You are a data analyst assistant with access to a TableVault repository.
+
+Your goal is to investigate the repository and extract **structured evidence**
+relevant to the user task.
+
+The final output should summarize the evidence stored in the TableVault
+repository in the form of:
+
+1. a **results table** (structured rows), and
+2. a **scientific-style summary** interpreting that evidence.
+
+The results table should represent **summary evidence extracted from the
+repository**. Each row corresponds to a piece of evidence such as an experiment
+result, dataset observation, workflow output, or other structured record.
+
+Example result table schemas:
+
+Example 1 — workflow evaluation evidence
+
+[
+  {
+    "workflow": "baseline_xgboost",
+    "model": "xgboost",
+    "running_time": 132.4,
+    "accuracy": 0.91
+  },
+  {
+    "workflow": "llm_augmented_pipeline",
+    "model": "gpt-4o-mini",
+    "running_time": 245.8,
+    "accuracy": 0.94
+  }
+]
+
+Example 2 — sample-level classification evidence
+
+[
+  {
+    "data_sample": "sample_001",
+    "true_label": "sports",
+    "predicted_label": "sports",
+    "reasoning_strategy": "few-shot classification"
+  },
+  {
+    "data_sample": "sample_002",
+    "true_label": "business",
+    "predicted_label": "technology",
+    "reasoning_strategy": "two-step reasoning + classification"
+  }
+]
+
+The columns depend on what evidence exists in the repository. Choose columns
+that best summarize the relevant structured evidence. Don't include unnecessary columns.
+
+------------------------------------------------------------
+
+## What is TableVault?
+
+TableVault is a centralized data repository (backed by ArangoDB) that stores
+**item lists** — ordered collections of data items. Every item list has a
+unique name and belongs to one of four types:
+
+| Type          | Stores                                         |
+|---------------|------------------------------------------------|
+| **file**      | References (paths) to external files           |
+| **document**  | Text strings (paragraphs, logs, notes, etc.)   |
+| **embedding** | Fixed-dimension float vectors                  |
+| **record**    | Structured rows (dict with predefined columns) |
+
+------------------------------------------------------------
+
+## How data gets into TableVault
+
+Data is ingested by Python processes. A Python script or notebook initialises
+a `Vault` object, and then calls `append_*` helpers to add items to the
+relevant lists.
+
+There may also be additional context about the lists stored in the repository.
+The available tool functions expose what context is accessible.
+
+------------------------------------------------------------
+
+## Tools
+
+Call the available TableVault query functions directly as tool calls — you do
+not need to write Python code. Use `finalize_result` to return the final answer.
+
+------------------------------------------------------------
+
+## Rules
+
+- Always act via tool calls — never just describe what you would do.
+- On errors, read the error message and retry with corrected arguments.
+- **Do not make direct HuggingFace model calls** — all model inference results
+  are pre-computed and stored in the TableVault repository. Retrieve them there.
+- **Minimize token usage**: gather enough evidence to answer the question well,
+  then stop. More specific queries and filters reduce the number of calls needed —
+  prefer targeted searches over broad scans. Stop as soon as you have sufficient
+  evidence to give a confident, well-supported answer.
+
+------------------------------------------------------------
+
+## Your output
+
+When you have enough information, call `finalize_result` with exactly this shape:
+
+{
+  "rows": [
+    {"column1": "value1", "column2": "value2"}
+  ],
+  "summary": "Scientific-style description of the evidence and interpretation."
+}
+
+------------------------------------------------------------
+
+## Summary expectations
+
+The **summary** should interpret the evidence in a research-style description.
+It should explain:
+
+• what the repository evidence suggests about the user's task
+• key findings or patterns in the retrieved data
+• notable issues, biases, or inconsistencies in existing workflows or results
+• limitations or gaps in the available evidence
+• how the returned table should be interpreted
+
+The summary should read like a short analytical explanation of the evidence,
+not just a description of the table.
+
+------------------------------------------------------------
+
+```
+
+---
+
+## Turn 0 — `description_search` [ok]
+
+### Model Input
+**previous_response_id:** `resp_0bd49b1f5c8407520069da5999df648193867a1f57c87770a8`
+
+**Pending messages:**
+```json
+[
+  {
+    "role": "user",
+    "content": "How do different strategies for enforcing prediction symmetry affect accuracy when using NLI-based and zero-shot models for paraphrase detection on MRPC?"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_0bd49b1f5c8407520069da5999df648193867a1f57c87770a8`
+
+**Output items:**
+```json
+[
+  {
+    "type": "reasoning",
+    "summary": []
+  },
+  {
+    "type": "function_call",
+    "name": "description_search",
+    "call_id": "call_XxJPdhkXzXNI7noDHGCCfq4D",
+    "arguments": {
+      "description_text": "MRPC paraphrase detection symmetry accuracy NLI zero-shot prediction symmetry"
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `description_search` | **call_id:** `call_XxJPdhkXzXNI7noDHGCCfq4D`
+
+**Arguments:**
+```json
+{
+  "description_text": "MRPC paraphrase detection symmetry accuracy NLI zero-shot prediction symmetry"
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": []
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 1705 | 103 | 70 | 0 | 2.022s | 0.042s |
+
+---
+
+## Turn 1 — `description_search` [ok]
+
+### Model Input
+**previous_response_id:** `resp_0bd49b1f5c8407520069da599bf08481938720682c4786fbf4`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_XxJPdhkXzXNI7noDHGCCfq4D",
+    "output": "{\"ok\": true, \"result\": []}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_0bd49b1f5c8407520069da599bf08481938720682c4786fbf4`
+
+**Output items:**
+```json
+[
+  {
+    "type": "reasoning",
+    "summary": []
+  },
+  {
+    "type": "function_call",
+    "name": "description_search",
+    "call_id": "call_iE1uHYUTjZ8kQbqvcAHdofcO",
+    "arguments": {
+      "description_text": "MRPC paraphrase"
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `description_search` | **call_id:** `call_iE1uHYUTjZ8kQbqvcAHdofcO`
+
+**Arguments:**
+```json
+{
+  "description_text": "MRPC paraphrase"
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    [
+      "BASE",
+      "sentence-transformers-sentence-1-distance_threshold is an embedding dataset containing one 384-dimensional sentence embedding for the sentence1 field of each example in the GLUE MRPC validation set. Each item is a normalized dense vector generated with the sentence-transformers/all-MiniLM-L6-v2 model, and each embedding is linked back to the corresponding source row in glue_mrpc_validation through the input_items index mapping. This dataset does not store raw text columns itself; its primary field is the embedding vector for sentence1. In this workflow, it serves as the sentence1 representation used with the matching sentence-transformers-sentence-2-distance_threshold embeddings to compute L2 distances, apply a fixed distance threshold, and produce paraphrase predictions.",
+      "sentence-transformers-sentence-1-distance_threshold",
+      "embedding_list"
+    ],
+    [
+      "BASE",
+      "Embedding list containing one 384-dimensional normalized sentence embedding per row for the sentence1 field of the GLUE MRPC validation dataset. Each embedding is generated with the sentence-transformers/all-MiniLM-L6-v2 model using max_seq_length=64, so inputs may be truncated beyond 64 tokens. Structure: this dataset stores a single embedding vector for each original example and is linked back to the corresponding row in glue_mrpc_validation via input item indices. In this workflow, it provides the vector representation of the first sentence in each pair, which is later compared with the matching sentence-transformers-sentence-2-max64 embedding using cosine similarity to produce paraphrase predictions.",
+      "sentence-transformers-sentence-1-max64",
+      "embedding_list"
+    ],
+    [
+      "BASE",
+      "This dataset stores the normalized SentenceTransformer embeddings for the sentence1 field of each example in the GLUE MRPC validation set. Each item is a single 384-dimensional float vector produced by the model sentence-transformers/paraphrase-MiniLM-L3-v2, with one embedding per input row and lineage linked back to the corresponding glue_mrpc_validation record.\n\nStructure: an embedding list with ndim=384. There are no tabular feature columns; each entry consists of the embedding vector plus metadata links to the source row in glue_mrpc_validation.\n\nRole in the workflow: this dataset represents the first sentence in each MRPC pair in embedding space. These vectors are used with the corresponding sentence-2 embeddings to compute cosine similarity scores, which are then thresholded (0.74) to generate paraphrase predictions.",
+      "sentence-transformers-sentence-1-threshold",
+      "embedding_list"
+    ],
+    [
+      "BASE",
+      "This dataset stores the sentence embeddings for the sentence1 field of the GLUE MRPC validation set. Each item is a 768-dimensional float vector produced by the sentence-transformers/all-distilroberta-v1 model with normalized embeddings enabled, so dot products correspond to cosine similarity. The dataset is structured as an embedding list: one embedding per MRPC validation example, with each embedding linked to the corresponding row in glue_mrpc_validation through input item provenance. In this workflow, it provides the first-sentence representation used with the matching sentence-transformers-sentence-2-threshold_2 embeddings to compute similarity scores and apply a 0.72 threshold for paraphrase prediction.",
+      "sentence-transformers-sentence-1-threshold_2",
+      "embedding_list"
+    ],
+    [
+      "BASE",
+      "This dataset stores one normalized sentence embedding per example for the sentence2 field in the GLUE MRPC validation split. Each item is a 384-dimensional float vector generated by the sentence-transformers/all-MiniLM-L6-v2 model, with each embedding linked back to the corresponding source row in glue_mrpc_validation via input item lineage. Structure: an embedding list where each entry contains a single 384-length embedding vector and its association to the matching MRPC example index. In this workflow, these sentence2 embeddings are paired with the corresponding sentence1 embeddings from sentence-transformers-sentence-1-distance_threshold, and the L2 distance between the two vectors is used with a fixed threshold to predict whether the sentence pair is a paraphrase.",
+      "sentence-transformers-sentence-2-distance_threshold",
+      "embedding_list"
+    ],
+    [
+      "BASE",
+      "Embedding dataset containing one 384-dimensional normalized sentence embedding per row for the sentence2 field of each example in the GLUE MRPC validation set. Each vector was produced with the sentence-transformers/all-MiniLM-L6-v2 model using a maximum sequence length of 64, so it represents the truncated second sentence in a paraphrase pair. The dataset structure is an embedding list: each item stores a single 384-float embedding and is linked back to the corresponding row in glue_mrpc_validation. In this workflow, these sentence2 embeddings are paired with the matching sentence-transformers-sentence-1-max64 embeddings to compute cosine similarity scores and generate paraphrase predictions.",
+      "sentence-transformers-sentence-2-max64",
+      "embedding_list"
+    ],
+    [
+      "BASE",
+      "sentence-transformers-sentence-2-threshold is an embedding dataset containing one normalized 384-dimensional sentence embedding for the sentence2 field of each example in the GLUE MRPC validation set. Each entry corresponds 1-to-1 with a row in glue_mrpc_validation and is linked back to the source record through input_items, so the dataset structure is an ordered list of embedding vectors plus provenance to the original example index range. The embeddings are produced with the sentence-transformers/paraphrase-MiniLM-L3-v2 model and are intended to represent the second sentence in each MRPC pair. In this workflow, this dataset is used together with the matching sentence-transformers-sentence-1-threshold embeddings to compute cosine similarity scores and generate threshold-based paraphrase predictions.",
+      "sentence-transformers-sentence-2-threshold",
+      "embedding_list"
+    ],
+    [
+      "BASE",
+      "This dataset stores the sentence embedding for the second sentence (sentence2) of each example in the GLUE MRPC validation set. It is an embedding list with one row per MRPC record, where each item contains a 768-dimensional, L2-normalized vector produced by the sentence-transformers/all-distilroberta-v1 model, and each embedding is linked back to the corresponding source row in glue_mrpc_validation through the input_items index range [i, i+1]. In this workflow, these sentence2 embeddings are paired with the corresponding sentence1 embeddings from sentence-transformers-sentence-1-threshold_2, and their dot product is used as cosine similarity to make threshold-based paraphrase predictions.",
+      "sentence-transformers-sentence-2-threshold_2",
+      "embedding_list"
+    ],
+    [
+      "BASE",
+      "Summary dataset for the MRPC validation evaluation of the consensus-then-average-margin inference method. It contains aggregate performance results computed by comparing the generated paraphrase predictions against the true labels from glue_mrpc_validation, using prediction records stored in mrpc_gate_margin_prediction. The dataset is structured as a record list with columns: accuracy (float), f1 (float), and classification_report (string containing the full per-class sklearn classification report for not_paraphrase and paraphrase). In this workflow, it serves as the final evaluation artifact for the notebook, linking the full MRPC validation set and the per-example prediction dataset to a compact summary of model performance.",
+      "consensus_then_avg_margin_mrpc_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "This dataset stores per-example paraphrase predictions for the GLUE MRPC validation set produced by a DistilBERT-based cosine similarity pipeline. For each sentence pair from glue_mrpc_validation, the notebook encodes sentence1 and sentence2 with distilbert-base-uncased, applies masked max pooling to the token embeddings, computes the cosine similarity between the two normalized sentence embeddings, and converts that score to a binary prediction using a threshold of 0.85.\n\nStructure:\n- prediction: integer binary label predicted by the similarity rule (1 = paraphrase, 0 = not paraphrase)\n- cosine_scores: float cosine similarity between the max-pooled embeddings of the two sentences\n\nEach record corresponds to one input sentence pair and is linked back to the source validation examples through input_items. In this workflow, the dataset serves as the main model-output table for downstream evaluation, inspection of correct and incorrect predictions, and creation of the final summary metrics dataset.",
+      "cosine_mrpc_max_pool_similarity_prediction",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "This dataset stores per-example paraphrase predictions for the GLUE MRPC validation set produced by this notebook\u2019s embedding-similarity baseline. Each record corresponds to one sentence pair from glue_mrpc_validation and contains two fields: prediction, a binary label (1 if the pair is predicted to be a paraphrase, 0 otherwise), and similarities, the cosine similarity score between the L2-normalized sentence embeddings of sentence1 and sentence2. The embeddings are generated with distilbert-base-uncased by averaging the last 4 hidden layers at the token level and then mean-pooling across tokens. Predictions are created by applying a fixed threshold of 0.85 to the similarity score. In this workflow, this dataset is the intermediate model output used to inspect individual examples, analyze errors, and compute the final evaluation summary in distilbert_last4_mean_cosine_mrpc_summary.",
+      "cosine_mrpc_mean_similarity_prediction",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Per-example prediction dataset for the GLUE MRPC validation split. Each record corresponds to one sentence pair from glue_mrpc_validation and stores the output of a simple paraphrase classifier built from DistilBERT sentence embeddings. The dataset has two fields: prediction, a binary label where 1 means paraphrase and 0 means not paraphrase, produced by thresholding the cosine similarity at 0.85; and score, the raw cosine similarity between the L2-normalized first-token embeddings of sentence1 and sentence2 from distilbert-base-uncased. In this workflow, this dataset is the main record of model inference results, used for error analysis, inspection of individual examples, and as input to the downstream summary dataset distilbert_cls_cosine_mrpc_summary.",
+      "cosine_mrpc_threshold_score",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "distilbert_cross_text_prediction stores per-example model outputs generated by applying the cross-encoder/quora-distilroberta-base cross-encoder to the GLUE MRPC validation dataset, using prefixed inputs of the form \u201cSentence 1: \u2026\u201d and \u201cSentence 2: \u2026\u201d. Each record corresponds to one source sentence pair from glue_mrpc_validation and contains two fields: prediction, the predicted binary paraphrase label (0 = not paraphrase, 1 = paraphrase), and score, the model\u2019s positive-class score used to derive the prediction. In this workflow, this dataset serves as the prediction table for the validation run and is later joined with the original MRPC labels to compute accuracy, F1, error analysis, and the experiment summary.",
+      "distilbert_cross_text_prediction",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Per-example prediction outputs from the cross-encoder paraphrase model evaluated on the GLUE MRPC validation set. Each row corresponds to one sentence pair from glue_mrpc_validation and stores two fields: prediction (binary predicted label, where 1 indicates paraphrase and 0 indicates not_paraphrase) and score (the model\u2019s positive-class score for the pair; in this notebook, the softmax probability of the paraphrase class when logits are returned). This dataset is an intermediate inference artifact used to persist row-level model outputs, trace them back to the source MRPC examples, inspect correct and incorrect predictions, and support downstream summary evaluation such as accuracy, F1, and the classification report.",
+      "distilbert_cross_text_prediction_cutoff",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Summary dataset for the DistilBERT cosine-similarity MRPC validation experiment. It contains an aggregate evaluation record for paraphrase detection on the GLUE MRPC validation split, where sentence1 and sentence2 are encoded with distilbert-base-uncased, the last 4 hidden layers are averaged, mean pooled into sentence embeddings, and classified by cosine similarity using a threshold of 0.85. The dataset structure has 3 fields: accuracy (float), f1 (float), and classification_report (string with per-class precision/recall/F1 and support). In this workflow, it serves as the final experiment-level metrics table summarizing model performance over the full validation set, with provenance linked to both the source dataset glue_mrpc_validation and the per-example prediction dataset cosine_mrpc_mean_similarity_prediction.",
+      "distilbert_last4_mean_cosine_mrpc_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Row-level prediction outputs for the GLUE MRPC validation set produced by the Hugging Face model textattack/distilbert-base-uncased-MRPC. Each record corresponds to one input sentence pair from glue_mrpc_validation and stores: prediction (final binary class after applying a margin rule), score_pos (softmax score for the paraphrase class), and score_neg (softmax score for the not_paraphrase class). In this workflow, the dataset serves as the persisted model-output table used to trace predictions back to the original validation examples and to support downstream metric computation, error analysis, and experiment summaries.",
+      "distilbert_margin_score_prediction_values",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "This dataset stores the experiment-level evaluation summary for the DistilBERT max-pooling cosine-similarity approach on the GLUE MRPC validation set. It contains a single summary record with three fields: accuracy (float), f1 (float), and classification_report (string). The values are computed by comparing binary paraphrase predictions\u2014generated by thresholding cosine similarity between max-pooled DistilBERT embeddings of sentence pairs\u2014against the ground-truth MRPC labels. In this workflow, the dataset serves as the final aggregated results table for the notebook, capturing overall model performance in a compact form for later inspection, comparison, and lineage tracking back to the validation data and prediction outputs.",
+      "distilbert_max_pool_cosine_mrpc_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "distilbert_mean_cosine_median_threshold_mrpc_summary is a summary dataset containing the evaluation results for the DistilBERT mean-pooled cosine-similarity baseline on the GLUE MRPC validation set. It stores aggregate metrics computed after encoding each sentence pair with distilbert-base-uncased, measuring cosine similarity between the two sentence embeddings, and converting scores to binary paraphrase predictions using the median similarity as the decision threshold. The dataset has three fields: accuracy (float), f1 (float), and classification_report (string with per-class precision/recall/F1 and support). In this workflow, it serves as the final experiment-level output that summarizes model performance over the full validation split, with provenance linked to both the source dataset glue_mrpc_validation and the per-example prediction dataset threshold_cosine_mrpc_similarity_prediction.",
+      "distilbert_mean_cosine_median_threshold_mrpc_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Summary dataset for the MRPC validation run using distilbert-base-uncased sentence embeddings. It contains aggregate evaluation results for paraphrase prediction on glue_mrpc_validation, where sentence1 and sentence2 are encoded separately, token embeddings are mean-pooled while excluding special tokens ([CLS], [SEP]), cosine similarity is computed between the two sentence embeddings, and a fixed threshold of 0.85 is used to produce binary paraphrase predictions.\n\nStructure: one record with fields accuracy (float), f1 (float), and classification_report (string). The record is linked to the full glue_mrpc_validation input range and to the no_special_cosine_mrpc_similarity_prediction dataset that stores per-example predictions and cosine scores.\n\nRole in workflow: this dataset is the experiment-level evaluation summary, used to capture the overall performance of the no-special-token mean-pooled cosine-similarity baseline on MRPC validation.",
+      "distilbert_no_special_tokens_mean_cosine_mrpc_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Per-example prediction dataset produced by running the cross-encoder model cross-encoder/quora-distilroberta-base on the glue_mrpc_validation sentence-pair dataset. Each record corresponds to one MRPC validation example and stores two fields: y_pred, the final binary paraphrase prediction after applying a 0.65 threshold, and pos_scores, the model\u2019s positive-class score/probability for the paraphrase label derived from the model output. The records are linked back to the matching source example in glue_mrpc_validation, enabling row-level inspection of predictions, error analysis, and downstream aggregation. In this workflow, this dataset is the main prediction output used to compare model decisions against ground-truth labels and to build the evaluation summary dataset.",
+      "distilbert_quora_softmax_prediction",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Per-example prediction outputs for the GLUE MRPC validation set generated with the textattack/distilbert-base-uncased-MRPC classifier under two sentence orders. Each record corresponds to one validation example and contains three fields: prediction (final binary label after averaging both orders and thresholding at 0.5), pos_probs (paraphrase probability for the original input order: sentence1, sentence2), and swap_pos_probs (paraphrase probability for the swapped order: sentence2, sentence1). This dataset is the intermediate prediction table used to capture order-sensitive model scores, produce the bidirectional averaged decision, and feed the final evaluation summary.",
+      "distilbert_swap_prediction_values",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Per-example prediction dataset for the GLUE MRPC validation split generated with the cross-encoder/quora-distilroberta-base model using symmetric inference over sentence order. Each record corresponds to one input sentence pair from glue_mrpc_validation and stores: y_pred (final binary paraphrase prediction after averaging forward and reverse scores and thresholding at 0.5), orig_score (positive-class probability for the original order: sentence1, sentence2), and rev_score (positive-class probability for the reversed order: sentence2, sentence1). This dataset is used as the main prediction artifact in the workflow: it captures model outputs for every validation example, supports error analysis and inspection of order sensitivity, and serves as an input to the downstream summary dataset that reports overall accuracy, F1, and the classification report.",
+      "distilbert_symmetric_average_prediction",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Summary dataset for the MRPC entailment-logprob-odds experiment on the GLUE MRPC validation split. It contains evaluation results for paraphrase predictions produced from a zero-shot NLI model (typeform/distilbert-base-uncased-mnli), where each sentence pair is scored using the average entailment-vs-contradiction log-odds across both input orders. Structure: one record with columns accuracy (float), f1 (float), and classification_report (string). Its role in this workflow is to provide a compact experiment-level summary of model performance, derived from the full per-example outputs in mrpc_entailment_prediction and the ground-truth labels in glue_mrpc_validation.",
+      "entailment_logprob_odds_mrpc_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "This dataset stores per-example inference outputs from google/flan-t5-small on the GLUE MRPC validation set using a prompted yes/no paraphrase detection setup. Each record corresponds to one input pair from glue_mrpc_validation and contains three fields: prediction (binary label, where 1 indicates the model preferred \u201cyes\u201d and 0 indicates it preferred \u201cno\u201d), yes_logits (the decoder logit for the token \u201cyes\u201d at the answer position), and no_logits (the decoder logit for the token \u201cno\u201d at the answer position). Predictions are produced by prompting the model with the two sentences, forcing the decoder prefix \u201cAnswer:\u201d, and selecting the higher of the yes/no logits. In this workflow, the dataset serves as the main model output table for downstream evaluation, error analysis, and summary metric generation, while preserving a row-level link back to the original MRPC validation examples.",
+      "flan_prediction_and_logit_prefix",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Per-example prediction dataset for the GLUE MRPC validation set produced by prompting google/flan-t5-small with a yes/no paraphrase question and applying contextual calibration. Each record corresponds to one input sentence pair from glue_mrpc_validation and stores the model\u2019s binary prediction (1 = paraphrase/yes, 0 = not paraphrase/no), the raw first-step logits for the yes and no tokens (raw_yes_logits, raw_no_logits), and the calibrated logits after subtracting baseline logits from a null calibration prompt (cal_yes_logits, cal_no_logits). This record list is the main intermediate output of the workflow: it preserves calibrated model scores for each example, supports error analysis and inspection, and is used to compute the downstream summary metrics in flan_t5_contextual_calibrated_yes_no_mrpc_summary.",
+      "flan_prediction_logit_calibrated",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "flan_prediction_scored is a per-example prediction dataset generated by running google/flan-t5-small on the GLUE MRPC validation set with a yes/no paraphrase prompt. Each record corresponds to one input pair from glue_mrpc_validation and stores the model\u2019s binary prediction and the sequence log-probability scores for the two candidate answers. The fields are: prediction (integer label, where 1 indicates yes/paraphrase and 0 indicates no/not paraphrase), yes_scores (float log-probability of the full answer token sequence for \u201cyes\u201d), and no_scores (float log-probability of the full answer token sequence for \u201cno\u201d). In this workflow, this dataset serves as the scored inference output used to inspect example-level model behavior and to compute downstream summary metrics such as accuracy, F1, and the classification report.",
+      "flan_prediction_scored",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Aggregate evaluation summary for the flan-t5-small contextual yes/no paraphrase classifier on the GLUE MRPC validation set after logit calibration. This dataset is a record list with one summary record containing the fields: accuracy (float), f1 (float), and classification_report (string with per-class precision/recall/F1 and support for not_paraphrase and paraphrase). It is produced after generating calibrated predictions in flan_prediction_logit_calibrated and compares those predictions against the ground-truth labels in glue_mrpc_validation. Its role in this workflow is to store run-level performance metrics for the full validation set, providing a compact summary of model quality for this notebook execution.",
+      "flan_t5_contextual_calibrated_yes_no_mrpc_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "flan_t5_full_answer_logprob_mrpc_summary is an experiment-level summary dataset for evaluating google/flan-t5-small on the GLUE MRPC validation split using prompt-based yes/no paraphrase prediction with full-answer log-probability scoring. It contains a single record with three fields: accuracy (float), f1 (float), and classification_report (string from sklearn with per-class precision, recall, f1, and support for not_paraphrase and paraphrase). This dataset is produced after generating example-level predictions in flan_prediction_scored and comparing them against the ground-truth MRPC labels. Its role in the workflow is to store the aggregate evaluation results for the entire validation run, linking the underlying input dataset (glue_mrpc_validation) and the per-example prediction dataset (flan_prediction_scored).",
+      "flan_t5_full_answer_logprob_mrpc_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Summary dataset for the FLAN-T5 symmetric-prompt MRPC evaluation run. It contains a single aggregate record describing model performance on the full glue_mrpc_validation split, computed from predictions stored in google_flan_prediction_swapped. The fields are: accuracy (float, overall classification accuracy), f1 (float, binary F1 score for paraphrase detection), and classification_report (string, the full scikit-learn classification report with precision, recall, F1, and support for both not_paraphrase and paraphrase classes). Its role in this workflow is to provide a compact experiment-level evaluation artifact that links the source validation examples and prediction outputs to final metrics for the notebook/process flan_t5_symmetric_prompt_average_mrpc.",
+      "flan_t5_symmetric_prompt_average_mrpc_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Summary dataset for the FLAN-T5 MRPC evaluation run using first-step true/false token scoring. It contains aggregate performance results for google/flan-t5-small on the glue_mrpc_validation split, where each example is prompted as a paraphrase detection task and predicted by comparing the first decoder-step logits for the tokens true and false. The record list has three fields: accuracy (float), f1 (float, for the positive/paraphrase class), and classification_report (string containing the full per-class precision/recall/F1 summary). In this workflow, this dataset serves as the experiment-level evaluation artifact that summarizes model performance over the full validation set and links the source validation data with the per-example prediction/logit dataset google_flan_prediction_and_logits.",
+      "flan_t5_true_false_first_step_mrpc_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "glue_mrpc_validation is the validation split of the GLUE MRPC (Microsoft Research Paraphrase Corpus) dataset stored in TableVault for this notebook. Each record contains sentence1, sentence2, label, and idx, where sentence1 and sentence2 are a pair of sentences, label is a binary paraphrase target (1 = paraphrase, 0 = not paraphrase), and idx is the example identifier from the original dataset. This dataset is the ground-truth evaluation input for the workflow: the sentence pairs are tokenized and passed to the pretrained textattack/distilbert-base-uncased-MRPC model, and the labels are used to compute accuracy, F1, error cases, and the final classification report. It serves as the source dataset linked to downstream prediction, mistake-analysis, and summary output records.",
+      "glue_mrpc_validation",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Per-example inference outputs from google/flan-t5-small on the GLUE MRPC validation set using a prompted true/false paraphrase decision. Each record corresponds to one validation example and is linked to the matching source row in glue_mrpc_validation. The dataset has three fields: prediction (binary model decision, where 1 means the logit for \u201ctrue\u201d is greater than the logit for \u201cfalse\u201d), true_logits (the first-decoder-step logit for the token \u201ctrue\u201d), and false_logits (the first-decoder-step logit for the token \u201cfalse\u201d). In this workflow, this dataset is the stored prediction artifact used to inspect model behavior on individual examples and to support the downstream summary evaluation dataset with accuracy, F1, and classification report.",
+      "google_flan_prediction_and_logits",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Per-example prediction outputs from google/flan-t5-small on the GLUE MRPC validation set using a yes/no paraphrase prompt evaluated in both original and swapped sentence order. Each record is aligned to one input example from glue_mrpc_validation and contains: prediction (binary paraphrase decision after averaging forward and swapped logits), yes_logits (forward-order logit for \u201cyes\u201d), no_logits (forward-order logit for \u201cno\u201d), swapped_yes_logits (swapped-order logit for \u201cyes\u201d), and swapped_no_logits (swapped-order logit for \u201cno\u201d). This dataset is used as the intermediate model-output table in the workflow, supporting order-symmetric paraphrase prediction, error analysis, and computation of final evaluation metrics in the summary dataset.",
+      "google_flan_prediction_swapped",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Summary dataset for the bidirectional MRPC evaluation run. It contains aggregate evaluation results for the TextAttack DistilBERT MRPC classifier on the GLUE MRPC validation set, where paraphrase probabilities are computed for both the original sentence order and the swapped sentence order, then averaged before thresholding to make the final prediction.\n\nStructure:\n- accuracy: float overall classification accuracy on the validation set\n- f1: float F1 score for the paraphrase class\n- classification_report: string version of the sklearn classification report, including per-class precision, recall, F1, and support\n\nRole in this workflow:\nThis dataset serves as the experiment-level evaluation summary for the notebook. It records the final performance metrics derived from comparing the averaged bidirectional predictions against the true labels, and links those metrics back to both the source dataset (glue_mrpc_validation) and the per-example prediction dataset (distilbert_swap_prediction_values).",
+      "hf_pipeline_mrpc_bidirectional_order_average_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "This dataset stores the aggregate evaluation results for the notebook\u2019s MRPC margin-rule experiment. It contains a summary record with three fields: accuracy (float), f1 (float), and classification_report (string containing the full sklearn classification report, including per-class precision, recall, f1-score, and support for not_paraphrase and paraphrase). The values are computed by comparing the true labels from glue_mrpc_validation against binary predictions produced from the TextAttack DistilBERT MRPC model, where prediction = 1 when score_pos - score_neg exceeds the configured margin threshold. Its role in the workflow is to provide a compact, final performance summary for the full validation set, linked to both the source validation data and the per-example prediction dataset distilbert_margin_score_prediction_values.",
+      "hf_pipeline_mrpc_margin_rule_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "This dataset stores the aggregate evaluation summary for the DistilBERT MRPC inference run on the GLUE MRPC validation set after converting pipeline raw logits to softmax probabilities. It contains one summary record with three fields: accuracy (overall prediction accuracy), f1 (binary F1 score for paraphrase detection), and classification_report (the full sklearn text report with per-class precision, recall, F1, support, and overall averages). In this workflow, it serves as the experiment-level performance snapshot, linking the source validation examples and the per-example prediction dataset pipeline_distilbert_softmax_probs so that users can quickly inspect overall model quality without recomputing metrics.",
+      "hf_pipeline_mrpc_raw_logits_softmax_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Summary dataset for the hf_pipeline_mrpc_threshold_070 experiment. It contains a single evaluation record aggregating model performance on the full glue_mrpc_validation split after running the Hugging Face text-classification pipeline with textattack/distilbert-base-uncased-MRPC and converting paraphrase probabilities to binary predictions using a 0.70 threshold. The dataset has three fields: accuracy (float), f1 (float, for the positive paraphrase class), and classification_report (string produced by sklearn, containing per-class precision, recall, f1-score, support, and overall averages). Its role in the workflow is to provide a compact experiment-level summary derived from the validation labels and the per-example predictions stored in pipeline_distilbert_threshold, so the notebook can track and compare final thresholded evaluation results.",
+      "hf_pipeline_mrpc_threshold_070_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Summary dataset for the min_direction_margin_mrpc workflow. It contains experiment-level evaluation results for paraphrase detection on the GLUE MRPC validation set, where predictions are made by scoring each sentence pair in both directions with an MNLI model and using the minimum entailment-minus-contradiction margin as the decision signal. The dataset has one record with three fields: accuracy (float), f1 (float), and classification_report (string). Its role is to store the final aggregated performance summary derived from the source validation examples and the per-example prediction dataset mrpc_min_margin_prediction, so future users can quickly inspect the overall outcome of this notebook without recomputing metrics.",
+      "min_direction_margin_mrpc_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Row-level prediction dataset for the GLUE MRPC validation set produced by the sentence-transformers/paraphrase-MiniLM-L6-v2 model. Each record corresponds to one sentence pair from glue_mrpc_validation and stores two fields: prediction (binary label, where 0 = not_paraphrase and 1 = paraphrase) and score (cosine similarity between the normalized embeddings of sentence1 and sentence2). Predictions are generated by applying a fixed threshold of 0.78 to the cosine similarity score. In this workflow, this dataset serves as the per-example model output used for downstream evaluation, error analysis, and creation of the summary metrics dataset.",
+      "minilm_cosine_threshold_prediction",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Model prediction outputs for the GLUE MRPC validation set generated by the textattack/distilbert-base-uncased-MRPC sequence classification model. Each record corresponds to one sentence-pair example in glue_mrpc_validation and stores the model\u2019s predicted class label for paraphrase detection. The dataset has a single field, prediction, which is an integer class ID (0 = not paraphrase, 1 = paraphrase). In this workflow, it serves as the inference output table linked back to the source validation examples and is used to compute evaluation metrics, compare predictions with ground-truth labels, and identify error cases.",
+      "mrpc_distilbert_predictions",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "mrpc_entailment_prediction contains per-example prediction outputs for the GLUE MRPC validation set generated with the typeform/distilbert-base-uncased-mnli NLI model. Each record corresponds to one validation pair from glue_mrpc_validation and stores three fields: prediction (binary paraphrase decision obtained by thresholding the averaged score at 0), dir12 (entailment-minus-contradiction log-probability score for sentence1 \u2192 sentence2), and dir21 (the same score for sentence2 \u2192 sentence1). The dataset is aligned one-to-one with the source MRPC examples through input item indexing. Its role in this workflow is to capture the model\u2019s directional entailment-based evidence and final paraphrase prediction for downstream evaluation, error analysis, and summary metric computation.",
+      "mrpc_entailment_prediction",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "mrpc_gate_margin_prediction is a per-example prediction dataset derived from the GLUE MRPC validation split. For each validation pair (sentence1, sentence2), the notebook runs the NLI model typeform/distilbert-base-uncased-mnli in both input orders, sentence1\u2192sentence2 and sentence2\u2192sentence1, and stores the resulting decision signals used for paraphrase classification. The dataset has four fields: prediction (final binary paraphrase prediction, 1 for paraphrase and 0 for not paraphrase), margin_12 (entailment logit minus contradiction logit for sentence1 paired with sentence2), margin_21 (the same margin for the reversed order), and gate (boolean flag that is true only when neither direction\u2019s argmax label is contradiction). The final prediction is produced by requiring gate = true and the average of margin_12 and margin_21 to be greater than 0. This dataset serves as the main intermediate output of the workflow: it preserves the model\u2019s directional margin scores and final gated prediction for each MRPC example, and it is then used to compute the summary accuracy, F1, and classification report.",
+      "mrpc_gate_margin_prediction",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Per-example prediction dataset for the GLUE MRPC validation split, generated by running the sentence pairs through the typeform/distilbert-base-uncased-mnli model in both input orders. Each record corresponds to one MRPC validation example and is linked to the matching row in glue_mrpc_validation. The dataset has three fields: prediction (binary paraphrase decision, where 1 indicates paraphrase and 0 indicates not paraphrase), gap_12 (entailment probability minus contradiction probability for sentence1\u2192sentence2), and gap_21 (the same probability gap for sentence2\u2192sentence1). In this workflow, it serves as the stored per-instance model output used to inspect directional confidence, compare predictions with ground-truth MRPC labels, and build the downstream summary metrics in softmax_gap_mean_mrpc_summary.",
+      "mrpc_mean_gap_prediction",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "mrpc_min_margin_prediction is an example-level prediction dataset derived from the GLUE MRPC validation split. For each sentence pair in glue_mrpc_validation, it stores the binary paraphrase prediction produced by a zero-shot NLI model (typeform/distilbert-base-uncased-mnli) and the confidence score used to make that prediction.\n\nEach record corresponds to one MRPC validation example and has two fields: prediction, an integer label where 1 indicates paraphrase and 0 indicates not_paraphrase; and min_margin, a float equal to the minimum of the entailment-versus-contradiction logit margins computed in both input directions, sentence1\u2192sentence2 and sentence2\u2192sentence1. The prediction is defined as 1 when min_margin > 0, otherwise 0.\n\nIn this workflow, this dataset serves as the per-example output of the min-direction-margin inference step. It is used as the input to downstream evaluation and summarization, including accuracy, F1, classification report generation, and error analysis.",
+      "mrpc_min_margin_prediction",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Per-example prediction dataset for the GLUE MRPC validation split, produced by applying the typeform/distilbert-base-uncased-mnli model as a zero-shot paraphrase detector. Each record corresponds to one sentence pair from glue_mrpc_validation and stores: prediction (binary paraphrase decision, where 1 indicates paraphrase and 0 indicates not_paraphrase), score_12 (entailment logit minus max(contradiction, neutral) for sentence1 -> sentence2), and score_21 (the same score for sentence2 -> sentence1). The final prediction is derived from the average of the two directional scores. In this workflow, this dataset captures the model\u2019s per-example outputs for downstream evaluation, inspection of mistakes, and construction of the overall summary metrics.",
+      "mrpc_neutral_penalty_prediction",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Subset of error cases from the GLUE MRPC validation run using the textattack/distilbert-base-uncased-MRPC model. Each record captures one misclassified sentence pair and includes the fields: idx (validation-set position), sentence1, sentence2, true (ground-truth binary label), and pred (model-predicted binary label). This dataset is created by selecting the first 10 examples where the model prediction differs from the true label, and each record is linked back to the corresponding source example in glue_mrpc_validation and its entry in mrpc_distilbert_predictions. Its role in the workflow is error analysis: it provides a compact, inspectable sample of model failures for diagnosing paraphrase detection mistakes.",
+      "mrpc_paraphrase_inference_distilbert_mistakes",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "This dataset contains the final evaluation summary for the textattack/distilbert-base-uncased-MRPC model on the GLUE MRPC validation split. It is a small output table with one record summarizing model performance over the full validation dataset.\n\nFields:\n- accuracy: overall classification accuracy on the validation set\n- f1: F1 score for the paraphrase classification task\n- classification_report: full text report from sklearn including precision, recall, F1, and support for the not_paraphrase and paraphrase classes\n\nIn this workflow, this dataset serves as the final results artifact. It is created after running batched inference on sentence pairs, comparing predictions against ground-truth labels, and aggregating the metrics. The record is linked to the full validation input dataset and the prediction dataset so a user can trace the reported metrics back to the underlying examples and model outputs.",
+      "mrpc_paraphrase_inference_distilbert_output",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Aggregate evaluation summary for the neutral-penalized margin MRPC experiment. This dataset contains a single summary record computed from the GLUE MRPC validation set and the derived mrpc_neutral_penalty_prediction records. Its fields are: accuracy (float, overall prediction accuracy), f1 (float, F1 score for the paraphrase class), and classification_report (string, full sklearn classification report with per-class precision, recall, F1, and support). In this workflow, it serves as the compact experiment-level output used to record and retrieve overall model performance after scoring sentence pairs with the MNLI model and converting the bidirectional entailment-vs.-non-entailment margin into paraphrase predictions.",
+      "neutral_penalized_margin_mrpc_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Per-example prediction dataset for the GLUE MRPC validation split. Each record corresponds to one sentence pair from glue_mrpc_validation and stores the model output from this notebook\u2019s similarity-based paraphrase detection pipeline using distilbert-base-uncased embeddings. The fields are: prediction (binary label, 1 if the cosine similarity between the two sentence embeddings is at least 0.85, otherwise 0) and cosine_scores (the raw cosine similarity score as a float). The embeddings are produced by mean-pooling DistilBERT token representations while excluding special tokens such as [CLS] and [SEP], followed by L2 normalization. In this workflow, this dataset serves as the detailed per-row inference output that links back to the original MRPC validation examples and is then used to compute and document overall evaluation metrics in the summary dataset.",
+      "no_special_cosine_mrpc_similarity_prediction",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Per-example inference outputs for the GLUE MRPC validation set produced by the Hugging Face text-classification pipeline using textattack/distilbert-base-uncased-MRPC. Each record corresponds to one input sentence pair from glue_mrpc_validation and stores the model\u2019s predicted class and the softmax probability of the positive/paraphrase class. The dataset is structured as one row per validation example with fields for prediction (integer class label from argmax) and the positive-class probability (intended as positive_probs; in the appended records this is written as paraphrase_probs). In this workflow, this dataset serves as the main prediction artifact linking model outputs back to the source validation examples and is used downstream to compute accuracy, F1, and the classification report summary.",
+      "pipeline_distilbert_softmax_probs",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Per-example inference results from the Hugging Face model textattack/distilbert-base-uncased-MRPC run on the glue_mrpc_validation dataset. Each record corresponds to one sentence pair from the MRPC validation split and stores two fields: prediction, a binary label produced by thresholding the model\u2019s paraphrase probability at 0.70; and paraphrase_probs, the softmax probability assigned to the positive paraphrase class. Records are linked back to the matching input example in glue_mrpc_validation. This dataset serves as the main prediction output of the workflow and is used for downstream evaluation, error analysis, and creation of the run-level summary dataset.",
+      "pipeline_distilbert_threshold",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "This dataset stores the evaluation summary for the notebook run quora_cross_encoder_prefixed_sentence_tags_mrpc on the GLUE MRPC validation set. It contains a summary record of the cross-encoder paraphrase detection results produced from the prediction dataset distilbert_cross_text_prediction. Its fields are: accuracy (float, overall classification accuracy), f1 (float, binary F1 score for paraphrase detection), and classification_report (string, the full sklearn classification report with precision, recall, F1, and support for the not_paraphrase and paraphrase classes). In this workflow, it serves as the experiment-level metrics dataset that aggregates model performance over the full validation set and links the source inputs from glue_mrpc_validation and the generated predictions.",
+      "quora_cross_encoder_prefixed_sentence_tags_mrpc_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Experiment-level evaluation summary for the notebook run using the cross-encoder/quora-distilroberta-base model on the GLUE MRPC validation split with a paraphrase decision threshold of 0.65 applied to the positive softmax score. This dataset contains a single summary record with the fields: accuracy (float), f1 (float), and classification_report (string produced by sklearn, summarizing precision, recall, f1-score, and support for the not_paraphrase and paraphrase classes). It is derived from the full glue_mrpc_validation dataset and the corresponding per-example predictions stored in distilbert_quora_softmax_prediction, and its role is to capture the overall performance of this experiment in a compact, queryable form for comparison, tracking, and documentation.",
+      "quora_cross_encoder_softmax_threshold_065_mrpc_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Summary dataset for the notebook\u2019s evaluation run of the cross-encoder/quora-distilroberta-base model on the GLUE MRPC validation set using symmetric scoring. It contains aggregate performance results computed after predicting each sentence pair in both original and reversed order, averaging the two positive-class scores, and thresholding at 0.5.\n\nStructure: a record list with columns accuracy, f1, and classification_report. accuracy is the overall validation accuracy, f1 is the binary F1 score for paraphrase detection, and classification_report is the full sklearn text report summarizing class-wise precision, recall, F1, and support for the labels not_paraphrase and paraphrase.\n\nRole in the workflow: this dataset stores the run-level evaluation summary for the prediction dataset distilbert_symmetric_average_prediction, linked to both the source input dataset glue_mrpc_validation and the generated prediction records. It is intended as the compact experiment result table for comparing or auditing this notebook run.",
+      "quora_cross_encoder_symmetric_average_mrpc_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "This dataset stores the evaluation summary for the notebook run that applies the cross-encoder/quora-distilroberta-base model to the GLUE MRPC validation set after text normalization. It contains a single aggregated record rather than per-example predictions. The fields are: accuracy (float), f1 (float), and classification_report (string with the full sklearn classification report for the not_paraphrase/paraphrase labels). Its role in the workflow is to capture experiment-level performance metrics derived from comparing the normalized-text predictions in distilbert-normalized-text-prediction against the ground-truth labels in glue_mrpc_validation, providing a compact summary of model performance for this run.",
+      "quora_cross_encoder_text_normalized_mrpc_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Per-example prediction dataset for the GLUE MRPC validation set, generated by comparing sentence embeddings from sentence-transformers/all-MiniLM-L6-v2. Each record contains a single field, prediction, which is a binary label: 1 when the L2 distance between the normalized embeddings of sentence1 and sentence2 is less than or equal to the fixed threshold (0.63), and 0 otherwise. The dataset has one record per validation example and is linked back to the original glue_mrpc_validation row as well as the corresponding sentence 1 and sentence 2 embedding entries. Its role in this workflow is to store the model\u2019s threshold-based paraphrase decisions so they can be inspected, traced to source inputs, and used to compute evaluation metrics such as accuracy, F1, and the classification report.",
+      "sentence_transformers_mrpc_prediction_distance",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Binary paraphrase predictions for the GLUE MRPC validation set, generated by encoding each sentence pair with sentence-transformers/all-MiniLM-L6-v2 using max_seq_length=64, computing the cosine similarity between the normalized sentence1 and sentence2 embeddings, and applying a threshold of 0.80. This record list contains one row per validation example with a single field, prediction, where 1 indicates predicted paraphrase and 0 indicates predicted non-paraphrase. Each record is linked back to the corresponding source example in glue_mrpc_validation and to the two embedding lists sentence-transformers-sentence-1-max64 and sentence-transformers-sentence-2-max64. In this workflow, the dataset serves as the stored model output used for downstream evaluation, error analysis, and experiment summary reporting.",
+      "sentence_transformers_mrpc_prediction_max64",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "sentence_transformers_mrpc_prediction_threshold is a record list containing the per-example binary predictions produced on the GLUE MRPC validation set by a SentenceTransformer paraphrase model. Each record has a single field, prediction, where 1 indicates the sentence pair is predicted to be a paraphrase and 0 indicates not_paraphrase. Predictions are generated by encoding sentence1 and sentence2 with sentence-transformers/paraphrase-MiniLM-L3-v2, computing their cosine similarity via normalized embedding dot product, and applying a fixed threshold of 0.74. The dataset is aligned one-to-one with glue_mrpc_validation and is linked to the corresponding sentence-pair embeddings, making it the main stored output used for error analysis, metric computation, and creation of the workflow summary dataset.",
+      "sentence_transformers_mrpc_prediction_threshold",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Binary prediction table for the GLUE MRPC validation set produced by the sentence-transformers/all-distilroberta-v1 model. Each record corresponds to one validation example and stores a single field, prediction, where 1 indicates the sentence pair is predicted to be a paraphrase and 0 indicates not_paraphrase. Predictions are generated by computing the cosine similarity between the normalized embeddings of sentence1 and sentence2 and applying a fixed threshold of 0.72. This dataset serves as the model output layer in the workflow, linking each prediction back to the original MRPC example and the two sentence embedding datasets, and it is used downstream to compute accuracy, F1, error analysis, and the experiment summary.",
+      "sentence_transformers_mrpc_prediction_threshold_2",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Summary record list for the MRPC validation evaluation of a threshold-based paraphrase detection workflow using sentence-transformers/all-distilroberta-v1. This dataset contains experiment-level metrics computed by comparing predicted paraphrase labels from cosine similarity scores between sentence1 and sentence2 embeddings against the ground-truth labels in glue_mrpc_validation. Its structure is a record list with three fields: accuracy (float), f1 (float), and classification_report (string containing the full per-class evaluation report). In this notebook, it serves as the final aggregated result of the process, linking the full GLUE MRPC validation set and the generated prediction record list into a compact summary of model performance for the chosen cosine threshold.",
+      "st_all_distilroberta_v1_cosine_threshold_mrpc_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Summary dataset for the MRPC validation run using sentence-transformers/all-MiniLM-L6-v2 sentence embeddings and an L2 distance threshold classifier. It contains a single record that aggregates evaluation results over the full glue_mrpc_validation dataset after predicting whether each sentence pair is a paraphrase based on whether the embedding distance is less than or equal to the chosen threshold (0.63).\n\nFields:\naccuracy: overall classification accuracy on the validation set\nf1: F1 score for the paraphrase class\nclassification_report: full text report from sklearn with precision, recall, F1, and support for both not_paraphrase and paraphrase classes\n\nRole in the workflow:\nThis dataset stores the experiment-level evaluation summary for the notebook. It provides a compact record of model performance derived from the per-example prediction dataset sentence_transformers_mrpc_prediction_distance and linked to the full glue_mrpc_validation input range.",
+      "st_all_minilm_l6_l2_distance_threshold_mrpc_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Summary dataset for the MRPC validation experiment using sentence-transformers/all-MiniLM-L6-v2 with max_seq_length=64 and cosine-similarity thresholding. It contains aggregate evaluation results for the prediction run, not per-example data. The record list has three fields: accuracy (float), f1 (float), and classification_report (string with the full class-wise sklearn report for not_paraphrase vs paraphrase). In this workflow, it stores the final performance summary of the predicted paraphrase labels generated from cosine scores between sentence1 and sentence2 embeddings on glue_mrpc_validation, providing a compact experiment-level result linked back to the source validation set and prediction outputs.",
+      "st_all_minilm_l6_max_seq_len_64_cosine_mrpc_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "This dataset stores the run-level evaluation summary for the SentenceTransformer bi-encoder cosine-similarity paraphrase detection experiment on the GLUE MRPC validation set. It contains a single summary record rather than per-example predictions. The fields are: accuracy (float), f1 (float), and classification_report (string with class-wise precision, recall, and F1 statistics). In this workflow, it serves as the compact results table that aggregates model performance after generating sentence embeddings, scoring sentence pairs with cosine similarity, applying a fixed decision threshold, and comparing predictions against the MRPC ground-truth labels.",
+      "st_paraphrase_minilm_l3_cosine_threshold_mrpc_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "This dataset stores the evaluation summary for the paraphrase detection workflow using sentence-transformers/paraphrase-MiniLM-L6-v2 on the GLUE MRPC validation set with cosine-similarity thresholding at 0.78. It contains a single summary record with three fields: accuracy (float), f1 (float), and classification_report (string). The metrics are computed by comparing thresholded cosine-similarity predictions from the minilm_cosine_threshold_prediction dataset against the ground-truth labels in glue_mrpc_validation. Its role in this workflow is to provide a compact, experiment-level performance summary for the notebook, linking the full validation set and per-example predictions to aggregate evaluation results.",
+      "st_paraphrase_minilm_l6_cosine_threshold_mrpc_summary",
+      "record_list"
+    ]
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 1829 | 32 | 8 | 2 | 1.393s | 0.028s |
+
+---
+
+## Turn 2 — `description_search` [ok]
+
+### Model Input
+**previous_response_id:** `resp_0bd49b1f5c8407520069da599d6c8481939f81ea0cfcd3cf79`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_iE1uHYUTjZ8kQbqvcAHdofcO",
+    "output": "{\"ok\": true, \"result\": [[\"BASE\", \"sentence-transformers-sentence-1-distance_threshold is an embedding dataset containing one 384-dimensional sentence embedding for the sentence1 field of each example in the GLUE MRPC validation set. Each item is a normalized dense vector generated with the sentence-transformers/all-MiniLM-L6-v2 model, and each embedding is linked back to the corresponding source row in glue_mrpc_validation through the input_items index mapping. This dataset does not store raw text columns itself; its primary field is the embedding vector for sentence1. In this workflow, it serves as the sentence1 representation used with the matching sentence-transformers-sentence-2-distance_threshold embeddings to compute L2 distances, apply a fixed distance threshold, and produce paraphrase predictions.\", \"sentence-transformers-sentence-1-distance_threshold\", \"embedding_list\"], [\"BASE\", \"Embedding list containing one 384-dimensional normalized sentence embedding per row for the sentence1 field of the GLUE MRPC validation dataset. Each embedding is generated with the sentence-transformers/all-MiniLM-L6-v2 model using max_seq_length=64, so inputs may be truncated beyond 64 tokens. Structure: this dataset stores a single embedding vector for each original example and is linked back to the corresponding row in glue_mrpc_validation via input item indices. In this workflow, it provides the vector representation of the first sentence in each pair, which is later compared with the matching sentence-transformers-sentence-2-max64 embedding using cosine similarity to produce paraphrase predictions.\", \"sentence-transformers-sentence-1-max64\", \"embedding_list\"], [\"BASE\", \"This dataset stores the normalized SentenceTransformer embeddings for the sentence1 field of each example in the GLUE MRPC validation set. Each item is a single 384-dimensional float vector produced by the model sentence-transformers/paraphrase-MiniLM-L3-v2, with one embedding per input row and lineage linked back to the corresponding glue_mrpc_validation record.\\n\\nStructure: an embedding list with ndim=384. There are no tabular feature columns; each entry consists of the embedding vector plus metadata links to the source row in glue_mrpc_validation.\\n\\nRole in the workflow: this dataset represents the first sentence in each MRPC pair in embedding space. These vectors are used with the corresponding sentence-2 embeddings to compute cosine similarity scores, which are then thresholded (0.74) to generate paraphrase predictions.\", \"sentence-transformers-sentence-1-threshold\", \"embedding_list\"], [\"BASE\", \"This dataset stores the sentence embeddings for the sentence1 field of the GLUE MRPC validation set. Each item is a 768-dimensional float vector produced by the sentence-transformers/all-distilroberta-v1 model with normalized embeddings enabled, so dot products correspond to cosine similarity. The dataset is structured as an embedding list: one embedding per MRPC validation example, with each embedding linked to the corresponding row in glue_mrpc_validation through input item provenance. In this workflow, it provides the first-sentence representation used with the matching sentence-transformers-sentence-2-threshold_2 embeddings to compute similarity scores and apply a 0.72 threshold for paraphrase prediction.\", \"sentence-transformers-sentence-1-threshold_2\", \"embedding_list\"], [\"BASE\", \"This dataset stores one normalized sentence embedding per example for the sentence2 field in the GLUE MRPC validation split. Each item is a 384-dimensional float vector generated by the sentence-transformers/all-MiniLM-L6-v2 model, with each embedding linked back to the corresponding source row in glue_mrpc_validation via input item lineage. Structure: an embedding list where each entry contains a single 384-length embedding vector and its association to the matching MRPC example index. In this workflow, these sentence2 embeddings are paired with the corresponding sentence1 embeddings from sentence-transformers-sentence-1-distance_threshold, and the L2 distance between the two vectors is used with a fixed threshold to predict whether the sentence pair is a paraphrase.\", \"sentence-transformers-sentence-2-distance_threshold\", \"embedding_list\"], [\"BASE\", \"Embedding dataset containing one 384-dimensional normalized sentence embedding per row for the sentence2 field of each example in the GLUE MRPC validation set. Each vector was produced with the sentence-transformers/all-MiniLM-L6-v2 model using a maximum sequence length of 64, so it represents the truncated second sentence in a paraphrase pair. The dataset structure is an embedding list: each item stores a single 384-float embedding and is linked back to the corresponding row in glue_mrpc_validation. In this workflow, these sentence2 embeddings are paired with the matching sentence-transformers-sentence-1-max64 embeddings to compute cosine similarity scores and generate paraphrase predictions.\", \"sentence-transformers-sentence-2-max64\", \"embedding_list\"], [\"BASE\", \"sentence-transformers-sentence-2-threshold is an embedding dataset containing one normalized 384-dimensional sentence embedding for the sentence2 field of each example in the GLUE MRPC validation set. Each entry corresponds 1-to-1 with a row in glue_mrpc_validation and is linked back to the source record through input_items, so the dataset structure is an ordered list of embedding vectors plus provenance to the original example index range. The embeddings are produced with the sentence-transformers/paraphrase-MiniLM-L3-v2 model and are intended to represent the second sentence in each MRPC pair. In this workflow, this dataset is used together with the matching sentence-transformers-sentence-1-threshold embeddings to compute cosine similarity scores and generate threshold-based paraphrase predictions.\", \"sentence-transformers-sentence-2-threshold\", \"embedding_list\"], [\"BASE\", \"This dataset stores the sentence embedding for the second sentence (sentence2) of each example in the GLUE MRPC validation set. It is an embedding list with one row per MRPC record, where each item contains a 768-dimensional, L2-normalized vector produced by the sentence-transformers/all-distilroberta-v1 model, and each embedding is linked back to the corresponding source row in glue_mrpc_validation through the input_items index range [i, i+1]. In this workflow, these sentence2 embeddings are paired with the corresponding sentence1 embeddings from sentence-transformers-sentence-1-threshold_2, and their dot product is used as cosine similarity to make threshold-based paraphrase predictions.\", \"sentence-transformers-sentence-2-threshold_2\", \"embedding_list\"], [\"BASE\", \"Summary dataset for the MRPC validation evaluation of the consensus-then-average-margin inference method. It contains aggregate performance results computed by comparing the generated paraphrase predictions against the true labels from glue_mrpc_validation, using prediction records stored in mrpc_gate_margin_prediction. The dataset is structured as a record list with columns: accuracy (float), f1 (float), and classification_report (string containing the full per-class sklearn classification report for not_paraphrase and paraphrase). In this workflow, it serves as the final evaluation artifact for the notebook, linking the full MRPC validation set and the per-example prediction dataset to a compact summary of model performance.\", \"consensus_then_avg_margin_mrpc_summary\", \"record_list\"], [\"BASE\", \"This dataset stores per-example paraphrase predictions for the GLUE MRPC validation set produced by a DistilBERT-based cosine similarity pipeline. For each sentence pair from glue_mrpc_validation, the notebook encodes sentence1 and sentence2 with distilbert-base-uncased, applies masked max pooling to the token embeddings, computes the cosine similarity between the two normalized sentence embeddings, and converts that score to a binary prediction using a threshold of 0.85.\\n\\nStructure:\\n- prediction: integer binary label predicted by the similarity rule (1 = paraphrase, 0 = not paraphrase)\\n- cosine_scores: float cosine similarity between the max-pooled embeddings of the two sentences\\n\\nEach record corresponds to one input sentence pair and is linked back to the source validation examples through input_items. In this workflow, the dataset serves as the main model-output table for downstream evaluation, inspection of correct and incorrect predictions, and creation of the final summary metrics dataset.\", \"cosine_mrpc_max_pool_similarity_prediction\", \"record_list\"], [\"BASE\", \"This dataset stores per-example paraphrase predictions for the GLUE MRPC validation set produced by this notebook\\u2019s embedding-similarity baseline. Each record corresponds to one sentence pair from glue_mrpc_validation and contains two fields: prediction, a binary label (1 if the pair is predicted to be a paraphrase, 0 otherwise), and similarities, the cosine similarity score between the L2-normalized sentence embeddings of sentence1 and sentence2. The embeddings are generated with distilbert-base-uncased by averaging the last 4 hidden layers at the token level and then mean-pooling across tokens. Predictions are created by applying a fixed threshold of 0.85 to the similarity score. In this workflow, this dataset is the intermediate model output used to inspect individual examples, analyze errors, and compute the final evaluation summary in distilbert_last4_mean_cosine_mrpc_summary.\", \"cosine_mrpc_mean_similarity_prediction\", \"record_list\"], [\"BASE\", \"Per-example prediction dataset for the GLUE MRPC validation split. Each record corresponds to one sentence pair from glue_mrpc_validation and stores the output of a simple paraphrase classifier built from DistilBERT sentence embeddings. The dataset has two fields: prediction, a binary label where 1 means paraphrase and 0 means not paraphrase, produced by thresholding the cosine similarity at 0.85; and score, the raw cosine similarity between the L2-normalized first-token embeddings of sentence1 and sentence2 from distilbert-base-uncased. In this workflow, this dataset is the main record of model inference results, used for error analysis, inspection of individual examples, and as input to the downstream summary dataset distilbert_cls_cosine_mrpc_summary.\", \"cosine_mrpc_threshold_score\", \"record_list\"], [\"BASE\", \"distilbert_cross_text_prediction stores per-example model outputs generated by applying the cross-encoder/quora-distilroberta-base cross-encoder to the GLUE MRPC validation dataset, using prefixed inputs of the form \\u201cSentence 1: \\u2026\\u201d and \\u201cSentence 2: \\u2026\\u201d. Each record corresponds to one source sentence pair from glue_mrpc_validation and contains two fields: prediction, the predicted binary paraphrase label (0 = not paraphrase, 1 = paraphrase), and score, the model\\u2019s positive-class score used to derive the prediction. In this workflow, this dataset serves as the prediction table for the validation run and is later joined with the original MRPC labels to compute accuracy, F1, error analysis, and the experiment summary.\", \"distilbert_cross_text_prediction\", \"record_list\"], [\"BASE\", \"Per-example prediction outputs from the cross-encoder paraphrase model evaluated on the GLUE MRPC validation set. Each row corresponds to one sentence pair from glue_mrpc_validation and stores two fields: prediction (binary predicted label, where 1 indicates paraphrase and 0 indicates not_paraphrase) and score (the model\\u2019s positive-class score for the pair; in this notebook, the softmax probability of the paraphrase class when logits are returned). This dataset is an intermediate inference artifact used to persist row-level model outputs, trace them back to the source MRPC examples, inspect correct and incorrect predictions, and support downstream summary evaluation such as accuracy, F1, and the classification report.\", \"distilbert_cross_text_prediction_cutoff\", \"record_list\"], [\"BASE\", \"Summary dataset for the DistilBERT cosine-similarity MRPC validation experiment. It contains an aggregate evaluation record for paraphrase detection on the GLUE MRPC validation split, where sentence1 and sentence2 are encoded with distilbert-base-uncased, the last 4 hidden layers are averaged, mean pooled into sentence embeddings, and classified by cosine similarity using a threshold of 0.85. The dataset structure has 3 fields: accuracy (float), f1 (float), and classification_report (string with per-class precision/recall/F1 and support). In this workflow, it serves as the final experiment-level metrics table summarizing model performance over the full validation set, with provenance linked to both the source dataset glue_mrpc_validation and the per-example prediction dataset cosine_mrpc_mean_similarity_prediction.\", \"distilbert_last4_mean_cosine_mrpc_summary\", \"record_list\"], [\"BASE\", \"Row-level prediction outputs for the GLUE MRPC validation set produced by the Hugging Face model textattack/distilbert-base-uncased-MRPC. Each record corresponds to one input sentence pair from glue_mrpc_validation and stores: prediction (final binary class after applying a margin rule), score_pos (softmax score for the paraphrase class), and score_neg (softmax score for the not_paraphrase class). In this workflow, the dataset serves as the persisted model-output table used to trace predictions back to the original validation examples and to support downstream metric computation, error analysis, and experiment summaries.\", \"distilbert_margin_score_prediction_values\", \"record_list\"], [\"BASE\", \"This dataset stores the experiment-level evaluation summary for the DistilBERT max-pooling cosine-similarity approach on the GLUE MRPC validation set. It contains a single summary record with three fields: accuracy (float), f1 (float), and classification_report (string). The values are computed by comparing binary paraphrase predictions\\u2014generated by thresholding cosine similarity between max-pooled DistilBERT embeddings of sentence pairs\\u2014against the ground-truth MRPC labels. In this workflow, the dataset serves as the final aggregated results table for the notebook, capturing overall model performance in a compact form for later inspection, comparison, and lineage tracking back to the validation data and prediction outputs.\", \"distilbert_max_pool_cosine_mrpc_summary\", \"record_list\"], [\"BASE\", \"distilbert_mean_cosine_median_threshold_mrpc_summary is a summary dataset containing the evaluation results for the DistilBERT mean-pooled cosine-similarity baseline on the GLUE MRPC validation set. It stores aggregate metrics computed after encoding each sentence pair with distilbert-base-uncased, measuring cosine similarity between the two sentence embeddings, and converting scores to binary paraphrase predictions using the median similarity as the decision threshold. The dataset has three fields: accuracy (float), f1 (float), and classification_report (string with per-class precision/recall/F1 and support). In this workflow, it serves as the final experiment-level output that summarizes model performance over the full validation split, with provenance linked to both the source dataset glue_mrpc_validation and the per-example prediction dataset threshold_cosine_mrpc_similarity_prediction.\", \"distilbert_mean_cosine_median_threshold_mrpc_summary\", \"record_list\"], [\"BASE\", \"Summary dataset for the MRPC validation run using distilbert-base-uncased sentence embeddings. It contains aggregate evaluation results for paraphrase prediction on glue_mrpc_validation, where sentence1 and sentence2 are encoded separately, token embeddings are mean-pooled while excluding special tokens ([CLS], [SEP]), cosine similarity is computed between the two sentence embeddings, and a fixed threshold of 0.85 is used to produce binary paraphrase predictions.\\n\\nStructure: one record with fields accuracy (float), f1 (float), and classification_report (string). The record is linked to the full glue_mrpc_validation input range and to the no_special_cosine_mrpc_similarity_prediction dataset that stores per-example predictions and cosine scores.\\n\\nRole in workflow: this dataset is the experiment-level evaluation summary, used to capture the overall performance of the no-special-token mean-pooled cosine-similarity baseline on MRPC validation.\", \"distilbert_no_special_tokens_mean_cosine_mrpc_summary\", \"record_list\"], [\"BASE\", \"Per-example prediction dataset produced by running the cross-encoder model cross-encoder/quora-distilroberta-base on the glue_mrpc_validation sentence-pair dataset. Each record corresponds to one MRPC validation example and stores two fields: y_pred, the final binary paraphrase prediction after applying a 0.65 threshold, and pos_scores, the model\\u2019s positive-class score/probability for the paraphrase label derived from the model output. The records are linked back to the matching source example in glue_mrpc_validation, enabling row-level inspection of predictions, error analysis, and downstream aggregation. In this workflow, this dataset is the main prediction output used to compare model decisions against ground-truth labels and to build the evaluation summary dataset.\", \"distilbert_quora_softmax_prediction\", \"record_list\"], [\"BASE\", \"Per-example prediction outputs for the GLUE MRPC validation set generated with the textattack/distilbert-base-uncased-MRPC classifier under two sentence orders. Each record corresponds to one validation example and contains three fields: prediction (final binary label after averaging both orders and thresholding at 0.5), pos_probs (paraphrase probability for the original input order: sentence1, sentence2), and swap_pos_probs (paraphrase probability for the swapped order: sentence2, sentence1). This dataset is the intermediate prediction table used to capture order-sensitive model scores, produce the bidirectional averaged decision, and feed the final evaluation summary.\", \"distilbert_swap_prediction_values\", \"record_list\"], [\"BASE\", \"Per-example prediction dataset for the GLUE MRPC validation split generated with the cross-encoder/quora-distilroberta-base model using symmetric inference over sentence order. Each record corresponds to one input sentence pair from glue_mrpc_validation and stores: y_pred (final binary paraphrase prediction after averaging forward and reverse scores and thresholding at 0.5), orig_score (positive-class probability for the original order: sentence1, sentence2), and rev_score (positive-class probability for the reversed order: sentence2, sentence1). This dataset is used as the main prediction artifact in the workflow: it captures model outputs for every validation example, supports error analysis and inspection of order sensitivity, and serves as an input to the downstream summary dataset that reports overall accuracy, F1, and the classification report.\", \"distilbert_symmetric_average_prediction\", \"record_list\"], [\"BASE\", \"Summary dataset for the MRPC entailment-logprob-odds experiment on the GLUE MRPC validation split. It contains evaluation results for paraphrase predictions produced from a zero-shot NLI model (typeform/distilbert-base-uncased-mnli), where each sentence pair is scored using the average entailment-vs-contradiction log-odds across both input orders. Structure: one record with columns accuracy (float), f1 (float), and classification_report (string). Its role in this workflow is to provide a compact experiment-level summary of model performance, derived from the full per-example outputs in mrpc_entailment_prediction and the ground-truth labels in glue_mrpc_validation.\", \"entailment_logprob_odds_mrpc_summary\", \"record_list\"], [\"BASE\", \"This dataset stores per-example inference outputs from google/flan-t5-small on the GLUE MRPC validation set using a prompted yes/no paraphrase detection setup. Each record corresponds to one input pair from glue_mrpc_validation and contains three fields: prediction (binary label, where 1 indicates the model preferred \\u201cyes\\u201d and 0 indicates it preferred \\u201cno\\u201d), yes_logits (the decoder logit for the token \\u201cyes\\u201d at the answer position), and no_logits (the decoder logit for the token \\u201cno\\u201d at the answer position). Predictions are produced by prompting the model with the two sentences, forcing the decoder prefix \\u201cAnswer:\\u201d, and selecting the higher of the yes/no logits. In this workflow, the dataset serves as the main model output table for downstream evaluation, error analysis, and summary metric generation, while preserving a row-level link back to the original MRPC validation examples.\", \"flan_prediction_and_logit_prefix\", \"record_list\"], [\"BASE\", \"Per-example prediction dataset for the GLUE MRPC validation set produced by prompting google/flan-t5-small with a yes/no paraphrase question and applying contextual calibration. Each record corresponds to one input sentence pair from glue_mrpc_validation and stores the model\\u2019s binary prediction (1 = paraphrase/yes, 0 = not paraphrase/no), the raw first-step logits for the yes and no tokens (raw_yes_logits, raw_no_logits), and the calibrated logits after subtracting baseline logits from a null calibration prompt (cal_yes_logits, cal_no_logits). This record list is the main intermediate output of the workflow: it preserves calibrated model scores for each example, supports error analysis and inspection, and is used to compute the downstream summary metrics in flan_t5_contextual_calibrated_yes_no_mrpc_summary.\", \"flan_prediction_logit_calibrated\", \"record_list\"], [\"BASE\", \"flan_prediction_scored is a per-example prediction dataset generated by running google/flan-t5-small on the GLUE MRPC validation set with a yes/no paraphrase prompt. Each record corresponds to one input pair from glue_mrpc_validation and stores the model\\u2019s binary prediction and the sequence log-probability scores for the two candidate answers. The fields are: prediction (integer label, where 1 indicates yes/paraphrase and 0 indicates no/not paraphrase), yes_scores (float log-probability of the full answer token sequence for \\u201cyes\\u201d), and no_scores (float log-probability of the full answer token sequence for \\u201cno\\u201d). In this workflow, this dataset serves as the scored inference output used to inspect example-level model behavior and to compute downstream summary metrics such as accuracy, F1, and the classification report.\", \"flan_prediction_scored\", \"record_list\"], [\"BASE\", \"Aggregate evaluation summary for the flan-t5-small contextual yes/no paraphrase classifier on the GLUE MRPC validation set after logit calibration. This dataset is a record list with one summary record containing the fields: accuracy (float), f1 (float), and classification_report (string with per-class precision/recall/F1 and support for not_paraphrase and paraphrase). It is produced after generating calibrated predictions in flan_prediction_logit_calibrated and compares those predictions against the ground-truth labels in glue_mrpc_validation. Its role in this workflow is to store run-level performance metrics for the full validation set, providing a compact summary of model quality for this notebook execution.\", \"flan_t5_contextual_calibrated_yes_no_mrpc_summary\", \"record_list\"], [\"BASE\", \"flan_t5_full_answer_logprob_mrpc_summary is an experiment-level summary dataset for evaluating google/flan-t5-small on the GLUE MRPC validation split using prompt-based yes/no paraphrase prediction with full-answer log-probability scoring. It contains a single record with three fields: accuracy (float), f1 (float), and classification_report (string from sklearn with per-class precision, recall, f1, and support for not_paraphrase and paraphrase). This dataset is produced after generating example-level predictions in flan_prediction_scored and comparing them against the ground-truth MRPC labels. Its role in the workflow is to store the aggregate evaluation results for the entire validation run, linking the underlying input dataset (glue_mrpc_validation) and the per-example prediction dataset (flan_prediction_scored).\", \"flan_t5_full_answer_logprob_mrpc_summary\", \"record_list\"], [\"BASE\", \"Summary dataset for the FLAN-T5 symmetric-prompt MRPC evaluation run. It contains a single aggregate record describing model performance on the full glue_mrpc_validation split, computed from predictions stored in google_flan_prediction_swapped. The fields are: accuracy (float, overall classification accuracy), f1 (float, binary F1 score for paraphrase detection), and classification_report (string, the full scikit-learn classification report with precision, recall, F1, and support for both not_paraphrase and paraphrase classes). Its role in this workflow is to provide a compact experiment-level evaluation artifact that links the source validation examples and prediction outputs to final metrics for the notebook/process flan_t5_symmetric_prompt_average_mrpc.\", \"flan_t5_symmetric_prompt_average_mrpc_summary\", \"record_list\"], [\"BASE\", \"Summary dataset for the FLAN-T5 MRPC evaluation run using first-step true/false token scoring. It contains aggregate performance results for google/flan-t5-small on the glue_mrpc_validation split, where each example is prompted as a paraphrase detection task and predicted by comparing the first decoder-step logits for the tokens true and false. The record list has three fields: accuracy (float), f1 (float, for the positive/paraphrase class), and classification_report (string containing the full per-class precision/recall/F1 summary). In this workflow, this dataset serves as the experiment-level evaluation artifact that summarizes model performance over the full validation set and links the source validation data with the per-example prediction/logit dataset google_flan_prediction_and_logits.\", \"flan_t5_true_false_first_step_mrpc_summary\", \"record_list\"], [\"BASE\", \"glue_mrpc_validation is the validation split of the GLUE MRPC (Microsoft Research Paraphrase Corpus) dataset stored in TableVault for this notebook. Each record contains sentence1, sentence2, label, and idx, where sentence1 and sentence2 are a pair of sentences, label is a binary paraphrase target (1 = paraphrase, 0 = not paraphrase), and idx is the example identifier from the original dataset. This dataset is the ground-truth evaluation input for the workflow: the sentence pairs are tokenized and passed to the pretrained textattack/distilbert-base-uncased-MRPC model, and the labels are used to compute accuracy, F1, error cases, and the final classification report. It serves as the source dataset linked to downstream prediction, mistake-analysis, and summary output records.\", \"glue_mrpc_validation\", \"record_list\"], [\"BASE\", \"Per-example inference outputs from google/flan-t5-small on the GLUE MRPC validation set using a prompted true/false paraphrase decision. Each record corresponds to one validation example and is linked to the matching source row in glue_mrpc_validation. The dataset has three fields: prediction (binary model decision, where 1 means the logit for \\u201ctrue\\u201d is greater than the logit for \\u201cfalse\\u201d), true_logits (the first-decoder-step logit for the token \\u201ctrue\\u201d), and false_logits (the first-decoder-step logit for the token \\u201cfalse\\u201d). In this workflow, this dataset is the stored prediction artifact used to inspect model behavior on individual examples and to support the downstream summary evaluation dataset with accuracy, F1, and classification report.\", \"google_flan_prediction_and_logits\", \"record_list\"], [\"BASE\", \"Per-example prediction outputs from google/flan-t5-small on the GLUE MRPC validation set using a yes/no paraphrase prompt evaluated in both original and swapped sentence order. Each record is aligned to one input example from glue_mrpc_validation and contains: prediction (binary paraphrase decision after averaging forward and swapped logits), yes_logits (forward-order logit for \\u201cyes\\u201d), no_logits (forward-order logit for \\u201cno\\u201d), swapped_yes_logits (swapped-order logit for \\u201cyes\\u201d), and swapped_no_logits (swapped-order logit for \\u201cno\\u201d). This dataset is used as the intermediate model-output table in the workflow, supporting order-symmetric paraphrase prediction, error analysis, and computation of final evaluation metrics in the summary dataset.\", \"google_flan_prediction_swapped\", \"record_list\"], [\"BASE\", \"Summary dataset for the bidirectional MRPC evaluation run. It contains aggregate evaluation results for the TextAttack DistilBERT MRPC classifier on the GLUE MRPC validation set, where paraphrase probabilities are computed for both the original sentence order and the swapped sentence order, then averaged before thresholding to make the final prediction.\\n\\nStructure:\\n- accuracy: float overall classification accuracy on the validation set\\n- f1: float F1 score for the paraphrase class\\n- classification_report: string version of the sklearn classification report, including per-class precision, recall, F1, and support\\n\\nRole in this workflow:\\nThis dataset serves as the experiment-level evaluation summary for the notebook. It records the final performance metrics derived from comparing the averaged bidirectional predictions against the true labels, and links those metrics back to both the source dataset (glue_mrpc_validation) and the per-example prediction dataset (distilbert_swap_prediction_values).\", \"hf_pipeline_mrpc_bidirectional_order_average_summary\", \"record_list\"], [\"BASE\", \"This dataset stores the aggregate evaluation results for the notebook\\u2019s MRPC margin-rule experiment. It contains a summary record with three fields: accuracy (float), f1 (float), and classification_report (string containing the full sklearn classification report, including per-class precision, recall, f1-score, and support for not_paraphrase and paraphrase). The values are computed by comparing the true labels from glue_mrpc_validation against binary predictions produced from the TextAttack DistilBERT MRPC model, where prediction = 1 when score_pos - score_neg exceeds the configured margin threshold. Its role in the workflow is to provide a compact, final performance summary for the full validation set, linked to both the source validation data and the per-example prediction dataset distilbert_margin_score_prediction_values.\", \"hf_pipeline_mrpc_margin_rule_summary\", \"record_list\"], [\"BASE\", \"This dataset stores the aggregate evaluation summary for the DistilBERT MRPC inference run on the GLUE MRPC validation set after converting pipeline raw logits to softmax probabilities. It contains one summary record with three fields: accuracy (overall prediction accuracy), f1 (binary F1 score for paraphrase detection), and classification_report (the full sklearn text report with per-class precision, recall, F1, support, and overall averages). In this workflow, it serves as the experiment-level performance snapshot, linking the source validation examples and the per-example prediction dataset pipeline_distilbert_softmax_probs so that users can quickly inspect overall model quality without recomputing metrics.\", \"hf_pipeline_mrpc_raw_logits_softmax_summary\", \"record_list\"], [\"BASE\", \"Summary dataset for the hf_pipeline_mrpc_threshold_070 experiment. It contains a single evaluation record aggregating model performance on the full glue_mrpc_validation split after running the Hugging Face text-classification pipeline with textattack/distilbert-base-uncased-MRPC and converting paraphrase probabilities to binary predictions using a 0.70 threshold. The dataset has three fields: accuracy (float), f1 (float, for the positive paraphrase class), and classification_report (string produced by sklearn, containing per-class precision, recall, f1-score, support, and overall averages). Its role in the workflow is to provide a compact experiment-level summary derived from the validation labels and the per-example predictions stored in pipeline_distilbert_threshold, so the notebook can track and compare final thresholded evaluation results.\", \"hf_pipeline_mrpc_threshold_070_summary\", \"record_list\"], [\"BASE\", \"Summary dataset for the min_direction_margin_mrpc workflow. It contains experiment-level evaluation results for paraphrase detection on the GLUE MRPC validation set, where predictions are made by scoring each sentence pair in both directions with an MNLI model and using the minimum entailment-minus-contradiction margin as the decision signal. The dataset has one record with three fields: accuracy (float), f1 (float), and classification_report (string). Its role is to store the final aggregated performance summary derived from the source validation examples and the per-example prediction dataset mrpc_min_margin_prediction, so future users can quickly inspect the overall outcome of this notebook without recomputing metrics.\", \"min_direction_margin_mrpc_summary\", \"record_list\"], [\"BASE\", \"Row-level prediction dataset for the GLUE MRPC validation set produced by the sentence-transformers/paraphrase-MiniLM-L6-v2 model. Each record corresponds to one sentence pair from glue_mrpc_validation and stores two fields: prediction (binary label, where 0 = not_paraphrase and 1 = paraphrase) and score (cosine similarity between the normalized embeddings of sentence1 and sentence2). Predictions are generated by applying a fixed threshold of 0.78 to the cosine similarity score. In this workflow, this dataset serves as the per-example model output used for downstream evaluation, error analysis, and creation of the summary metrics dataset.\", \"minilm_cosine_threshold_prediction\", \"record_list\"], [\"BASE\", \"Model prediction outputs for the GLUE MRPC validation set generated by the textattack/distilbert-base-uncased-MRPC sequence classification model. Each record corresponds to one sentence-pair example in glue_mrpc_validation and stores the model\\u2019s predicted class label for paraphrase detection. The dataset has a single field, prediction, which is an integer class ID (0 = not paraphrase, 1 = paraphrase). In this workflow, it serves as the inference output table linked back to the source validation examples and is used to compute evaluation metrics, compare predictions with ground-truth labels, and identify error cases.\", \"mrpc_distilbert_predictions\", \"record_list\"], [\"BASE\", \"mrpc_entailment_prediction contains per-example prediction outputs for the GLUE MRPC validation set generated with the typeform/distilbert-base-uncased-mnli NLI model. Each record corresponds to one validation pair from glue_mrpc_validation and stores three fields: prediction (binary paraphrase decision obtained by thresholding the averaged score at 0), dir12 (entailment-minus-contradiction log-probability score for sentence1 \\u2192 sentence2), and dir21 (the same score for sentence2 \\u2192 sentence1). The dataset is aligned one-to-one with the source MRPC examples through input item indexing. Its role in this workflow is to capture the model\\u2019s directional entailment-based evidence and final paraphrase prediction for downstream evaluation, error analysis, and summary metric computation.\", \"mrpc_entailment_prediction\", \"record_list\"], [\"BASE\", \"mrpc_gate_margin_prediction is a per-example prediction dataset derived from the GLUE MRPC validation split. For each validation pair (sentence1, sentence2), the notebook runs the NLI model typeform/distilbert-base-uncased-mnli in both input orders, sentence1\\u2192sentence2 and sentence2\\u2192sentence1, and stores the resulting decision signals used for paraphrase classification. The dataset has four fields: prediction (final binary paraphrase prediction, 1 for paraphrase and 0 for not paraphrase), margin_12 (entailment logit minus contradiction logit for sentence1 paired with sentence2), margin_21 (the same margin for the reversed order), and gate (boolean flag that is true only when neither direction\\u2019s argmax label is contradiction). The final prediction is produced by requiring gate = true and the average of margin_12 and margin_21 to be greater than 0. This dataset serves as the main intermediate output of the workflow: it preserves the model\\u2019s directional margin scores and final gated prediction for each MRPC example, and it is then used to compute the summary accuracy, F1, and classification report.\", \"mrpc_gate_margin_prediction\", \"record_list\"], [\"BASE\", \"Per-example prediction dataset for the GLUE MRPC validation split, generated by running the sentence pairs through the typeform/distilbert-base-uncased-mnli model in both input orders. Each record corresponds to one MRPC validation example and is linked to the matching row in glue_mrpc_validation. The dataset has three fields: prediction (binary paraphrase decision, where 1 indicates paraphrase and 0 indicates not paraphrase), gap_12 (entailment probability minus contradiction probability for sentence1\\u2192sentence2), and gap_21 (the same probability gap for sentence2\\u2192sentence1). In this workflow, it serves as the stored per-instance model output used to inspect directional confidence, compare predictions with ground-truth MRPC labels, and build the downstream summary metrics in softmax_gap_mean_mrpc_summary.\", \"mrpc_mean_gap_prediction\", \"record_list\"], [\"BASE\", \"mrpc_min_margin_prediction is an example-level prediction dataset derived from the GLUE MRPC validation split. For each sentence pair in glue_mrpc_validation, it stores the binary paraphrase prediction produced by a zero-shot NLI model (typeform/distilbert-base-uncased-mnli) and the confidence score used to make that prediction.\\n\\nEach record corresponds to one MRPC validation example and has two fields: prediction, an integer label where 1 indicates paraphrase and 0 indicates not_paraphrase; and min_margin, a float equal to the minimum of the entailment-versus-contradiction logit margins computed in both input directions, sentence1\\u2192sentence2 and sentence2\\u2192sentence1. The prediction is defined as 1 when min_margin > 0, otherwise 0.\\n\\nIn this workflow, this dataset serves as the per-example output of the min-direction-margin inference step. It is used as the input to downstream evaluation and summarization, including accuracy, F1, classification report generation, and error analysis.\", \"mrpc_min_margin_prediction\", \"record_list\"], [\"BASE\", \"Per-example prediction dataset for the GLUE MRPC validation split, produced by applying the typeform/distilbert-base-uncased-mnli model as a zero-shot paraphrase detector. Each record corresponds to one sentence pair from glue_mrpc_validation and stores: prediction (binary paraphrase decision, where 1 indicates paraphrase and 0 indicates not_paraphrase), score_12 (entailment logit minus max(contradiction, neutral) for sentence1 -> sentence2), and score_21 (the same score for sentence2 -> sentence1). The final prediction is derived from the average of the two directional scores. In this workflow, this dataset captures the model\\u2019s per-example outputs for downstream evaluation, inspection of mistakes, and construction of the overall summary metrics.\", \"mrpc_neutral_penalty_prediction\", \"record_list\"], [\"BASE\", \"Subset of error cases from the GLUE MRPC validation run using the textattack/distilbert-base-uncased-MRPC model. Each record captures one misclassified sentence pair and includes the fields: idx (validation-set position), sentence1, sentence2, true (ground-truth binary label), and pred (model-predicted binary label). This dataset is created by selecting the first 10 examples where the model prediction differs from the true label, and each record is linked back to the corresponding source example in glue_mrpc_validation and its entry in mrpc_distilbert_predictions. Its role in the workflow is error analysis: it provides a compact, inspectable sample of model failures for diagnosing paraphrase detection mistakes.\", \"mrpc_paraphrase_inference_distilbert_mistakes\", \"record_list\"], [\"BASE\", \"This dataset contains the final evaluation summary for the textattack/distilbert-base-uncased-MRPC model on the GLUE MRPC validation split. It is a small output table with one record summarizing model performance over the full validation dataset.\\n\\nFields:\\n- accuracy: overall classification accuracy on the validation set\\n- f1: F1 score for the paraphrase classification task\\n- classification_report: full text report from sklearn including precision, recall, F1, and support for the not_paraphrase and paraphrase classes\\n\\nIn this workflow, this dataset serves as the final results artifact. It is created after running batched inference on sentence pairs, comparing predictions against ground-truth labels, and aggregating the metrics. The record is linked to the full validation input dataset and the prediction dataset so a user can trace the reported metrics back to the underlying examples and model outputs.\", \"mrpc_paraphrase_inference_distilbert_output\", \"record_list\"], [\"BASE\", \"Aggregate evaluation summary for the neutral-penalized margin MRPC experiment. This dataset contains a single summary record computed from the GLUE MRPC validation set and the derived mrpc_neutral_penalty_prediction records. Its fields are: accuracy (float, overall prediction accuracy), f1 (float, F1 score for the paraphrase class), and classification_report (string, full sklearn classification report with per-class precision, recall, F1, and support). In this workflow, it serves as the compact experiment-level output used to record and retrieve overall model performance after scoring sentence pairs with the MNLI model and converting the bidirectional entailment-vs.-non-entailment margin into paraphrase predictions.\", \"neutral_penalized_margin_mrpc_summary\", \"record_list\"], [\"BASE\", \"Per-example prediction dataset for the GLUE MRPC validation split. Each record corresponds to one sentence pair from glue_mrpc_validation and stores the model output from this notebook\\u2019s similarity-based paraphrase detection pipeline using distilbert-base-uncased embeddings. The fields are: prediction (binary label, 1 if the cosine similarity between the two sentence embeddings is at least 0.85, otherwise 0) and cosine_scores (the raw cosine similarity score as a float). The embeddings are produced by mean-pooling DistilBERT token representations while excluding special tokens such as [CLS] and [SEP], followed by L2 normalization. In this workflow, this dataset serves as the detailed per-row inference output that links back to the original MRPC validation examples and is then used to compute and document overall evaluation metrics in the summary dataset.\", \"no_special_cosine_mrpc_similarity_prediction\", \"record_list\"], [\"BASE\", \"Per-example inference outputs for the GLUE MRPC validation set produced by the Hugging Face text-classification pipeline using textattack/distilbert-base-uncased-MRPC. Each record corresponds to one input sentence pair from glue_mrpc_validation and stores the model\\u2019s predicted class and the softmax probability of the positive/paraphrase class. The dataset is structured as one row per validation example with fields for prediction (integer class label from argmax) and the positive-class probability (intended as positive_probs; in the appended records this is written as paraphrase_probs). In this workflow, this dataset serves as the main prediction artifact linking model outputs back to the source validation examples and is used downstream to compute accuracy, F1, and the classification report summary.\", \"pipeline_distilbert_softmax_probs\", \"record_list\"], [\"BASE\", \"Per-example inference results from the Hugging Face model textattack/distilbert-base-uncased-MRPC run on the glue_mrpc_validation dataset. Each record corresponds to one sentence pair from the MRPC validation split and stores two fields: prediction, a binary label produced by thresholding the model\\u2019s paraphrase probability at 0.70; and paraphrase_probs, the softmax probability assigned to the positive paraphrase class. Records are linked back to the matching input example in glue_mrpc_validation. This dataset serves as the main prediction output of the workflow and is used for downstream evaluation, error analysis, and creation of the run-level summary dataset.\", \"pipeline_distilbert_threshold\", \"record_list\"], [\"BASE\", \"This dataset stores the evaluation summary for the notebook run quora_cross_encoder_prefixed_sentence_tags_mrpc on the GLUE MRPC validation set. It contains a summary record of the cross-encoder paraphrase detection results produced from the prediction dataset distilbert_cross_text_prediction. Its fields are: accuracy (float, overall classification accuracy), f1 (float, binary F1 score for paraphrase detection), and classification_report (string, the full sklearn classification report with precision, recall, F1, and support for the not_paraphrase and paraphrase classes). In this workflow, it serves as the experiment-level metrics dataset that aggregates model performance over the full validation set and links the source inputs from glue_mrpc_validation and the generated predictions.\", \"quora_cross_encoder_prefixed_sentence_tags_mrpc_summary\", \"record_list\"], [\"BASE\", \"Experiment-level evaluation summary for the notebook run using the cross-encoder/quora-distilroberta-base model on the GLUE MRPC validation split with a paraphrase decision threshold of 0.65 applied to the positive softmax score. This dataset contains a single summary record with the fields: accuracy (float), f1 (float), and classification_report (string produced by sklearn, summarizing precision, recall, f1-score, and support for the not_paraphrase and paraphrase classes). It is derived from the full glue_mrpc_validation dataset and the corresponding per-example predictions stored in distilbert_quora_softmax_prediction, and its role is to capture the overall performance of this experiment in a compact, queryable form for comparison, tracking, and documentation.\", \"quora_cross_encoder_softmax_threshold_065_mrpc_summary\", \"record_list\"], [\"BASE\", \"Summary dataset for the notebook\\u2019s evaluation run of the cross-encoder/quora-distilroberta-base model on the GLUE MRPC validation set using symmetric scoring. It contains aggregate performance results computed after predicting each sentence pair in both original and reversed order, averaging the two positive-class scores, and thresholding at 0.5.\\n\\nStructure: a record list with columns accuracy, f1, and classification_report. accuracy is the overall validation accuracy, f1 is the binary F1 score for paraphrase detection, and classification_report is the full sklearn text report summarizing class-wise precision, recall, F1, and support for the labels not_paraphrase and paraphrase.\\n\\nRole in the workflow: this dataset stores the run-level evaluation summary for the prediction dataset distilbert_symmetric_average_prediction, linked to both the source input dataset glue_mrpc_validation and the generated prediction records. It is intended as the compact experiment result table for comparing or auditing this notebook run.\", \"quora_cross_encoder_symmetric_average_mrpc_summary\", \"record_list\"], [\"BASE\", \"This dataset stores the evaluation summary for the notebook run that applies the cross-encoder/quora-distilroberta-base model to the GLUE MRPC validation set after text normalization. It contains a single aggregated record rather than per-example predictions. The fields are: accuracy (float), f1 (float), and classification_report (string with the full sklearn classification report for the not_paraphrase/paraphrase labels). Its role in the workflow is to capture experiment-level performance metrics derived from comparing the normalized-text predictions in distilbert-normalized-text-prediction against the ground-truth labels in glue_mrpc_validation, providing a compact summary of model performance for this run.\", \"quora_cross_encoder_text_normalized_mrpc_summary\", \"record_list\"], [\"BASE\", \"Per-example prediction dataset for the GLUE MRPC validation set, generated by comparing sentence embeddings from sentence-transformers/all-MiniLM-L6-v2. Each record contains a single field, prediction, which is a binary label: 1 when the L2 distance between the normalized embeddings of sentence1 and sentence2 is less than or equal to the fixed threshold (0.63), and 0 otherwise. The dataset has one record per validation example and is linked back to the original glue_mrpc_validation row as well as the corresponding sentence 1 and sentence 2 embedding entries. Its role in this workflow is to store the model\\u2019s threshold-based paraphrase decisions so they can be inspected, traced to source inputs, and used to compute evaluation metrics such as accuracy, F1, and the classification report.\", \"sentence_transformers_mrpc_prediction_distance\", \"record_list\"], [\"BASE\", \"Binary paraphrase predictions for the GLUE MRPC validation set, generated by encoding each sentence pair with sentence-transformers/all-MiniLM-L6-v2 using max_seq_length=64, computing the cosine similarity between the normalized sentence1 and sentence2 embeddings, and applying a threshold of 0.80. This record list contains one row per validation example with a single field, prediction, where 1 indicates predicted paraphrase and 0 indicates predicted non-paraphrase. Each record is linked back to the corresponding source example in glue_mrpc_validation and to the two embedding lists sentence-transformers-sentence-1-max64 and sentence-transformers-sentence-2-max64. In this workflow, the dataset serves as the stored model output used for downstream evaluation, error analysis, and experiment summary reporting.\", \"sentence_transformers_mrpc_prediction_max64\", \"record_list\"], [\"BASE\", \"sentence_transformers_mrpc_prediction_threshold is a record list containing the per-example binary predictions produced on the GLUE MRPC validation set by a SentenceTransformer paraphrase model. Each record has a single field, prediction, where 1 indicates the sentence pair is predicted to be a paraphrase and 0 indicates not_paraphrase. Predictions are generated by encoding sentence1 and sentence2 with sentence-transformers/paraphrase-MiniLM-L3-v2, computing their cosine similarity via normalized embedding dot product, and applying a fixed threshold of 0.74. The dataset is aligned one-to-one with glue_mrpc_validation and is linked to the corresponding sentence-pair embeddings, making it the main stored output used for error analysis, metric computation, and creation of the workflow summary dataset.\", \"sentence_transformers_mrpc_prediction_threshold\", \"record_list\"], [\"BASE\", \"Binary prediction table for the GLUE MRPC validation set produced by the sentence-transformers/all-distilroberta-v1 model. Each record corresponds to one validation example and stores a single field, prediction, where 1 indicates the sentence pair is predicted to be a paraphrase and 0 indicates not_paraphrase. Predictions are generated by computing the cosine similarity between the normalized embeddings of sentence1 and sentence2 and applying a fixed threshold of 0.72. This dataset serves as the model output layer in the workflow, linking each prediction back to the original MRPC example and the two sentence embedding datasets, and it is used downstream to compute accuracy, F1, error analysis, and the experiment summary.\", \"sentence_transformers_mrpc_prediction_threshold_2\", \"record_list\"], [\"BASE\", \"Summary record list for the MRPC validation evaluation of a threshold-based paraphrase detection workflow using sentence-transformers/all-distilroberta-v1. This dataset contains experiment-level metrics computed by comparing predicted paraphrase labels from cosine similarity scores between sentence1 and sentence2 embeddings against the ground-truth labels in glue_mrpc_validation. Its structure is a record list with three fields: accuracy (float), f1 (float), and classification_report (string containing the full per-class evaluation report). In this notebook, it serves as the final aggregated result of the process, linking the full GLUE MRPC validation set and the generated prediction record list into a compact summary of model performance for the chosen cosine threshold.\", \"st_all_distilroberta_v1_cosine_threshold_mrpc_summary\", \"record_list\"], [\"BASE\", \"Summary dataset for the MRPC validation run using sentence-transformers/all-MiniLM-L6-v2 sentence embeddings and an L2 distance threshold classifier. It contains a single record that aggregates evaluation results over the full glue_mrpc_validation dataset after predicting whether each sentence pair is a paraphrase based on whether the embedding distance is less than or equal to the chosen threshold (0.63).\\n\\nFields:\\naccuracy: overall classification accuracy on the validation set\\nf1: F1 score for the paraphrase class\\nclassification_report: full text report from sklearn with precision, recall, F1, and support for both not_paraphrase and paraphrase classes\\n\\nRole in the workflow:\\nThis dataset stores the experiment-level evaluation summary for the notebook. It provides a compact record of model performance derived from the per-example prediction dataset sentence_transformers_mrpc_prediction_distance and linked to the full glue_mrpc_validation input range.\", \"st_all_minilm_l6_l2_distance_threshold_mrpc_summary\", \"record_list\"], [\"BASE\", \"Summary dataset for the MRPC validation experiment using sentence-transformers/all-MiniLM-L6-v2 with max_seq_length=64 and cosine-similarity thresholding. It contains aggregate evaluation results for the prediction run, not per-example data. The record list has three fields: accuracy (float), f1 (float), and classification_report (string with the full class-wise sklearn report for not_paraphrase vs paraphrase). In this workflow, it stores the final performance summary of the predicted paraphrase labels generated from cosine scores between sentence1 and sentence2 embeddings on glue_mrpc_validation, providing a compact experiment-level result linked back to the source validation set and prediction outputs.\", \"st_all_minilm_l6_max_seq_len_64_cosine_mrpc_summary\", \"record_list\"], [\"BASE\", \"This dataset stores the run-level evaluation summary for the SentenceTransformer bi-encoder cosine-similarity paraphrase detection experiment on the GLUE MRPC validation set. It contains a single summary record rather than per-example predictions. The fields are: accuracy (float), f1 (float), and classification_report (string with class-wise precision, recall, and F1 statistics). In this workflow, it serves as the compact results table that aggregates model performance after generating sentence embeddings, scoring sentence pairs with cosine similarity, applying a fixed decision threshold, and comparing predictions against the MRPC ground-truth labels.\", \"st_paraphrase_minilm_l3_cosine_threshold_mrpc_summary\", \"record_list\"], [\"BASE\", \"This dataset stores the evaluation summary for the paraphrase detection workflow using sentence-transformers/paraphrase-MiniLM-L6-v2 on the GLUE MRPC validation set with cosine-similarity thresholding at 0.78. It contains a single summary record with three fields: accuracy (float), f1 (float), and classification_report (string). The metrics are computed by comparing thresholded cosine-similarity predictions from the minilm_cosine_threshold_prediction dataset against the ground-truth labels in glue_mrpc_validation. Its role in this workflow is to provide a compact, experiment-level performance summary for the notebook, linking the full validation set and per-example predictions to aggregate evaluation results.\", \"st_paraphrase_minilm_l6_cosine_threshold_mrpc_summary\", \"record_list\"]]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_0bd49b1f5c8407520069da599d6c8481939f81ea0cfcd3cf79`
+
+**Output items:**
+```json
+[
+  {
+    "type": "reasoning",
+    "summary": []
+  },
+  {
+    "type": "function_call",
+    "name": "description_search",
+    "call_id": "call_4daSY5VhOYzY5GHiJ7A1rIis",
+    "arguments": {
+      "description_text": "symmetry symmetric average swapped summary MRPC"
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `description_search` | **call_id:** `call_4daSY5VhOYzY5GHiJ7A1rIis`
+
+**Arguments:**
+```json
+{
+  "description_text": "symmetry symmetric average swapped summary MRPC"
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": []
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 13183 | 292 | 264 | 11356 | 5.093s | 0.033s |
+
+---
+
+## Turn 3 — `description_search` [ok]
+
+### Model Input
+**previous_response_id:** `resp_0bd49b1f5c8407520069da59a27cc8819397624919ec669a8d`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_4daSY5VhOYzY5GHiJ7A1rIis",
+    "output": "{\"ok\": true, \"result\": []}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_0bd49b1f5c8407520069da59a27cc8819397624919ec669a8d`
+
+**Output items:**
+```json
+[
+  {
+    "type": "reasoning",
+    "summary": []
+  },
+  {
+    "type": "function_call",
+    "name": "description_search",
+    "call_id": "call_nIxXCzoDdFYDmdRkcAuoQ8KD",
+    "arguments": {
+      "description_text": "symmetric MRPC summary"
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `description_search` | **call_id:** `call_nIxXCzoDdFYDmdRkcAuoQ8KD`
+
+**Arguments:**
+```json
+{
+  "description_text": "symmetric MRPC summary"
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    [
+      "BASE",
+      "Per-example prediction dataset for the GLUE MRPC validation split generated with the cross-encoder/quora-distilroberta-base model using symmetric inference over sentence order. Each record corresponds to one input sentence pair from glue_mrpc_validation and stores: y_pred (final binary paraphrase prediction after averaging forward and reverse scores and thresholding at 0.5), orig_score (positive-class probability for the original order: sentence1, sentence2), and rev_score (positive-class probability for the reversed order: sentence2, sentence1). This dataset is used as the main prediction artifact in the workflow: it captures model outputs for every validation example, supports error analysis and inspection of order sensitivity, and serves as an input to the downstream summary dataset that reports overall accuracy, F1, and the classification report.",
+      "distilbert_symmetric_average_prediction",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Summary dataset for the FLAN-T5 symmetric-prompt MRPC evaluation run. It contains a single aggregate record describing model performance on the full glue_mrpc_validation split, computed from predictions stored in google_flan_prediction_swapped. The fields are: accuracy (float, overall classification accuracy), f1 (float, binary F1 score for paraphrase detection), and classification_report (string, the full scikit-learn classification report with precision, recall, F1, and support for both not_paraphrase and paraphrase classes). Its role in this workflow is to provide a compact experiment-level evaluation artifact that links the source validation examples and prediction outputs to final metrics for the notebook/process flan_t5_symmetric_prompt_average_mrpc.",
+      "flan_t5_symmetric_prompt_average_mrpc_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Per-example prediction outputs from google/flan-t5-small on the GLUE MRPC validation set using a yes/no paraphrase prompt evaluated in both original and swapped sentence order. Each record is aligned to one input example from glue_mrpc_validation and contains: prediction (binary paraphrase decision after averaging forward and swapped logits), yes_logits (forward-order logit for \u201cyes\u201d), no_logits (forward-order logit for \u201cno\u201d), swapped_yes_logits (swapped-order logit for \u201cyes\u201d), and swapped_no_logits (swapped-order logit for \u201cno\u201d). This dataset is used as the intermediate model-output table in the workflow, supporting order-symmetric paraphrase prediction, error analysis, and computation of final evaluation metrics in the summary dataset.",
+      "google_flan_prediction_swapped",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Summary dataset for the notebook\u2019s evaluation run of the cross-encoder/quora-distilroberta-base model on the GLUE MRPC validation set using symmetric scoring. It contains aggregate performance results computed after predicting each sentence pair in both original and reversed order, averaging the two positive-class scores, and thresholding at 0.5.\n\nStructure: a record list with columns accuracy, f1, and classification_report. accuracy is the overall validation accuracy, f1 is the binary F1 score for paraphrase detection, and classification_report is the full sklearn text report summarizing class-wise precision, recall, F1, and support for the labels not_paraphrase and paraphrase.\n\nRole in the workflow: this dataset stores the run-level evaluation summary for the prediction dataset distilbert_symmetric_average_prediction, linked to both the source input dataset glue_mrpc_validation and the generated prediction records. It is intended as the compact experiment result table for comparing or auditing this notebook run.",
+      "quora_cross_encoder_symmetric_average_mrpc_summary",
+      "record_list"
+    ]
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 13496 | 34 | 9 | 11669 | 1.482s | 0.041s |
+
+---
+
+## Turn 4 — `description_search` [ok]
+
+### Model Input
+**previous_response_id:** `resp_0bd49b1f5c8407520069da59a404c0819399f576a4f789cd8d`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_nIxXCzoDdFYDmdRkcAuoQ8KD",
+    "output": "{\"ok\": true, \"result\": [[\"BASE\", \"Per-example prediction dataset for the GLUE MRPC validation split generated with the cross-encoder/quora-distilroberta-base model using symmetric inference over sentence order. Each record corresponds to one input sentence pair from glue_mrpc_validation and stores: y_pred (final binary paraphrase prediction after averaging forward and reverse scores and thresholding at 0.5), orig_score (positive-class probability for the original order: sentence1, sentence2), and rev_score (positive-class probability for the reversed order: sentence2, sentence1). This dataset is used as the main prediction artifact in the workflow: it captures model outputs for every validation example, supports error analysis and inspection of order sensitivity, and serves as an input to the downstream summary dataset that reports overall accuracy, F1, and the classification report.\", \"distilbert_symmetric_average_prediction\", \"record_list\"], [\"BASE\", \"Summary dataset for the FLAN-T5 symmetric-prompt MRPC evaluation run. It contains a single aggregate record describing model performance on the full glue_mrpc_validation split, computed from predictions stored in google_flan_prediction_swapped. The fields are: accuracy (float, overall classification accuracy), f1 (float, binary F1 score for paraphrase detection), and classification_report (string, the full scikit-learn classification report with precision, recall, F1, and support for both not_paraphrase and paraphrase classes). Its role in this workflow is to provide a compact experiment-level evaluation artifact that links the source validation examples and prediction outputs to final metrics for the notebook/process flan_t5_symmetric_prompt_average_mrpc.\", \"flan_t5_symmetric_prompt_average_mrpc_summary\", \"record_list\"], [\"BASE\", \"Per-example prediction outputs from google/flan-t5-small on the GLUE MRPC validation set using a yes/no paraphrase prompt evaluated in both original and swapped sentence order. Each record is aligned to one input example from glue_mrpc_validation and contains: prediction (binary paraphrase decision after averaging forward and swapped logits), yes_logits (forward-order logit for \\u201cyes\\u201d), no_logits (forward-order logit for \\u201cno\\u201d), swapped_yes_logits (swapped-order logit for \\u201cyes\\u201d), and swapped_no_logits (swapped-order logit for \\u201cno\\u201d). This dataset is used as the intermediate model-output table in the workflow, supporting order-symmetric paraphrase prediction, error analysis, and computation of final evaluation metrics in the summary dataset.\", \"google_flan_prediction_swapped\", \"record_list\"], [\"BASE\", \"Summary dataset for the notebook\\u2019s evaluation run of the cross-encoder/quora-distilroberta-base model on the GLUE MRPC validation set using symmetric scoring. It contains aggregate performance results computed after predicting each sentence pair in both original and reversed order, averaging the two positive-class scores, and thresholding at 0.5.\\n\\nStructure: a record list with columns accuracy, f1, and classification_report. accuracy is the overall validation accuracy, f1 is the binary F1 score for paraphrase detection, and classification_report is the full sklearn text report summarizing class-wise precision, recall, F1, and support for the labels not_paraphrase and paraphrase.\\n\\nRole in the workflow: this dataset stores the run-level evaluation summary for the prediction dataset distilbert_symmetric_average_prediction, linked to both the source input dataset glue_mrpc_validation and the generated prediction records. It is intended as the compact experiment result table for comparing or auditing this notebook run.\", \"quora_cross_encoder_symmetric_average_mrpc_summary\", \"record_list\"]]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_0bd49b1f5c8407520069da59a404c0819399f576a4f789cd8d`
+
+**Output items:**
+```json
+[
+  {
+    "type": "reasoning",
+    "summary": []
+  },
+  {
+    "type": "function_call",
+    "name": "description_search",
+    "call_id": "call_Rl20pKFmv3qqhulgirZExq3o",
+    "arguments": {
+      "description_text": "NLI MRPC summary entailment margin average symmetric"
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `description_search` | **call_id:** `call_Rl20pKFmv3qqhulgirZExq3o`
+
+**Arguments:**
+```json
+{
+  "description_text": "NLI MRPC summary entailment margin average symmetric"
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": []
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 14308 | 50 | 20 | 12481 | 1.924s | 0.045s |
+
+---
+
+## Turn 5 — `description_search` [ok]
+
+### Model Input
+**previous_response_id:** `resp_0bd49b1f5c8407520069da59a5fd3c81939a35444bec64dcc1`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_Rl20pKFmv3qqhulgirZExq3o",
+    "output": "{\"ok\": true, \"result\": []}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_0bd49b1f5c8407520069da59a5fd3c81939a35444bec64dcc1`
+
+**Output items:**
+```json
+[
+  {
+    "type": "reasoning",
+    "summary": []
+  },
+  {
+    "type": "function_call",
+    "name": "description_search",
+    "call_id": "call_uRQy9gffdRlijjyeox3cHxJt",
+    "arguments": {
+      "description_text": "entailment MRPC summary"
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `description_search` | **call_id:** `call_uRQy9gffdRlijjyeox3cHxJt`
+
+**Arguments:**
+```json
+{
+  "description_text": "entailment MRPC summary"
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    [
+      "BASE",
+      "Summary dataset for the MRPC entailment-logprob-odds experiment on the GLUE MRPC validation split. It contains evaluation results for paraphrase predictions produced from a zero-shot NLI model (typeform/distilbert-base-uncased-mnli), where each sentence pair is scored using the average entailment-vs-contradiction log-odds across both input orders. Structure: one record with columns accuracy (float), f1 (float), and classification_report (string). Its role in this workflow is to provide a compact experiment-level summary of model performance, derived from the full per-example outputs in mrpc_entailment_prediction and the ground-truth labels in glue_mrpc_validation.",
+      "entailment_logprob_odds_mrpc_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Summary dataset for the min_direction_margin_mrpc workflow. It contains experiment-level evaluation results for paraphrase detection on the GLUE MRPC validation set, where predictions are made by scoring each sentence pair in both directions with an MNLI model and using the minimum entailment-minus-contradiction margin as the decision signal. The dataset has one record with three fields: accuracy (float), f1 (float), and classification_report (string). Its role is to store the final aggregated performance summary derived from the source validation examples and the per-example prediction dataset mrpc_min_margin_prediction, so future users can quickly inspect the overall outcome of this notebook without recomputing metrics.",
+      "min_direction_margin_mrpc_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "mrpc_entailment_prediction contains per-example prediction outputs for the GLUE MRPC validation set generated with the typeform/distilbert-base-uncased-mnli NLI model. Each record corresponds to one validation pair from glue_mrpc_validation and stores three fields: prediction (binary paraphrase decision obtained by thresholding the averaged score at 0), dir12 (entailment-minus-contradiction log-probability score for sentence1 \u2192 sentence2), and dir21 (the same score for sentence2 \u2192 sentence1). The dataset is aligned one-to-one with the source MRPC examples through input item indexing. Its role in this workflow is to capture the model\u2019s directional entailment-based evidence and final paraphrase prediction for downstream evaluation, error analysis, and summary metric computation.",
+      "mrpc_entailment_prediction",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "mrpc_gate_margin_prediction is a per-example prediction dataset derived from the GLUE MRPC validation split. For each validation pair (sentence1, sentence2), the notebook runs the NLI model typeform/distilbert-base-uncased-mnli in both input orders, sentence1\u2192sentence2 and sentence2\u2192sentence1, and stores the resulting decision signals used for paraphrase classification. The dataset has four fields: prediction (final binary paraphrase prediction, 1 for paraphrase and 0 for not paraphrase), margin_12 (entailment logit minus contradiction logit for sentence1 paired with sentence2), margin_21 (the same margin for the reversed order), and gate (boolean flag that is true only when neither direction\u2019s argmax label is contradiction). The final prediction is produced by requiring gate = true and the average of margin_12 and margin_21 to be greater than 0. This dataset serves as the main intermediate output of the workflow: it preserves the model\u2019s directional margin scores and final gated prediction for each MRPC example, and it is then used to compute the summary accuracy, F1, and classification report.",
+      "mrpc_gate_margin_prediction",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Per-example prediction dataset for the GLUE MRPC validation split, generated by running the sentence pairs through the typeform/distilbert-base-uncased-mnli model in both input orders. Each record corresponds to one MRPC validation example and is linked to the matching row in glue_mrpc_validation. The dataset has three fields: prediction (binary paraphrase decision, where 1 indicates paraphrase and 0 indicates not paraphrase), gap_12 (entailment probability minus contradiction probability for sentence1\u2192sentence2), and gap_21 (the same probability gap for sentence2\u2192sentence1). In this workflow, it serves as the stored per-instance model output used to inspect directional confidence, compare predictions with ground-truth MRPC labels, and build the downstream summary metrics in softmax_gap_mean_mrpc_summary.",
+      "mrpc_mean_gap_prediction",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Per-example prediction dataset for the GLUE MRPC validation split, produced by applying the typeform/distilbert-base-uncased-mnli model as a zero-shot paraphrase detector. Each record corresponds to one sentence pair from glue_mrpc_validation and stores: prediction (binary paraphrase decision, where 1 indicates paraphrase and 0 indicates not_paraphrase), score_12 (entailment logit minus max(contradiction, neutral) for sentence1 -> sentence2), and score_21 (the same score for sentence2 -> sentence1). The final prediction is derived from the average of the two directional scores. In this workflow, this dataset captures the model\u2019s per-example outputs for downstream evaluation, inspection of mistakes, and construction of the overall summary metrics.",
+      "mrpc_neutral_penalty_prediction",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Aggregate evaluation summary for the neutral-penalized margin MRPC experiment. This dataset contains a single summary record computed from the GLUE MRPC validation set and the derived mrpc_neutral_penalty_prediction records. Its fields are: accuracy (float, overall prediction accuracy), f1 (float, F1 score for the paraphrase class), and classification_report (string, full sklearn classification report with per-class precision, recall, F1, and support). In this workflow, it serves as the compact experiment-level output used to record and retrieve overall model performance after scoring sentence pairs with the MNLI model and converting the bidirectional entailment-vs.-non-entailment margin into paraphrase predictions.",
+      "neutral_penalized_margin_mrpc_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Summary dataset for the MRPC validation experiment using an MNLI sequence-classification model and the mean softmax-gap decision rule. It contains a single aggregate record with three fields: accuracy (float), f1 (float), and classification_report (string). These metrics are computed by comparing ground-truth MRPC labels from glue_mrpc_validation against predictions in mrpc_mean_gap_prediction, where each prediction is based on the average of the entailment-minus-contradiction probability gap for both sentence orders (sentence1, sentence2) and (sentence2, sentence1). In this workflow, this dataset serves as the experiment-level evaluation output summarizing model performance over the full validation set.",
+      "softmax_gap_mean_mrpc_summary",
+      "record_list"
+    ]
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 14379 | 41 | 15 | 12552 | 1.794s | 0.042s |
+
+---
+
+## Turn 6 — `description_search` [ok]
+
+### Model Input
+**previous_response_id:** `resp_0bd49b1f5c8407520069da59a7d2148193864ba42a7405c8de`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_uRQy9gffdRlijjyeox3cHxJt",
+    "output": "{\"ok\": true, \"result\": [[\"BASE\", \"Summary dataset for the MRPC entailment-logprob-odds experiment on the GLUE MRPC validation split. It contains evaluation results for paraphrase predictions produced from a zero-shot NLI model (typeform/distilbert-base-uncased-mnli), where each sentence pair is scored using the average entailment-vs-contradiction log-odds across both input orders. Structure: one record with columns accuracy (float), f1 (float), and classification_report (string). Its role in this workflow is to provide a compact experiment-level summary of model performance, derived from the full per-example outputs in mrpc_entailment_prediction and the ground-truth labels in glue_mrpc_validation.\", \"entailment_logprob_odds_mrpc_summary\", \"record_list\"], [\"BASE\", \"Summary dataset for the min_direction_margin_mrpc workflow. It contains experiment-level evaluation results for paraphrase detection on the GLUE MRPC validation set, where predictions are made by scoring each sentence pair in both directions with an MNLI model and using the minimum entailment-minus-contradiction margin as the decision signal. The dataset has one record with three fields: accuracy (float), f1 (float), and classification_report (string). Its role is to store the final aggregated performance summary derived from the source validation examples and the per-example prediction dataset mrpc_min_margin_prediction, so future users can quickly inspect the overall outcome of this notebook without recomputing metrics.\", \"min_direction_margin_mrpc_summary\", \"record_list\"], [\"BASE\", \"mrpc_entailment_prediction contains per-example prediction outputs for the GLUE MRPC validation set generated with the typeform/distilbert-base-uncased-mnli NLI model. Each record corresponds to one validation pair from glue_mrpc_validation and stores three fields: prediction (binary paraphrase decision obtained by thresholding the averaged score at 0), dir12 (entailment-minus-contradiction log-probability score for sentence1 \\u2192 sentence2), and dir21 (the same score for sentence2 \\u2192 sentence1). The dataset is aligned one-to-one with the source MRPC examples through input item indexing. Its role in this workflow is to capture the model\\u2019s directional entailment-based evidence and final paraphrase prediction for downstream evaluation, error analysis, and summary metric computation.\", \"mrpc_entailment_prediction\", \"record_list\"], [\"BASE\", \"mrpc_gate_margin_prediction is a per-example prediction dataset derived from the GLUE MRPC validation split. For each validation pair (sentence1, sentence2), the notebook runs the NLI model typeform/distilbert-base-uncased-mnli in both input orders, sentence1\\u2192sentence2 and sentence2\\u2192sentence1, and stores the resulting decision signals used for paraphrase classification. The dataset has four fields: prediction (final binary paraphrase prediction, 1 for paraphrase and 0 for not paraphrase), margin_12 (entailment logit minus contradiction logit for sentence1 paired with sentence2), margin_21 (the same margin for the reversed order), and gate (boolean flag that is true only when neither direction\\u2019s argmax label is contradiction). The final prediction is produced by requiring gate = true and the average of margin_12 and margin_21 to be greater than 0. This dataset serves as the main intermediate output of the workflow: it preserves the model\\u2019s directional margin scores and final gated prediction for each MRPC example, and it is then used to compute the summary accuracy, F1, and classification report.\", \"mrpc_gate_margin_prediction\", \"record_list\"], [\"BASE\", \"Per-example prediction dataset for the GLUE MRPC validation split, generated by running the sentence pairs through the typeform/distilbert-base-uncased-mnli model in both input orders. Each record corresponds to one MRPC validation example and is linked to the matching row in glue_mrpc_validation. The dataset has three fields: prediction (binary paraphrase decision, where 1 indicates paraphrase and 0 indicates not paraphrase), gap_12 (entailment probability minus contradiction probability for sentence1\\u2192sentence2), and gap_21 (the same probability gap for sentence2\\u2192sentence1). In this workflow, it serves as the stored per-instance model output used to inspect directional confidence, compare predictions with ground-truth MRPC labels, and build the downstream summary metrics in softmax_gap_mean_mrpc_summary.\", \"mrpc_mean_gap_prediction\", \"record_list\"], [\"BASE\", \"Per-example prediction dataset for the GLUE MRPC validation split, produced by applying the typeform/distilbert-base-uncased-mnli model as a zero-shot paraphrase detector. Each record corresponds to one sentence pair from glue_mrpc_validation and stores: prediction (binary paraphrase decision, where 1 indicates paraphrase and 0 indicates not_paraphrase), score_12 (entailment logit minus max(contradiction, neutral) for sentence1 -> sentence2), and score_21 (the same score for sentence2 -> sentence1). The final prediction is derived from the average of the two directional scores. In this workflow, this dataset captures the model\\u2019s per-example outputs for downstream evaluation, inspection of mistakes, and construction of the overall summary metrics.\", \"mrpc_neutral_penalty_prediction\", \"record_list\"], [\"BASE\", \"Aggregate evaluation summary for the neutral-penalized margin MRPC experiment. This dataset contains a single summary record computed from the GLUE MRPC validation set and the derived mrpc_neutral_penalty_prediction records. Its fields are: accuracy (float, overall prediction accuracy), f1 (float, F1 score for the paraphrase class), and classification_report (string, full sklearn classification report with per-class precision, recall, F1, and support). In this workflow, it serves as the compact experiment-level output used to record and retrieve overall model performance after scoring sentence pairs with the MNLI model and converting the bidirectional entailment-vs.-non-entailment margin into paraphrase predictions.\", \"neutral_penalized_margin_mrpc_summary\", \"record_list\"], [\"BASE\", \"Summary dataset for the MRPC validation experiment using an MNLI sequence-classification model and the mean softmax-gap decision rule. It contains a single aggregate record with three fields: accuracy (float), f1 (float), and classification_report (string). These metrics are computed by comparing ground-truth MRPC labels from glue_mrpc_validation against predictions in mrpc_mean_gap_prediction, where each prediction is based on the average of the entailment-minus-contradiction probability gap for both sentence orders (sentence1, sentence2) and (sentence2, sentence1). In this workflow, this dataset serves as the experiment-level evaluation output summarizing model performance over the full validation set.\", \"softmax_gap_mean_mrpc_summary\", \"record_list\"]]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_0bd49b1f5c8407520069da59a7d2148193864ba42a7405c8de`
+
+**Output items:**
+```json
+[
+  {
+    "type": "reasoning",
+    "summary": []
+  },
+  {
+    "type": "function_call",
+    "name": "description_search",
+    "call_id": "call_QnXpCOTS27yWMi7EnBmy1l7s",
+    "arguments": {
+      "description_text": "zero-shot MRPC flan summary"
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `description_search` | **call_id:** `call_QnXpCOTS27yWMi7EnBmy1l7s`
+
+**Arguments:**
+```json
+{
+  "description_text": "zero-shot MRPC flan summary"
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": []
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 15874 | 54 | 27 | 14047 | 2.008s | 0.029s |
+
+---
+
+## Turn 7 — `description_search` [ok]
+
+### Model Input
+**previous_response_id:** `resp_0bd49b1f5c8407520069da59a9daa48193bcfa0cc508892d25`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_QnXpCOTS27yWMi7EnBmy1l7s",
+    "output": "{\"ok\": true, \"result\": []}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_0bd49b1f5c8407520069da59a9daa48193bcfa0cc508892d25`
+
+**Output items:**
+```json
+[
+  {
+    "type": "reasoning",
+    "summary": []
+  },
+  {
+    "type": "function_call",
+    "name": "description_search",
+    "call_id": "call_gRwdsjOtR09eutrVQGZR2OqC",
+    "arguments": {
+      "description_text": "flan MRPC summary yes no"
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `description_search` | **call_id:** `call_gRwdsjOtR09eutrVQGZR2OqC`
+
+**Arguments:**
+```json
+{
+  "description_text": "flan MRPC summary yes no"
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    [
+      "BASE",
+      "This dataset stores per-example inference outputs from google/flan-t5-small on the GLUE MRPC validation set using a prompted yes/no paraphrase detection setup. Each record corresponds to one input pair from glue_mrpc_validation and contains three fields: prediction (binary label, where 1 indicates the model preferred \u201cyes\u201d and 0 indicates it preferred \u201cno\u201d), yes_logits (the decoder logit for the token \u201cyes\u201d at the answer position), and no_logits (the decoder logit for the token \u201cno\u201d at the answer position). Predictions are produced by prompting the model with the two sentences, forcing the decoder prefix \u201cAnswer:\u201d, and selecting the higher of the yes/no logits. In this workflow, the dataset serves as the main model output table for downstream evaluation, error analysis, and summary metric generation, while preserving a row-level link back to the original MRPC validation examples.",
+      "flan_prediction_and_logit_prefix",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Per-example prediction dataset for the GLUE MRPC validation set produced by prompting google/flan-t5-small with a yes/no paraphrase question and applying contextual calibration. Each record corresponds to one input sentence pair from glue_mrpc_validation and stores the model\u2019s binary prediction (1 = paraphrase/yes, 0 = not paraphrase/no), the raw first-step logits for the yes and no tokens (raw_yes_logits, raw_no_logits), and the calibrated logits after subtracting baseline logits from a null calibration prompt (cal_yes_logits, cal_no_logits). This record list is the main intermediate output of the workflow: it preserves calibrated model scores for each example, supports error analysis and inspection, and is used to compute the downstream summary metrics in flan_t5_contextual_calibrated_yes_no_mrpc_summary.",
+      "flan_prediction_logit_calibrated",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "flan_prediction_scored is a per-example prediction dataset generated by running google/flan-t5-small on the GLUE MRPC validation set with a yes/no paraphrase prompt. Each record corresponds to one input pair from glue_mrpc_validation and stores the model\u2019s binary prediction and the sequence log-probability scores for the two candidate answers. The fields are: prediction (integer label, where 1 indicates yes/paraphrase and 0 indicates no/not paraphrase), yes_scores (float log-probability of the full answer token sequence for \u201cyes\u201d), and no_scores (float log-probability of the full answer token sequence for \u201cno\u201d). In this workflow, this dataset serves as the scored inference output used to inspect example-level model behavior and to compute downstream summary metrics such as accuracy, F1, and the classification report.",
+      "flan_prediction_scored",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Summary dataset for the FLAN-T5-small MRPC validation run using answer-prefix yes/no scoring. It contains aggregate evaluation results computed from predictions on the glue_mrpc_validation dataset, based on comparing the model\u2019s logits for the tokens \u201cyes\u201d and \u201cno\u201d after the decoder prefix \u201cAnswer:\u201d. The dataset structure has three fields: accuracy (float), f1 (float), and classification_report (string with per-class precision/recall/F1/support). In this workflow, it serves as the experiment-level summary record for the notebook, linking the full validation input set and the per-example prediction/logit dataset flan_prediction_and_logit_prefix into a single compact performance summary.",
+      "flan_t5_answer_prefix_yes_no_mrpcc_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Aggregate evaluation summary for the flan-t5-small contextual yes/no paraphrase classifier on the GLUE MRPC validation set after logit calibration. This dataset is a record list with one summary record containing the fields: accuracy (float), f1 (float), and classification_report (string with per-class precision/recall/F1 and support for not_paraphrase and paraphrase). It is produced after generating calibrated predictions in flan_prediction_logit_calibrated and compares those predictions against the ground-truth labels in glue_mrpc_validation. Its role in this workflow is to store run-level performance metrics for the full validation set, providing a compact summary of model quality for this notebook execution.",
+      "flan_t5_contextual_calibrated_yes_no_mrpc_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "flan_t5_full_answer_logprob_mrpc_summary is an experiment-level summary dataset for evaluating google/flan-t5-small on the GLUE MRPC validation split using prompt-based yes/no paraphrase prediction with full-answer log-probability scoring. It contains a single record with three fields: accuracy (float), f1 (float), and classification_report (string from sklearn with per-class precision, recall, f1, and support for not_paraphrase and paraphrase). This dataset is produced after generating example-level predictions in flan_prediction_scored and comparing them against the ground-truth MRPC labels. Its role in the workflow is to store the aggregate evaluation results for the entire validation run, linking the underlying input dataset (glue_mrpc_validation) and the per-example prediction dataset (flan_prediction_scored).",
+      "flan_t5_full_answer_logprob_mrpc_summary",
+      "record_list"
+    ],
+    [
+      "BASE",
+      "Per-example prediction outputs from google/flan-t5-small on the GLUE MRPC validation set using a yes/no paraphrase prompt evaluated in both original and swapped sentence order. Each record is aligned to one input example from glue_mrpc_validation and contains: prediction (binary paraphrase decision after averaging forward and swapped logits), yes_logits (forward-order logit for \u201cyes\u201d), no_logits (forward-order logit for \u201cno\u201d), swapped_yes_logits (swapped-order logit for \u201cyes\u201d), and swapped_no_logits (swapped-order logit for \u201cno\u201d). This dataset is used as the intermediate model-output table in the workflow, supporting order-symmetric paraphrase prediction, error analysis, and computation of final evaluation metrics in the summary dataset.",
+      "google_flan_prediction_swapped",
+      "record_list"
+    ]
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 15949 | 35 | 8 | 14122 | 2.121s | 0.040s |
+
+---
+
+## Turn 8 — `description_search` [ok]
+
+### Model Input
+**previous_response_id:** `resp_0bd49b1f5c8407520069da59ac076c8193acacb86bb6ba272c`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_gRwdsjOtR09eutrVQGZR2OqC",
+    "output": "{\"ok\": true, \"result\": [[\"BASE\", \"This dataset stores per-example inference outputs from google/flan-t5-small on the GLUE MRPC validation set using a prompted yes/no paraphrase detection setup. Each record corresponds to one input pair from glue_mrpc_validation and contains three fields: prediction (binary label, where 1 indicates the model preferred \\u201cyes\\u201d and 0 indicates it preferred \\u201cno\\u201d), yes_logits (the decoder logit for the token \\u201cyes\\u201d at the answer position), and no_logits (the decoder logit for the token \\u201cno\\u201d at the answer position). Predictions are produced by prompting the model with the two sentences, forcing the decoder prefix \\u201cAnswer:\\u201d, and selecting the higher of the yes/no logits. In this workflow, the dataset serves as the main model output table for downstream evaluation, error analysis, and summary metric generation, while preserving a row-level link back to the original MRPC validation examples.\", \"flan_prediction_and_logit_prefix\", \"record_list\"], [\"BASE\", \"Per-example prediction dataset for the GLUE MRPC validation set produced by prompting google/flan-t5-small with a yes/no paraphrase question and applying contextual calibration. Each record corresponds to one input sentence pair from glue_mrpc_validation and stores the model\\u2019s binary prediction (1 = paraphrase/yes, 0 = not paraphrase/no), the raw first-step logits for the yes and no tokens (raw_yes_logits, raw_no_logits), and the calibrated logits after subtracting baseline logits from a null calibration prompt (cal_yes_logits, cal_no_logits). This record list is the main intermediate output of the workflow: it preserves calibrated model scores for each example, supports error analysis and inspection, and is used to compute the downstream summary metrics in flan_t5_contextual_calibrated_yes_no_mrpc_summary.\", \"flan_prediction_logit_calibrated\", \"record_list\"], [\"BASE\", \"flan_prediction_scored is a per-example prediction dataset generated by running google/flan-t5-small on the GLUE MRPC validation set with a yes/no paraphrase prompt. Each record corresponds to one input pair from glue_mrpc_validation and stores the model\\u2019s binary prediction and the sequence log-probability scores for the two candidate answers. The fields are: prediction (integer label, where 1 indicates yes/paraphrase and 0 indicates no/not paraphrase), yes_scores (float log-probability of the full answer token sequence for \\u201cyes\\u201d), and no_scores (float log-probability of the full answer token sequence for \\u201cno\\u201d). In this workflow, this dataset serves as the scored inference output used to inspect example-level model behavior and to compute downstream summary metrics such as accuracy, F1, and the classification report.\", \"flan_prediction_scored\", \"record_list\"], [\"BASE\", \"Summary dataset for the FLAN-T5-small MRPC validation run using answer-prefix yes/no scoring. It contains aggregate evaluation results computed from predictions on the glue_mrpc_validation dataset, based on comparing the model\\u2019s logits for the tokens \\u201cyes\\u201d and \\u201cno\\u201d after the decoder prefix \\u201cAnswer:\\u201d. The dataset structure has three fields: accuracy (float), f1 (float), and classification_report (string with per-class precision/recall/F1/support). In this workflow, it serves as the experiment-level summary record for the notebook, linking the full validation input set and the per-example prediction/logit dataset flan_prediction_and_logit_prefix into a single compact performance summary.\", \"flan_t5_answer_prefix_yes_no_mrpcc_summary\", \"record_list\"], [\"BASE\", \"Aggregate evaluation summary for the flan-t5-small contextual yes/no paraphrase classifier on the GLUE MRPC validation set after logit calibration. This dataset is a record list with one summary record containing the fields: accuracy (float), f1 (float), and classification_report (string with per-class precision/recall/F1 and support for not_paraphrase and paraphrase). It is produced after generating calibrated predictions in flan_prediction_logit_calibrated and compares those predictions against the ground-truth labels in glue_mrpc_validation. Its role in this workflow is to store run-level performance metrics for the full validation set, providing a compact summary of model quality for this notebook execution.\", \"flan_t5_contextual_calibrated_yes_no_mrpc_summary\", \"record_list\"], [\"BASE\", \"flan_t5_full_answer_logprob_mrpc_summary is an experiment-level summary dataset for evaluating google/flan-t5-small on the GLUE MRPC validation split using prompt-based yes/no paraphrase prediction with full-answer log-probability scoring. It contains a single record with three fields: accuracy (float), f1 (float), and classification_report (string from sklearn with per-class precision, recall, f1, and support for not_paraphrase and paraphrase). This dataset is produced after generating example-level predictions in flan_prediction_scored and comparing them against the ground-truth MRPC labels. Its role in the workflow is to store the aggregate evaluation results for the entire validation run, linking the underlying input dataset (glue_mrpc_validation) and the per-example prediction dataset (flan_prediction_scored).\", \"flan_t5_full_answer_logprob_mrpc_summary\", \"record_list\"], [\"BASE\", \"Per-example prediction outputs from google/flan-t5-small on the GLUE MRPC validation set using a yes/no paraphrase prompt evaluated in both original and swapped sentence order. Each record is aligned to one input example from glue_mrpc_validation and contains: prediction (binary paraphrase decision after averaging forward and swapped logits), yes_logits (forward-order logit for \\u201cyes\\u201d), no_logits (forward-order logit for \\u201cno\\u201d), swapped_yes_logits (swapped-order logit for \\u201cyes\\u201d), and swapped_no_logits (swapped-order logit for \\u201cno\\u201d). This dataset is used as the intermediate model-output table in the workflow, supporting order-symmetric paraphrase prediction, error analysis, and computation of final evaluation metrics in the summary dataset.\", \"google_flan_prediction_swapped\", \"record_list\"]]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_0bd49b1f5c8407520069da59ac076c8193acacb86bb6ba272c`
+
+**Output items:**
+```json
+[
+  {
+    "type": "reasoning",
+    "summary": []
+  },
+  {
+    "type": "function_call",
+    "name": "description_search",
+    "call_id": "call_MqwJ5gY9MfigQzzBVFqSzviB",
+    "arguments": {
+      "description_text": "MNLI MRPC summary single direction"
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `description_search` | **call_id:** `call_MqwJ5gY9MfigQzzBVFqSzviB`
+
+**Arguments:**
+```json
+{
+  "description_text": "MNLI MRPC summary single direction"
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": []
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 17330 | 359 | 332 | 15503 | 5.592s | 0.038s |
+
+---
+
+## Turn 9 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_0bd49b1f5c8407520069da59b1a3d881938ecbfb3bf16f90de`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_MqwJ5gY9MfigQzzBVFqSzviB",
+    "output": "{\"ok\": true, \"result\": []}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_0bd49b1f5c8407520069da59b1a3d881938ecbfb3bf16f90de`
+
+**Output items:**
+```json
+[
+  {
+    "type": "reasoning",
+    "summary": []
+  },
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_PSuN0FhUB006sRLdYsO0YEtX",
+    "arguments": {
+      "item_name": "entailment_logprob_odds_mrpc_summary",
+      "start_position": 0,
+      "end_position": 1
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_PSuN0FhUB006sRLdYsO0YEtX`
+
+**Arguments:**
+```json
+{
+  "item_name": "entailment_logprob_odds_mrpc_summary",
+  "start_position": 0,
+  "end_position": 1
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "accuracy": 0.7034313725490197,
+      "f1": 0.7729831144465291,
+      "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.53      0.63      0.57       129\n    paraphrase       0.81      0.74      0.77       279\n\n      accuracy                           0.70       408\n     macro avg       0.67      0.68      0.67       408\n  weighted avg       0.72      0.70      0.71       408\n"
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 17710 | 323 | 283 | 15883 | 5.594s | 0.009s |
+
+---
+
+## Turn 10 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_0bd49b1f5c8407520069da59b742448193b2ef56d69f659a0b`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_PSuN0FhUB006sRLdYsO0YEtX",
+    "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.7034313725490197, \"f1\": 0.7729831144465291, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.53      0.63      0.57       129\\n    paraphrase       0.81      0.74      0.77       279\\n\\n      accuracy                           0.70       408\\n     macro avg       0.67      0.68      0.67       408\\n  weighted avg       0.72      0.70      0.71       408\\n\"}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_0bd49b1f5c8407520069da59b742448193b2ef56d69f659a0b`
+
+**Output items:**
+```json
+[
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_ncMHw7450T6IP49dNtOGiP5I",
+    "arguments": {
+      "item_name": "min_direction_margin_mrpc_summary",
+      "start_position": 0,
+      "end_position": 1
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_ncMHw7450T6IP49dNtOGiP5I`
+
+**Arguments:**
+```json
+{
+  "item_name": "min_direction_margin_mrpc_summary",
+  "start_position": 0,
+  "end_position": 1
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "accuracy": 0.5857843137254902,
+      "f1": 0.5888077858880778,
+      "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.43      0.91      0.58       129\n    paraphrase       0.92      0.43      0.59       279\n\n      accuracy                           0.59       408\n     macro avg       0.67      0.67      0.59       408\n  weighted avg       0.76      0.59      0.59       408\n"
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 18199 | 34 | 0 | 16372 | 1.399s | 0.009s |
+
+---
+
+## Turn 11 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_0bd49b1f5c8407520069da59b8a480819386a4399897421b41`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_ncMHw7450T6IP49dNtOGiP5I",
+    "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.5857843137254902, \"f1\": 0.5888077858880778, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.43      0.91      0.58       129\\n    paraphrase       0.92      0.43      0.59       279\\n\\n      accuracy                           0.59       408\\n     macro avg       0.67      0.67      0.59       408\\n  weighted avg       0.76      0.59      0.59       408\\n\"}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_0bd49b1f5c8407520069da59b8a480819386a4399897421b41`
+
+**Output items:**
+```json
+[
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_vGJ6Aw96APPLQrYwP1KnKdY6",
+    "arguments": {
+      "item_name": "neutral_penalized_margin_mrpc_summary",
+      "start_position": 0,
+      "end_position": 1
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_vGJ6Aw96APPLQrYwP1KnKdY6`
+
+**Arguments:**
+```json
+{
+  "item_name": "neutral_penalized_margin_mrpc_summary",
+  "start_position": 0,
+  "end_position": 1
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "accuracy": 0.5563725490196079,
+      "f1": 0.5322997416020672,
+      "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.41      0.96      0.58       129\n    paraphrase       0.95      0.37      0.53       279\n\n      accuracy                           0.56       408\n     macro avg       0.68      0.67      0.56       408\n  weighted avg       0.78      0.56      0.55       408\n"
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 18399 | 36 | 0 | 16572 | 1.452s | 0.015s |
+
+---
+
+## Turn 12 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_0bd49b1f5c8407520069da59ba1e008193b3e8a889ca7481de`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_vGJ6Aw96APPLQrYwP1KnKdY6",
+    "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.5563725490196079, \"f1\": 0.5322997416020672, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.41      0.96      0.58       129\\n    paraphrase       0.95      0.37      0.53       279\\n\\n      accuracy                           0.56       408\\n     macro avg       0.68      0.67      0.56       408\\n  weighted avg       0.78      0.56      0.55       408\\n\"}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_0bd49b1f5c8407520069da59ba1e008193b3e8a889ca7481de`
+
+**Output items:**
+```json
+[
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_iNmxoiFu0xfHa04RzOJVvCed",
+    "arguments": {
+      "item_name": "softmax_gap_mean_mrpc_summary",
+      "start_position": 0,
+      "end_position": 1
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_iNmxoiFu0xfHa04RzOJVvCed`
+
+**Arguments:**
+```json
+{
+  "item_name": "softmax_gap_mean_mrpc_summary",
+  "start_position": 0,
+  "end_position": 1
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "accuracy": 0.7181372549019608,
+      "f1": 0.7905282331511839,
+      "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.55      0.59      0.57       129\n    paraphrase       0.80      0.78      0.79       279\n\n      accuracy                           0.72       408\n     macro avg       0.68      0.68      0.68       408\n  weighted avg       0.72      0.72      0.72       408\n"
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 18601 | 35 | 0 | 16774 | 1.637s | 0.014s |
+
+---
+
+## Turn 13 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_0bd49b1f5c8407520069da59bbc7e88193841ede0d28c2ba3e`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_iNmxoiFu0xfHa04RzOJVvCed",
+    "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.7181372549019608, \"f1\": 0.7905282331511839, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.55      0.59      0.57       129\\n    paraphrase       0.80      0.78      0.79       279\\n\\n      accuracy                           0.72       408\\n     macro avg       0.68      0.68      0.68       408\\n  weighted avg       0.72      0.72      0.72       408\\n\"}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_0bd49b1f5c8407520069da59bbc7e88193841ede0d28c2ba3e`
+
+**Output items:**
+```json
+[
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_K66B9Knrw5FHtZaQDQ1Ugcfk",
+    "arguments": {
+      "item_name": "consensus_then_avg_margin_mrpc_summary",
+      "start_position": 0,
+      "end_position": 1
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_K66B9Knrw5FHtZaQDQ1Ugcfk`
+
+**Arguments:**
+```json
+{
+  "item_name": "consensus_then_avg_margin_mrpc_summary",
+  "start_position": 0,
+  "end_position": 1
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "accuracy": 0.7009803921568627,
+      "f1": 0.769811320754717,
+      "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.52      0.64      0.57       129\n    paraphrase       0.81      0.73      0.77       279\n\n      accuracy                           0.70       408\n     macro avg       0.67      0.68      0.67       408\n  weighted avg       0.72      0.70      0.71       408\n"
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 18802 | 36 | 0 | 16975 | 1.332s | 0.009s |
+
+---
+
+## Turn 14 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_0bd49b1f5c8407520069da59bd1c848193ae36028bb2ef588e`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_K66B9Knrw5FHtZaQDQ1Ugcfk",
+    "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.7009803921568627, \"f1\": 0.769811320754717, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.52      0.64      0.57       129\\n    paraphrase       0.81      0.73      0.77       279\\n\\n      accuracy                           0.70       408\\n     macro avg       0.67      0.68      0.67       408\\n  weighted avg       0.72      0.70      0.71       408\\n\"}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_0bd49b1f5c8407520069da59bd1c848193ae36028bb2ef588e`
+
+**Output items:**
+```json
+[
+  {
+    "type": "reasoning",
+    "summary": []
+  },
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_dke48iphJrzq4Or6CMqMlj1X",
+    "arguments": {
+      "item_name": "flan_t5_answer_prefix_yes_no_mrpcc_summary",
+      "start_position": 0,
+      "end_position": 1
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_dke48iphJrzq4Or6CMqMlj1X`
+
+**Arguments:**
+```json
+{
+  "item_name": "flan_t5_answer_prefix_yes_no_mrpcc_summary",
+  "start_position": 0,
+  "end_position": 1
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "accuracy": 0.6372549019607843,
+      "f1": 0.6877637130801688,
+      "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.46      0.75      0.57       129\n    paraphrase       0.84      0.58      0.69       279\n\n      accuracy                           0.64       408\n     macro avg       0.65      0.67      0.63       408\n  weighted avg       0.72      0.64      0.65       408\n"
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 19003 | 90 | 48 | 17176 | 2.522s | 0.012s |
+
+---
+
+## Turn 15 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_0bd49b1f5c8407520069da59bfa1ac8193ae4543a2783410d2`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_dke48iphJrzq4Or6CMqMlj1X",
+    "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.6372549019607843, \"f1\": 0.6877637130801688, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.46      0.75      0.57       129\\n    paraphrase       0.84      0.58      0.69       279\\n\\n      accuracy                           0.64       408\\n     macro avg       0.65      0.67      0.63       408\\n  weighted avg       0.72      0.64      0.65       408\\n\"}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_0bd49b1f5c8407520069da59bfa1ac8193ae4543a2783410d2`
+
+**Output items:**
+```json
+[
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_IR7xBr8uW0eOKEAokjLNUXtr",
+    "arguments": {
+      "item_name": "flan_t5_symmetric_prompt_average_mrpc_summary",
+      "start_position": 0,
+      "end_position": 1
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_IR7xBr8uW0eOKEAokjLNUXtr`
+
+**Arguments:**
+```json
+{
+  "item_name": "flan_t5_symmetric_prompt_average_mrpc_summary",
+  "start_position": 0,
+  "end_position": 1
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "accuracy": 0.7377450980392157,
+      "f1": 0.8065099457504521,
+      "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.58      0.60      0.59       129\n    paraphrase       0.81      0.80      0.81       279\n\n      accuracy                           0.74       408\n     macro avg       0.70      0.70      0.70       408\n  weighted avg       0.74      0.74      0.74       408\n"
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 19259 | 39 | 0 | 17432 | 1.526s | 0.014s |
+
+---
+
+## Turn 16 — `description_search` [ok]
+
+### Model Input
+**previous_response_id:** `resp_0bd49b1f5c8407520069da59c134a481939a6bb36dfa04b9a7`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_IR7xBr8uW0eOKEAokjLNUXtr",
+    "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.7377450980392157, \"f1\": 0.8065099457504521, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.58      0.60      0.59       129\\n    paraphrase       0.81      0.80      0.81       279\\n\\n      accuracy                           0.74       408\\n     macro avg       0.70      0.70      0.70       408\\n  weighted avg       0.74      0.74      0.74       408\\n\"}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_0bd49b1f5c8407520069da59c134a481939a6bb36dfa04b9a7`
+
+**Output items:**
+```json
+[
+  {
+    "type": "reasoning",
+    "summary": []
+  },
+  {
+    "type": "function_call",
+    "name": "description_search",
+    "call_id": "call_2pMMGEGYkN617ycM9HHTKqOQ",
+    "arguments": {
+      "description_text": "typeform/distilbert-base-uncased-mnli paraphrase detection summary"
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `description_search` | **call_id:** `call_2pMMGEGYkN617ycM9HHTKqOQ`
+
+**Arguments:**
+```json
+{
+  "description_text": "typeform/distilbert-base-uncased-mnli paraphrase detection summary"
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": []
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 19464 | 335 | 299 | 17637 | 6.641s | 0.046s |
+
+---
+
+## Turn 17 — `description_search` [ok]
+
+### Model Input
+**previous_response_id:** `resp_0bd49b1f5c8407520069da59c7df8c8193bbed921e0ede7447`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_2pMMGEGYkN617ycM9HHTKqOQ",
+    "output": "{\"ok\": true, \"result\": []}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_0bd49b1f5c8407520069da59c7df8c8193bbed921e0ede7447`
+
+**Output items:**
+```json
+[
+  {
+    "type": "reasoning",
+    "summary": []
+  },
+  {
+    "type": "function_call",
+    "name": "description_search",
+    "call_id": "call_g9viTaegHe6tRCfUKABufPAm",
+    "arguments": {
+      "description_text": "zero-shot paraphrase detector MRPC summary"
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `description_search` | **call_id:** `call_g9viTaegHe6tRCfUKABufPAm`
+
+**Arguments:**
+```json
+{
+  "description_text": "zero-shot paraphrase detector MRPC summary"
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    [
+      "BASE",
+      "Per-example prediction dataset for the GLUE MRPC validation split, produced by applying the typeform/distilbert-base-uncased-mnli model as a zero-shot paraphrase detector. Each record corresponds to one sentence pair from glue_mrpc_validation and stores: prediction (binary paraphrase decision, where 1 indicates paraphrase and 0 indicates not_paraphrase), score_12 (entailment logit minus max(contradiction, neutral) for sentence1 -> sentence2), and score_21 (the same score for sentence2 -> sentence1). The final prediction is derived from the average of the two directional scores. In this workflow, this dataset captures the model\u2019s per-example outputs for downstream evaluation, inspection of mistakes, and construction of the overall summary metrics.",
+      "mrpc_neutral_penalty_prediction",
+      "record_list"
+    ]
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 19820 | 40 | 12 | 17993 | 3.128s | 0.042s |
+
+---
+
+## Turn 18 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_0bd49b1f5c8407520069da59cb10048193995deb460b5cbdec`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_g9viTaegHe6tRCfUKABufPAm",
+    "output": "{\"ok\": true, \"result\": [[\"BASE\", \"Per-example prediction dataset for the GLUE MRPC validation split, produced by applying the typeform/distilbert-base-uncased-mnli model as a zero-shot paraphrase detector. Each record corresponds to one sentence pair from glue_mrpc_validation and stores: prediction (binary paraphrase decision, where 1 indicates paraphrase and 0 indicates not_paraphrase), score_12 (entailment logit minus max(contradiction, neutral) for sentence1 -> sentence2), and score_21 (the same score for sentence2 -> sentence1). The final prediction is derived from the average of the two directional scores. In this workflow, this dataset captures the model\\u2019s per-example outputs for downstream evaluation, inspection of mistakes, and construction of the overall summary metrics.\", \"mrpc_neutral_penalty_prediction\", \"record_list\"]]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_0bd49b1f5c8407520069da59cb10048193995deb460b5cbdec`
+
+**Output items:**
+```json
+[
+  {
+    "type": "reasoning",
+    "summary": []
+  },
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_giCsDAAg1qlcIL4oXR78r45i",
+    "arguments": {
+      "item_name": "flan_t5_full_answer_logprob_mrpc_summary",
+      "start_position": 0,
+      "end_position": 1
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_giCsDAAg1qlcIL4oXR78r45i`
+
+**Arguments:**
+```json
+{
+  "item_name": "flan_t5_full_answer_logprob_mrpc_summary",
+  "start_position": 0,
+  "end_position": 1
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "accuracy": 0.6495098039215687,
+      "f1": 0.6911447084233261,
+      "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.47      0.81      0.59       129\n    paraphrase       0.87      0.57      0.69       279\n\n      accuracy                           0.65       408\n     macro avg       0.67      0.69      0.64       408\n  weighted avg       0.74      0.65      0.66       408\n"
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 20058 | 141 | 100 | 18231 | 4.566s | 0.007s |
+
+---
+
+## Turn 19 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_0bd49b1f5c8407520069da59cfa6208193bd3f0984449c45b1`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_giCsDAAg1qlcIL4oXR78r45i",
+    "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.6495098039215687, \"f1\": 0.6911447084233261, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.47      0.81      0.59       129\\n    paraphrase       0.87      0.57      0.69       279\\n\\n      accuracy                           0.65       408\\n     macro avg       0.67      0.69      0.64       408\\n  weighted avg       0.74      0.65      0.66       408\\n\"}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_0bd49b1f5c8407520069da59cfa6208193bd3f0984449c45b1`
+
+**Output items:**
+```json
+[
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_UvgonHVRHnJ5Unb89m0Mqx7m",
+    "arguments": {
+      "item_name": "flan_t5_contextual_calibrated_yes_no_mrpc_summary",
+      "start_position": 0,
+      "end_position": 1
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_UvgonHVRHnJ5Unb89m0Mqx7m`
+
+**Arguments:**
+```json
+{
+  "item_name": "flan_t5_contextual_calibrated_yes_no_mrpc_summary",
+  "start_position": 0,
+  "end_position": 1
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "accuracy": 0.40441176470588236,
+      "f1": 0.24299065420560748,
+      "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.34      0.98      0.51       129\n    paraphrase       0.93      0.14      0.24       279\n\n      accuracy                           0.40       408\n     macro avg       0.64      0.56      0.38       408\n  weighted avg       0.74      0.40      0.33       408\n"
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 20365 | 42 | 0 | 18538 | 1.734s | 0.011s |
+
+---
+
+## Turn 20 — `get_item` [ok]
+
+### Model Input
+**previous_response_id:** `resp_0bd49b1f5c8407520069da59d15a108193b962ed0d1186f70b`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_UvgonHVRHnJ5Unb89m0Mqx7m",
+    "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.40441176470588236, \"f1\": 0.24299065420560748, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.34      0.98      0.51       129\\n    paraphrase       0.93      0.14      0.24       279\\n\\n      accuracy                           0.40       408\\n     macro avg       0.64      0.56      0.38       408\\n  weighted avg       0.74      0.40      0.33       408\\n\"}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_0bd49b1f5c8407520069da59d15a108193b962ed0d1186f70b`
+
+**Output items:**
+```json
+[
+  {
+    "type": "function_call",
+    "name": "get_item",
+    "call_id": "call_zFZT6tItTDUWjEjUdAkuQs5N",
+    "arguments": {
+      "item_name": "flan_t5_true_false_first_step_mrpc_summary",
+      "start_position": 0,
+      "end_position": 1
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `get_item` | **call_id:** `call_zFZT6tItTDUWjEjUdAkuQs5N`
+
+**Arguments:**
+```json
+{
+  "item_name": "flan_t5_true_false_first_step_mrpc_summary",
+  "start_position": 0,
+  "end_position": 1
+}
+```
+
+### Tool Output
+```json
+{
+  "ok": true,
+  "result": [
+    {
+      "accuracy": 0.5833333333333334,
+      "f1": 0.6443514644351465,
+      "classification_report": "                precision    recall  f1-score   support\n\nnot_paraphrase       0.40      0.65      0.50       129\n    paraphrase       0.77      0.55      0.64       279\n\n      accuracy                           0.58       408\n     macro avg       0.59      0.60      0.57       408\n  weighted avg       0.66      0.58      0.60       408\n"
+    }
+  ]
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 20573 | 39 | 0 | 18746 | 1.730s | 0.012s |
+
+---
+
+## Turn 21 — `finalize_result` [ok]
+
+### Model Input
+**previous_response_id:** `resp_0bd49b1f5c8407520069da59d31c8c8193bd24d594e2bf01e5`
+
+**Pending messages:**
+```json
+[
+  {
+    "type": "function_call_output",
+    "call_id": "call_zFZT6tItTDUWjEjUdAkuQs5N",
+    "output": "{\"ok\": true, \"result\": [{\"accuracy\": 0.5833333333333334, \"f1\": 0.6443514644351465, \"classification_report\": \"                precision    recall  f1-score   support\\n\\nnot_paraphrase       0.40      0.65      0.50       129\\n    paraphrase       0.77      0.55      0.64       279\\n\\n      accuracy                           0.58       408\\n     macro avg       0.59      0.60      0.57       408\\n  weighted avg       0.66      0.58      0.60       408\\n\"}]}"
+  }
+]
+```
+
+### Model Output
+**response_id:** `resp_0bd49b1f5c8407520069da59d31c8c8193bd24d594e2bf01e5`
+
+**Output items:**
+```json
+[
+  {
+    "type": "reasoning",
+    "summary": []
+  },
+  {
+    "type": "function_call",
+    "name": "finalize_result",
+    "call_id": "call_QavGBkRghpKvmdSHL156BKT0",
+    "arguments": {
+      "summary": "{\"rows\":[{\"model_family\":\"NLI-based\",\"model\":\"typeform/distilbert-base-uncased-mnli\",\"symmetry_strategy\":\"Average entailment-vs-contradiction log-odds across both sentence orders\",\"uses_both_orders\":true,\"accuracy\":0.7034,\"f1\":0.773,\"recall_not_paraphrase\":0.63,\"recall_paraphrase\":0.74},{\"model_family\":\"NLI-based\",\"model\":\"typeform/distilbert-base-uncased-mnli\",\"symmetry_strategy\":\"Mean softmax gap: average(entailment probability - contradiction probability) across both orders\",\"uses_both_orders\":true,\"accuracy\":0.7181,\"f1\":0.7905,\"recall_not_paraphrase\":0.59,\"recall_paraphrase\":0.78},{\"model_family\":\"NLI-based\",\"model\":\"typeform/distilbert-base-uncased-mnli\",\"symmetry_strategy\":\"Consensus gate + average margin (require neither direction to predict contradiction, then average margins)\",\"uses_both_orders\":true,\"accuracy\":0.701,\"f1\":0.7698,\"recall_not_paraphrase\":0.64,\"recall_paraphrase\":0.73},{\"model_family\":\"NLI-based\",\"model\":\"typeform/distilbert-base-uncased-mnli\",\"symmetry_strategy\":\"Minimum directional margin > 0\",\"uses_both_orders\":true,\"accuracy\":0.5858,\"f1\":0.5888,\"recall_not_paraphrase\":0.91,\"recall_paraphrase\":0.43},{\"model_family\":\"NLI-based\",\"model\":\"typeform/distilbert-base-uncased-mnli\",\"symmetry_strategy\":\"Average entailment minus max(contradiction, neutral) across both orders\",\"uses_both_orders\":true,\"accuracy\":0.5564,\"f1\":0.5323,\"recall_not_paraphrase\":0.96,\"recall_paraphrase\":0.37},{\"model_family\":\"Zero-shot prompted\",\"model\":\"google/flan-t5-small\",\"symmetry_strategy\":\"One-order answer-prefix yes/no scoring (no explicit symmetry)\",\"uses_both_orders\":false,\"accuracy\":0.6373,\"f1\":0.6878,\"recall_not_paraphrase\":0.75,\"recall_paraphrase\":0.58},{\"model_family\":\"Zero-shot prompted\",\"model\":\"google/flan-t5-small\",\"symmetry_strategy\":\"One-order full-answer yes/no log-probability scoring (no explicit symmetry)\",\"uses_both_orders\":false,\"accuracy\":0.6495,\"f1\":0.6911,\"recall_not_paraphrase\":0.81,\"recall_paraphrase\":0.57},{\"model_family\":\"Zero-shot prompted\",\"model\":\"google/flan-t5-small\",\"symmetry_strategy\":\"Symmetric prompt average over original and swapped sentence order logits\",\"uses_both_orders\":true,\"accuracy\":0.7377,\"f1\":0.8065,\"recall_not_paraphrase\":0.6,\"recall_paraphrase\":0.8}],\"summary\":\"Across MRPC validation experiments in the repository, prediction symmetry helps when it is enforced with soft score aggregation, but can hurt badly when it is enforced with hard agreement-style rules. For the NLI-based paraphrase detector (typeform/distilbert-base-uncased-mnli), the best retrieved strategy is bidirectional mean softmax-gap averaging, which reaches 0.718 accuracy and 0.791 F1. Averaging entailment-vs-contradiction log-odds is slightly worse at 0.703 accuracy, and the stricter consensus-gated average margin is similar at 0.701. In contrast, harder symmetry constraints that effectively require both directions to support paraphrase are much worse: minimum-direction margin drops to 0.586 accuracy and neutral-penalized averaging drops to 0.556. Their class reports show why: they strongly favor the negative class, pushing not_paraphrase recall up to 0.91-0.96 while collapsing paraphrase recall to 0.43 and 0.37. On the paraphrase-heavy MRPC validation split (279 paraphrase vs 129 not_paraphrase), that conservatism is costly. For the zero-shot prompted model (google/flan-t5-small), explicit symmetry is clearly beneficial: averaging logits from the original and swapped prompt orders yields 0.738 accuracy and 0.807 F1, outperforming one-order answer-prefix yes/no scoring at 0.637 accuracy (+10.0 points) and one-order full-answer log-probability scoring at 0.650 (+8.8 points). It also improves paraphrase recall from about 0.57-0.58 to 0.80 while keeping negative recall near 0.60. Overall, the repository evidence suggests that the most effective way to enforce symmetry on MRPC is to score both sentence orders and combine them with a soft average; overly strict symmetric decision rules can over-penalize positives, especially in NLI-style formulations. The table should be interpreted as experiment-level evidence from separate workflows rather than a perfectly controlled ablation: prompt wording, score definitions, and thresholds differ across rows, and the repository does not expose a stored single-direction NLI summary for a direct before/after symmetry comparison within that family.\"}"
+    }
+  }
+]
+```
+
+### Tool Call
+**Tool:** `finalize_result` | **call_id:** `call_QavGBkRghpKvmdSHL156BKT0`
+
+**Arguments:**
+```json
+{
+  "summary": "{\"rows\":[{\"model_family\":\"NLI-based\",\"model\":\"typeform/distilbert-base-uncased-mnli\",\"symmetry_strategy\":\"Average entailment-vs-contradiction log-odds across both sentence orders\",\"uses_both_orders\":true,\"accuracy\":0.7034,\"f1\":0.773,\"recall_not_paraphrase\":0.63,\"recall_paraphrase\":0.74},{\"model_family\":\"NLI-based\",\"model\":\"typeform/distilbert-base-uncased-mnli\",\"symmetry_strategy\":\"Mean softmax gap: average(entailment probability - contradiction probability) across both orders\",\"uses_both_orders\":true,\"accuracy\":0.7181,\"f1\":0.7905,\"recall_not_paraphrase\":0.59,\"recall_paraphrase\":0.78},{\"model_family\":\"NLI-based\",\"model\":\"typeform/distilbert-base-uncased-mnli\",\"symmetry_strategy\":\"Consensus gate + average margin (require neither direction to predict contradiction, then average margins)\",\"uses_both_orders\":true,\"accuracy\":0.701,\"f1\":0.7698,\"recall_not_paraphrase\":0.64,\"recall_paraphrase\":0.73},{\"model_family\":\"NLI-based\",\"model\":\"typeform/distilbert-base-uncased-mnli\",\"symmetry_strategy\":\"Minimum directional margin > 0\",\"uses_both_orders\":true,\"accuracy\":0.5858,\"f1\":0.5888,\"recall_not_paraphrase\":0.91,\"recall_paraphrase\":0.43},{\"model_family\":\"NLI-based\",\"model\":\"typeform/distilbert-base-uncased-mnli\",\"symmetry_strategy\":\"Average entailment minus max(contradiction, neutral) across both orders\",\"uses_both_orders\":true,\"accuracy\":0.5564,\"f1\":0.5323,\"recall_not_paraphrase\":0.96,\"recall_paraphrase\":0.37},{\"model_family\":\"Zero-shot prompted\",\"model\":\"google/flan-t5-small\",\"symmetry_strategy\":\"One-order answer-prefix yes/no scoring (no explicit symmetry)\",\"uses_both_orders\":false,\"accuracy\":0.6373,\"f1\":0.6878,\"recall_not_paraphrase\":0.75,\"recall_paraphrase\":0.58},{\"model_family\":\"Zero-shot prompted\",\"model\":\"google/flan-t5-small\",\"symmetry_strategy\":\"One-order full-answer yes/no log-probability scoring (no explicit symmetry)\",\"uses_both_orders\":false,\"accuracy\":0.6495,\"f1\":0.6911,\"recall_not_paraphrase\":0.81,\"recall_paraphrase\":0.57},{\"model_family\":\"Zero-shot prompted\",\"model\":\"google/flan-t5-small\",\"symmetry_strategy\":\"Symmetric prompt average over original and swapped sentence order logits\",\"uses_both_orders\":true,\"accuracy\":0.7377,\"f1\":0.8065,\"recall_not_paraphrase\":0.6,\"recall_paraphrase\":0.8}],\"summary\":\"Across MRPC validation experiments in the repository, prediction symmetry helps when it is enforced with soft score aggregation, but can hurt badly when it is enforced with hard agreement-style rules. For the NLI-based paraphrase detector (typeform/distilbert-base-uncased-mnli), the best retrieved strategy is bidirectional mean softmax-gap averaging, which reaches 0.718 accuracy and 0.791 F1. Averaging entailment-vs-contradiction log-odds is slightly worse at 0.703 accuracy, and the stricter consensus-gated average margin is similar at 0.701. In contrast, harder symmetry constraints that effectively require both directions to support paraphrase are much worse: minimum-direction margin drops to 0.586 accuracy and neutral-penalized averaging drops to 0.556. Their class reports show why: they strongly favor the negative class, pushing not_paraphrase recall up to 0.91-0.96 while collapsing paraphrase recall to 0.43 and 0.37. On the paraphrase-heavy MRPC validation split (279 paraphrase vs 129 not_paraphrase), that conservatism is costly. For the zero-shot prompted model (google/flan-t5-small), explicit symmetry is clearly beneficial: averaging logits from the original and swapped prompt orders yields 0.738 accuracy and 0.807 F1, outperforming one-order answer-prefix yes/no scoring at 0.637 accuracy (+10.0 points) and one-order full-answer log-probability scoring at 0.650 (+8.8 points). It also improves paraphrase recall from about 0.57-0.58 to 0.80 while keeping negative recall near 0.60. Overall, the repository evidence suggests that the most effective way to enforce symmetry on MRPC is to score both sentence orders and combine them with a soft average; overly strict symmetric decision rules can over-penalize positives, especially in NLI-style formulations. The table should be interpreted as experiment-level evidence from separate workflows rather than a perfectly controlled ablation: prompt wording, score definitions, and thresholds differ across rows, and the repository does not expose a stored single-direction NLI summary for a direct before/after symmetry comparison within that family.\"}"
+}
+```
+
+### Tool Output
+```json
+{
+  "summary": "{\"rows\":[{\"model_family\":\"NLI-based\",\"model\":\"typeform/distilbert-base-uncased-mnli\",\"symmetry_strategy\":\"Average entailment-vs-contradiction log-odds across both sentence orders\",\"uses_both_orders\":true,\"accuracy\":0.7034,\"f1\":0.773,\"recall_not_paraphrase\":0.63,\"recall_paraphrase\":0.74},{\"model_family\":\"NLI-based\",\"model\":\"typeform/distilbert-base-uncased-mnli\",\"symmetry_strategy\":\"Mean softmax gap: average(entailment probability - contradiction probability) across both orders\",\"uses_both_orders\":true,\"accuracy\":0.7181,\"f1\":0.7905,\"recall_not_paraphrase\":0.59,\"recall_paraphrase\":0.78},{\"model_family\":\"NLI-based\",\"model\":\"typeform/distilbert-base-uncased-mnli\",\"symmetry_strategy\":\"Consensus gate + average margin (require neither direction to predict contradiction, then average margins)\",\"uses_both_orders\":true,\"accuracy\":0.701,\"f1\":0.7698,\"recall_not_paraphrase\":0.64,\"recall_paraphrase\":0.73},{\"model_family\":\"NLI-based\",\"model\":\"typeform/distilbert-base-uncased-mnli\",\"symmetry_strategy\":\"Minimum directional margin > 0\",\"uses_both_orders\":true,\"accuracy\":0.5858,\"f1\":0.5888,\"recall_not_paraphrase\":0.91,\"recall_paraphrase\":0.43},{\"model_family\":\"NLI-based\",\"model\":\"typeform/distilbert-base-uncased-mnli\",\"symmetry_strategy\":\"Average entailment minus max(contradiction, neutral) across both orders\",\"uses_both_orders\":true,\"accuracy\":0.5564,\"f1\":0.5323,\"recall_not_paraphrase\":0.96,\"recall_paraphrase\":0.37},{\"model_family\":\"Zero-shot prompted\",\"model\":\"google/flan-t5-small\",\"symmetry_strategy\":\"One-order answer-prefix yes/no scoring (no explicit symmetry)\",\"uses_both_orders\":false,\"accuracy\":0.6373,\"f1\":0.6878,\"recall_not_paraphrase\":0.75,\"recall_paraphrase\":0.58},{\"model_family\":\"Zero-shot prompted\",\"model\":\"google/flan-t5-small\",\"symmetry_strategy\":\"One-order full-answer yes/no log-probability scoring (no explicit symmetry)\",\"uses_both_orders\":false,\"accuracy\":0.6495,\"f1\":0.6911,\"recall_not_paraphrase\":0.81,\"recall_paraphrase\":0.57},{\"model_family\":\"Zero-shot prompted\",\"model\":\"google/flan-t5-small\",\"symmetry_strategy\":\"Symmetric prompt average over original and swapped sentence order logits\",\"uses_both_orders\":true,\"accuracy\":0.7377,\"f1\":0.8065,\"recall_not_paraphrase\":0.6,\"recall_paraphrase\":0.8}],\"summary\":\"Across MRPC validation experiments in the repository, prediction symmetry helps when it is enforced with soft score aggregation, but can hurt badly when it is enforced with hard agreement-style rules. For the NLI-based paraphrase detector (typeform/distilbert-base-uncased-mnli), the best retrieved strategy is bidirectional mean softmax-gap averaging, which reaches 0.718 accuracy and 0.791 F1. Averaging entailment-vs-contradiction log-odds is slightly worse at 0.703 accuracy, and the stricter consensus-gated average margin is similar at 0.701. In contrast, harder symmetry constraints that effectively require both directions to support paraphrase are much worse: minimum-direction margin drops to 0.586 accuracy and neutral-penalized averaging drops to 0.556. Their class reports show why: they strongly favor the negative class, pushing not_paraphrase recall up to 0.91-0.96 while collapsing paraphrase recall to 0.43 and 0.37. On the paraphrase-heavy MRPC validation split (279 paraphrase vs 129 not_paraphrase), that conservatism is costly. For the zero-shot prompted model (google/flan-t5-small), explicit symmetry is clearly beneficial: averaging logits from the original and swapped prompt orders yields 0.738 accuracy and 0.807 F1, outperforming one-order answer-prefix yes/no scoring at 0.637 accuracy (+10.0 points) and one-order full-answer log-probability scoring at 0.650 (+8.8 points). It also improves paraphrase recall from about 0.57-0.58 to 0.80 while keeping negative recall near 0.60. Overall, the repository evidence suggests that the most effective way to enforce symmetry on MRPC is to score both sentence orders and combine them with a soft average; overly strict symmetric decision rules can over-penalize positives, especially in NLI-style formulations. The table should be interpreted as experiment-level evidence from separate workflows rather than a perfectly controlled ablation: prompt wording, score definitions, and thresholds differ across rows, and the repository does not expose a stored single-direction NLI summary for a direct before/after symmetry comparison within that family.\"}"
+}
+```
+
+### Metrics
+| tokens_in | tokens_out | reasoning | conv_tokens | api_latency | exec_latency |
+|-----------|------------|-----------|-------------|-------------|--------------|
+| 20778 | 5472 | 4316 | 18951 | 78.654s | 0.000s |
+
+---
+
+# Run Summary
+
+**Final Result:**
+```json
+{
+  "summary": "{\"rows\":[{\"model_family\":\"NLI-based\",\"model\":\"typeform/distilbert-base-uncased-mnli\",\"symmetry_strategy\":\"Average entailment-vs-contradiction log-odds across both sentence orders\",\"uses_both_orders\":true,\"accuracy\":0.7034,\"f1\":0.773,\"recall_not_paraphrase\":0.63,\"recall_paraphrase\":0.74},{\"model_family\":\"NLI-based\",\"model\":\"typeform/distilbert-base-uncased-mnli\",\"symmetry_strategy\":\"Mean softmax gap: average(entailment probability - contradiction probability) across both orders\",\"uses_both_orders\":true,\"accuracy\":0.7181,\"f1\":0.7905,\"recall_not_paraphrase\":0.59,\"recall_paraphrase\":0.78},{\"model_family\":\"NLI-based\",\"model\":\"typeform/distilbert-base-uncased-mnli\",\"symmetry_strategy\":\"Consensus gate + average margin (require neither direction to predict contradiction, then average margins)\",\"uses_both_orders\":true,\"accuracy\":0.701,\"f1\":0.7698,\"recall_not_paraphrase\":0.64,\"recall_paraphrase\":0.73},{\"model_family\":\"NLI-based\",\"model\":\"typeform/distilbert-base-uncased-mnli\",\"symmetry_strategy\":\"Minimum directional margin > 0\",\"uses_both_orders\":true,\"accuracy\":0.5858,\"f1\":0.5888,\"recall_not_paraphrase\":0.91,\"recall_paraphrase\":0.43},{\"model_family\":\"NLI-based\",\"model\":\"typeform/distilbert-base-uncased-mnli\",\"symmetry_strategy\":\"Average entailment minus max(contradiction, neutral) across both orders\",\"uses_both_orders\":true,\"accuracy\":0.5564,\"f1\":0.5323,\"recall_not_paraphrase\":0.96,\"recall_paraphrase\":0.37},{\"model_family\":\"Zero-shot prompted\",\"model\":\"google/flan-t5-small\",\"symmetry_strategy\":\"One-order answer-prefix yes/no scoring (no explicit symmetry)\",\"uses_both_orders\":false,\"accuracy\":0.6373,\"f1\":0.6878,\"recall_not_paraphrase\":0.75,\"recall_paraphrase\":0.58},{\"model_family\":\"Zero-shot prompted\",\"model\":\"google/flan-t5-small\",\"symmetry_strategy\":\"One-order full-answer yes/no log-probability scoring (no explicit symmetry)\",\"uses_both_orders\":false,\"accuracy\":0.6495,\"f1\":0.6911,\"recall_not_paraphrase\":0.81,\"recall_paraphrase\":0.57},{\"model_family\":\"Zero-shot prompted\",\"model\":\"google/flan-t5-small\",\"symmetry_strategy\":\"Symmetric prompt average over original and swapped sentence order logits\",\"uses_both_orders\":true,\"accuracy\":0.7377,\"f1\":0.8065,\"recall_not_paraphrase\":0.6,\"recall_paraphrase\":0.8}],\"summary\":\"Across MRPC validation experiments in the repository, prediction symmetry helps when it is enforced with soft score aggregation, but can hurt badly when it is enforced with hard agreement-style rules. For the NLI-based paraphrase detector (typeform/distilbert-base-uncased-mnli), the best retrieved strategy is bidirectional mean softmax-gap averaging, which reaches 0.718 accuracy and 0.791 F1. Averaging entailment-vs-contradiction log-odds is slightly worse at 0.703 accuracy, and the stricter consensus-gated average margin is similar at 0.701. In contrast, harder symmetry constraints that effectively require both directions to support paraphrase are much worse: minimum-direction margin drops to 0.586 accuracy and neutral-penalized averaging drops to 0.556. Their class reports show why: they strongly favor the negative class, pushing not_paraphrase recall up to 0.91-0.96 while collapsing paraphrase recall to 0.43 and 0.37. On the paraphrase-heavy MRPC validation split (279 paraphrase vs 129 not_paraphrase), that conservatism is costly. For the zero-shot prompted model (google/flan-t5-small), explicit symmetry is clearly beneficial: averaging logits from the original and swapped prompt orders yields 0.738 accuracy and 0.807 F1, outperforming one-order answer-prefix yes/no scoring at 0.637 accuracy (+10.0 points) and one-order full-answer log-probability scoring at 0.650 (+8.8 points). It also improves paraphrase recall from about 0.57-0.58 to 0.80 while keeping negative recall near 0.60. Overall, the repository evidence suggests that the most effective way to enforce symmetry on MRPC is to score both sentence orders and combine them with a soft average; overly strict symmetric decision rules can over-penalize positives, especially in NLI-style formulations. The table should be interpreted as experiment-level evidence from separate workflows rather than a perfectly controlled ablation: prompt wording, score definitions, and thresholds differ across rows, and the repository does not expose a stored single-direction NLI summary for a direct before/after symmetry comparison within that family.\"}"
+}
+```
+
+**Metrics Summary:**
+```json
+{
+  "tokens": {
+    "input": 359084,
+    "output": 7662,
+    "reasoning": 5811,
+    "total": 366746,
+    "system_estimate": 1827,
+    "conversation": 319012
+  },
+  "code": {
+    "executions": 0,
+    "failed_executions": 0,
+    "total_lines": 0
+  },
+  "timing": {
+    "api_latency_s": 135.341,
+    "exec_latency_s": 0.537,
+    "wall_time_s": 135.878
+  },
+  "api_calls": 22,
+  "cost": null
+}
+```

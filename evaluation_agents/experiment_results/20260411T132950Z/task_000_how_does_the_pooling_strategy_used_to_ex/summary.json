@@ -1,0 +1,221 @@
+{
+  "task_idx": 0,
+  "task": "How does the pooling strategy used to extract sentence representations from DistilBERT affect paraphrase detection accuracy on MRPC?",
+  "difficulty": "easy",
+  "expected_notebooks": [
+    "distilbert_feature_extraction_cosine_mrpc",
+    "distilbert_cls_cosine_mrpc",
+    "distilbert_max_pool_cosine_mrpc",
+    "distilbert_no_special_tokens_mean_cosine_mrpc",
+    "distilbert_last4_mean_cosine_mrpc",
+    "distilbert_mean_cosine_median_threshold_mrpc"
+  ],
+  "min_notebooks_expected": 5,
+  "key_finding": "Last-layer mean pooling (with or without special tokens) marginally outperforms CLS-token and max-pool extraction, but differences are small (accuracy ~0.696\u20130.703 vs ~0.684\u20130.686 at threshold=0.85). Averaging the last four hidden layers before mean-pooling does not improve over single-layer mean pooling and performs on par with CLS and max-pool. Note: distilbert_mean_cosine_median_threshold_mrpc uses a data-driven median threshold rather than 0.85 and shows substantially lower performance (accuracy ~0.65, F1 ~0.70) \u2014 this reflects threshold sensitivity, not pooling quality, and should not be interpreted as a pooling result. The agent should report accuracy and F1 per pooling variant at a fixed threshold and note that the overall spread across strategies is narrow.",
+  "experiments": {
+    "items_only": {
+      "error": null,
+      "stats": {
+        "total_tokens": 52361,
+        "input_tokens": 46939,
+        "output_tokens": 5422,
+        "reasoning_tokens": 4225,
+        "num_turns": 14,
+        "num_api_function_calls": 13,
+        "wall_time_s": 92.719
+      },
+      "rating": {
+        "score": 4,
+        "notebook_coverage": "5 of 6 expected notebooks cited",
+        "rationale": "Cites cls, max-pool, no-special-token mean, last4-mean, and median-threshold mean, and correctly reports that no-special-token mean is best while last4-mean and max-pool tie below it. Good analytical depth on class imbalance and threshold confounding, but it misses the fixed-threshold distilbert_feature_extraction_cosine_mrpc run, so the mean-pooling comparison is incomplete."
+      }
+    },
+    "dataset_search": {
+      "error": null,
+      "stats": {
+        "total_tokens": 43897,
+        "input_tokens": 39994,
+        "output_tokens": 3903,
+        "reasoning_tokens": 2850,
+        "num_turns": 11,
+        "num_api_function_calls": 10,
+        "wall_time_s": 68.918
+      },
+      "rating": {
+        "score": 3,
+        "notebook_coverage": "5 of 6 expected notebooks identified",
+        "rationale": "It covers most variants in descriptive form and notes that no-special-token mean is highest, with last4-mean offering no gain over max-pool. However, it omits distilbert_feature_extraction_cosine_mrpc and overemphasizes the median-threshold mean result as a balanced pooling alternative rather than primarily a threshold-sensitivity result, so the key finding is only partially captured."
+      }
+    },
+    "dataset_description": {
+      "error": null,
+      "stats": {
+        "total_tokens": 184451,
+        "input_tokens": 180724,
+        "output_tokens": 3727,
+        "reasoning_tokens": 2292,
+        "num_turns": 19,
+        "num_api_function_calls": 18,
+        "wall_time_s": 80.203
+      },
+      "rating": {
+        "score": 4,
+        "notebook_coverage": "5 of 6 expected notebooks cited",
+        "rationale": "Strong summary: it correctly frames the fixed-threshold comparison as narrow in spread, with no-special-token mean best, CLS slightly behind, and last4-mean no better than max-pool. It also properly treats the median-threshold mean run as not directly comparable, but it still misses the fixed-threshold distilbert_feature_extraction_cosine_mrpc notebook."
+      }
+    },
+    "dataset_description_embedding": {
+      "error": null,
+      "stats": {
+        "total_tokens": 90144,
+        "input_tokens": 84958,
+        "output_tokens": 5186,
+        "reasoning_tokens": 3934,
+        "num_turns": 13,
+        "num_api_function_calls": 12,
+        "wall_time_s": 89.54
+      },
+      "rating": {
+        "score": 4,
+        "notebook_coverage": "5 of 6 expected notebooks cited",
+        "rationale": "Correctly reports the small fixed-threshold differences, identifies no-special-token mean as best, and notes that last4-mean does not improve over simpler pooling. Good caveat that the median-threshold run reflects threshold effects, but the missing distilbert_feature_extraction_cosine_mrpc notebook leaves the core mean-pooling comparison incomplete."
+      }
+    },
+    "dataset_properties": {
+      "error": null,
+      "stats": {
+        "total_tokens": 98898,
+        "input_tokens": 94981,
+        "output_tokens": 3917,
+        "reasoning_tokens": 2673,
+        "num_turns": 20,
+        "num_api_function_calls": 19,
+        "wall_time_s": 86.396
+      },
+      "rating": {
+        "score": 3,
+        "notebook_coverage": "4 of 6 expected notebooks cited",
+        "rationale": "Below the minimum coverage threshold, so it cannot score above 3. The discussion of confounding from thresholding and class imbalance is useful, but it misses both the CLS notebook and the fixed-threshold distilbert_feature_extraction_cosine_mrpc run."
+      }
+    },
+    "items_and_code": {
+      "error": null,
+      "stats": {
+        "total_tokens": 126894,
+        "input_tokens": 122338,
+        "output_tokens": 4556,
+        "reasoning_tokens": 3124,
+        "num_turns": 16,
+        "num_api_function_calls": 15,
+        "wall_time_s": 83.209
+      },
+      "rating": {
+        "score": 4,
+        "notebook_coverage": "5 of 6 expected notebooks cited",
+        "rationale": "Good coverage and solid interpretation: it correctly shows no-special-token mean leading the cited fixed-threshold runs and last4-mean matching max-pool. It also flags the median-threshold mean run as a confounded comparison, but the absent distilbert_feature_extraction_cosine_mrpc notebook prevents a full fixed-threshold mean-pooling conclusion."
+      }
+    },
+    "items_and_lineage": {
+      "error": null,
+      "stats": {
+        "total_tokens": 223115,
+        "input_tokens": 218023,
+        "output_tokens": 5092,
+        "reasoning_tokens": 3325,
+        "num_turns": 29,
+        "num_api_function_calls": 28,
+        "wall_time_s": 128.074
+      },
+      "rating": {
+        "score": 4,
+        "notebook_coverage": "5 of 6 expected notebooks cited",
+        "rationale": "Accurately captures the main pattern among the retrieved notebooks: small accuracy spread, no-special-token mean best, and last4-mean offering no benefit over max-pool. The threshold-sensitivity caveat is well handled, but it still misses distilbert_feature_extraction_cosine_mrpc."
+      }
+    },
+    "code_search": {
+      "error": null,
+      "stats": {
+        "total_tokens": 149547,
+        "input_tokens": 144711,
+        "output_tokens": 4836,
+        "reasoning_tokens": 3530,
+        "num_turns": 15,
+        "num_api_function_calls": 14,
+        "wall_time_s": 102.323
+      },
+      "rating": {
+        "score": 3,
+        "notebook_coverage": "4 of 6 expected notebooks cited",
+        "rationale": "Below minimum notebook coverage, missing both the CLS notebook and distilbert_feature_extraction_cosine_mrpc. The confusion-matrix analysis is insightful, but the result is too under-covered to fully answer the pooling question."
+      }
+    },
+    "code_description": {
+      "error": null,
+      "stats": {
+        "total_tokens": 212777,
+        "input_tokens": 208201,
+        "output_tokens": 4576,
+        "reasoning_tokens": 3143,
+        "num_turns": 17,
+        "num_api_function_calls": 16,
+        "wall_time_s": 93.77
+      },
+      "rating": {
+        "score": 3,
+        "notebook_coverage": "5 of 6 expected notebooks cited",
+        "rationale": "It summarizes the retrieved variants well and notes the narrow spread and threshold confound, but it explicitly claims the repository lacks a fixed-threshold last-hidden-state mean-pooling run, which contradicts the expected distilbert_feature_extraction_cosine_mrpc notebook. That factual error weakens the central finding enough to keep this at 3."
+      }
+    },
+    "code_description_embedding": {
+      "error": null,
+      "stats": {
+        "total_tokens": 171227,
+        "input_tokens": 167039,
+        "output_tokens": 4188,
+        "reasoning_tokens": 3106,
+        "num_turns": 14,
+        "num_api_function_calls": 13,
+        "wall_time_s": 90.322
+      },
+      "rating": {
+        "score": 3,
+        "notebook_coverage": "4 of 6 expected notebooks cited",
+        "rationale": "Below minimum coverage, omitting both last4-mean and the fixed-threshold distilbert_feature_extraction_cosine_mrpc notebook. What it says about the retrieved runs is mostly correct, including the threshold caveat, but the answer is materially incomplete."
+      }
+    },
+    "code_properties": {
+      "error": null,
+      "stats": {
+        "total_tokens": 203352,
+        "input_tokens": 197444,
+        "output_tokens": 5908,
+        "reasoning_tokens": 4548,
+        "num_turns": 17,
+        "num_api_function_calls": 16,
+        "wall_time_s": 119.439
+      },
+      "rating": {
+        "score": 4,
+        "notebook_coverage": "5 of 6 expected notebooks cited",
+        "rationale": "Accurate on the key pattern for the cited runs: no-special-token mean is best, CLS is slightly lower, and last4-mean does not beat max-pool. It also correctly warns that the median-threshold mean result is confounded by thresholding, though it still misses distilbert_feature_extraction_cosine_mrpc."
+      }
+    },
+    "all_functions": {
+      "error": null,
+      "stats": {
+        "total_tokens": 188809,
+        "input_tokens": 182816,
+        "output_tokens": 5993,
+        "reasoning_tokens": 4492,
+        "num_turns": 24,
+        "num_api_function_calls": 23,
+        "wall_time_s": 120.515
+      },
+      "rating": {
+        "score": 4,
+        "notebook_coverage": "5 of 6 expected notebooks cited",
+        "rationale": "Best-rounded summary among the 5-of-6 agents: clear ranking, good use of majority-baseline context, and correct treatment of the median-threshold run as a thresholding issue rather than a pure pooling result. Still incomplete because distilbert_feature_extraction_cosine_mrpc is not retrieved."
+      }
+    }
+  }
+}
